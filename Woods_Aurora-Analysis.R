@@ -16,6 +16,17 @@ my_data <- read_excel("Aurora_Masters_7-25-22.xlsx") %>%
   # select(SubjectNum, AgeGrp, Sex,Leg, FiberType,Fibertypenum,Fibernum,ExpCond,ExpCondnum,
   #        CSA,Force,PoControl25C,MSRunNum, AkNm2,k,BkNm2,lbHz,CkNm2,lcHz,ton,twopib)
 
+table_glht <- function(x) {
+  pq <- summary(x)$test
+  mtests <- cbind(pq$coefficients, pq$sigma, pq$tstat, pq$pvalues)
+  error <- attr(pq$pvalues, "error")
+  pname <- switch(x$alternativ, less = paste("Pr(<", ifelse(x$df ==0, "z", "t"), ")", sep = ""), 
+                  greater = paste("Pr(>", ifelse(x$df == 0, "z", "t"), ")", sep = ""), two.sided = paste("Pr(>|",ifelse(x$df == 0, "z", "t"), "|)", sep = ""))
+  colnames(mtests) <- c("Estimate", "Std. Error", ifelse(x$df ==0, "z value", "t value"), pname)
+  return(mtests)
+  
+}
+
 ### Figure 1-----------------------------------------------------------------
 
 I <- read_excel("Aurora_Masters_7-25-22.xlsx") %>%
@@ -28,7 +39,7 @@ I <- read_excel("Aurora_Masters_7-25-22.xlsx") %>%
 
 I_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = I)
 I_Po_emm <- data.frame(emmeans(I_Po_lm, specs = "ExpCond"))  
-if (anova(I_Po_lm)$`Pr(>F)` <0.05) {
+if ((a <- anova(I_Po_lm)$`Pr(>F)`) <0.05) {
  
    I_Po_hoc <- summary(glht(I_Po_lm, linfct = mcp(ExpCond = "Tukey")))
   
@@ -38,7 +49,7 @@ if (anova(I_Po_lm)$`Pr(>F)` <0.05) {
 
 I_Force_lm <- lmer(Force ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = I)
 I_Force_emm <- data.frame(emmeans(I_Force_lm, specs = "ExpCond"))  
-if (anova(I_Force_lm)$`Pr(>F)` <0.05) {
+if ((b<- anova(I_Force_lm)$`Pr(>F)`) <0.05) {
   
   I_Force_hoc <- summary(glht(I_Force_lm, linfct = mcp(ExpCond = "Tukey")))
   
@@ -55,7 +66,7 @@ I.IIA <- read_excel("Aurora_Masters_7-25-22.xlsx") %>%
 
 I.IIA_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = I.IIA)
 I.IIA_Po_emm <- data.frame(emmeans(I.IIA_Po_lm, specs = "ExpCond"))  
-if (anova(I.IIA_Po_lm)$`Pr(>F)` <0.05) {
+if ((c <- anova(I.IIA_Po_lm)$`Pr(>F)`) <0.05) {
   
   I.IIA_Po_hoc <- summary(glht(I.IIA_Po_lm, linfct = mcp(ExpCond = "Tukey")))
   
@@ -65,7 +76,7 @@ if (anova(I.IIA_Po_lm)$`Pr(>F)` <0.05) {
 
 I.IIA_Force_lm <- lmer(Force ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = I.IIA)
 I.IIA_Force_emm <- data.frame(emmeans(I.IIA_Force_lm, specs = "ExpCond"))  
-if (anova(I.IIA_Force_lm)$`Pr(>F)` <0.05) {
+if ((d <- anova(I.IIA_Force_lm)$`Pr(>F)`) <0.05) {
   
   I.IIA_Force_hoc <- summary(glht(I.IIA_Force_lm, linfct = mcp(ExpCond = "Tukey")))
   
@@ -82,7 +93,7 @@ IIA <- read_excel("Aurora_Masters_7-25-22.xlsx") %>%
 
 IIA_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = IIA)
 IIA_Po_emm <- data.frame(emmeans(IIA_Po_lm, specs = "ExpCond"))  
-if (anova(IIA_Po_lm)$`Pr(>F)` <0.05) {
+if ((e<- anova(IIA_Po_lm)$`Pr(>F)`) <0.05) {
   
   IIA_Po_hoc <- summary(glht(IIA_Po_lm, linfct = mcp(ExpCond = "Tukey")))
   
@@ -92,7 +103,7 @@ if (anova(IIA_Po_lm)$`Pr(>F)` <0.05) {
 
 IIA_Force_lm <- lmer(Force ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = IIA)
 IIA_Force_emm <- data.frame(emmeans(IIA_Force_lm, specs = "ExpCond"))  
-if (anova(IIA_Force_lm)$`Pr(>F)` <0.05) {
+if ((f <- anova(IIA_Force_lm)$`Pr(>F)`) <0.05) {
   
   IIA_Force_hoc <- summary(glht(IIA_Force_lm, linfct = mcp(ExpCond = "Tukey")))
   
@@ -109,7 +120,7 @@ IIAX <- read_excel("Aurora_Masters_7-25-22.xlsx") %>%
 
 IIAX_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = IIAX)
 IIAX_Po_emm <- data.frame(emmeans(IIAX_Po_lm, specs = "ExpCond"))
-if (anova(IIAX_Po_lm)$`Pr(>F)` <0.05) {
+if (( g<- anova(IIAX_Po_lm)$`Pr(>F)`) <0.05) {
   
   IIAX_Po_hoc <- summary(glht(IIAX_Po_lm, linfct = mcp(ExpCond = "Tukey")))
   
@@ -119,7 +130,7 @@ if (anova(IIAX_Po_lm)$`Pr(>F)` <0.05) {
 
 IIAX_Force_lm <- lmer(Force ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = IIAX)
 IIAX_Force_emm <- data.frame(emmeans(IIAX_Force_lm, specs = "ExpCond"))  
-if (anova(IIAX_Force_lm)$`Pr(>F)` <0.05) {
+if ((h<- anova(IIAX_Force_lm)$`Pr(>F)`) <0.05) {
   
   IIAX_Force_hoc <- summary(glht(IIAX_Force_lm, linfct = mcp(ExpCond = "Tukey")))
   
@@ -149,11 +160,57 @@ Fig_1_emm <- rbind(I_Po_emm,
                    "ST","ST","ST",
                    "Force","Force","Force"), .before = emmean)
 
+Fig_1_anova <- data.frame(rbind(a,b,c,d,e,f,g,h)) %>% 
+  mutate(Fiber_Type = c("I","I", "I/IIA","I/IIA", "IIA","IIA", "IIAX","IIAX")) %>% 
+  mutate(Value = c("ST", "Force","ST", "Force","ST", "Force","ST", "Force")) 
+colnames(Fig_1_anova) <- c("p_value", "Fiber_Type", "Value")
+
+Fig_1_posthoc <- data.frame(rbind(table_glht(I_Po_hoc),
+                            table_glht(I_Force_hoc),
+                            table_glht(I.IIA_Po_hoc),
+                            table_glht(IIA_Po_hoc),
+                            table_glht(IIA_Force_hoc),
+                            table_glht(IIAX_Po_hoc),
+                            table_glht(IIAX_Force_hoc))) %>%   
+  mutate(Fiber_Type = c("I","I","I","I","I","I",
+                        "I.IIA","I.IIA","I.IIA",
+                        "IIA","IIA","IIA","IIA","IIA","IIA",
+                        "IIAX","IIAX","IIAX","IIAX","IIAX","IIAX")) %>% 
+  mutate(Value = c("ST","ST","ST",
+                   "Force","Force","Force",
+                   "ST","ST","ST",
+                   "ST","ST","ST",
+                   "Force","Force","Force",
+                   "ST","ST","ST",
+                   "Force","Force","Force")) %>% 
+  mutate(Comparison = c("Fatigue - Control == 0",
+                        "Fatigue+dATP - Control == 0",
+                        "Fatigue+dATP - Fatigue == 0",
+                        "Fatigue - Control == 0",
+                        "Fatigue+dATP - Control == 0",
+                        "Fatigue+dATP - Fatigue == 0",
+                        "Fatigue - Control == 0",
+                        "Fatigue+dATP - Control == 0",
+                        "Fatigue+dATP - Fatigue == 0",
+                        "Fatigue - Control == 0",
+                        "Fatigue+dATP - Control == 0",
+                        "Fatigue+dATP - Fatigue == 0",
+                        "Fatigue - Control == 0",
+                        "Fatigue+dATP - Control == 0",
+                        "Fatigue+dATP - Fatigue == 0",
+                        "Fatigue - Control == 0",
+                        "Fatigue+dATP - Control == 0",
+                        "Fatigue+dATP - Fatigue == 0",
+                        "Fatigue - Control == 0",
+                        "Fatigue+dATP - Control == 0",
+                        "Fatigue+dATP - Fatigue == 0"))
 
 
+Figure_1_Final <- list(Fig_1_emm,Fig_1_anova,Fig_1_posthoc)
 
+names(Figure_1_Final) <- c("Figure 1-EMM", "Figure 1-Anova", "Figure 1-Posthoc")
 
-
+writexl::write_xlsx(Figure_1_Final, path = "Woods_AuroraMaster_Figure1.xlsx")
 
 
 
