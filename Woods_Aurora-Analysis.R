@@ -175,14 +175,16 @@ Fig_1_posthoc <- data.frame(rbind(table_glht(I_Po_hoc),
   mutate(Fiber_Type = c("I","I","I","I","I","I",
                         "I.IIA","I.IIA","I.IIA",
                         "IIA","IIA","IIA","IIA","IIA","IIA",
-                        "IIAX","IIAX","IIAX","IIAX","IIAX","IIAX")) %>% 
+                        "IIAX","IIAX","IIAX","IIAX","IIAX","IIAX"),
+         .before = Estimate) %>% 
   mutate(Value = c("ST","ST","ST",
                    "Force","Force","Force",
                    "ST","ST","ST",
                    "ST","ST","ST",
                    "Force","Force","Force",
                    "ST","ST","ST",
-                   "Force","Force","Force")) %>% 
+                   "Force","Force","Force"),
+         .before = Fiber_Type) %>% 
   mutate(Comparison = c("Fatigue - Control == 0",
                         "Fatigue+dATP - Control == 0",
                         "Fatigue+dATP - Fatigue == 0",
@@ -203,7 +205,8 @@ Fig_1_posthoc <- data.frame(rbind(table_glht(I_Po_hoc),
                         "Fatigue+dATP - Fatigue == 0",
                         "Fatigue - Control == 0",
                         "Fatigue+dATP - Control == 0",
-                        "Fatigue+dATP - Fatigue == 0"))
+                        "Fatigue+dATP - Fatigue == 0"),
+         .before = Value)
 
 
 Figure_1_Final <- list(Fig_1_emm,Fig_1_anova,Fig_1_posthoc)
@@ -212,13 +215,21 @@ names(Figure_1_Final) <- c("Figure 1-EMM", "Figure 1-Anova", "Figure 1-Posthoc")
 
 writexl::write_xlsx(Figure_1_Final, path = "Woods_AuroraMaster_Figure1.xlsx")
 
+## Figure 3: Control + Fatigue  -----------------------------------------------------------------------------------
 
+con_fat_data <- read_excel("Aurora_Masters_7-25-22.xlsx") %>%
+  filter(Fibertypenum %in% c(1,2,4,5)) %>%
+  filter(ExpCondnum %in% c(1,2) & MSRunNum %in% c(1,2)) %>%
+  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>%
+  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
+  mutate(Force = CSA*PoControl25C)
 
-
-
-
-
-
+con_fatdatp_data <- read_excel("Aurora_Masters_7-25-22.xlsx") %>%
+  filter(Fibertypenum %in% c(1,2,4,5)) %>%
+  filter(ExpCondnum %in% c(1,3) & MSRunNum %in% c(1,2)) %>%
+  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>%
+  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
+  mutate(Force = CSA*PoControl25C)
 
 
 
