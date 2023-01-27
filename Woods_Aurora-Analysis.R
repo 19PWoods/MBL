@@ -219,14 +219,66 @@ writexl::write_xlsx(Figure_1_Final, path = "Woods_AuroraMaster_Figure1.xlsx")
 
 con_fat_data <- read_excel("Aurora_Masters_7-25-22.xlsx") %>%
   filter(Fibertypenum %in% c(1,2,4,5)) %>%
-  filter(ExpCondnum %in% c(1,2) & MSRunNum %in% c(1,2)) %>%
+  filter(Group == 1) %>%
+  filter(ExpCondnum %in% c(1,2)) %>% 
   group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>%
   mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
   mutate(Force = CSA*PoControl25C)
 
+I_cf <- con_fat_data %>% filter(FiberType == "I")
+
+I_Fig3_grp1_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
+                          data = I_cf)
+I_Fig3_grp1_Po_emm <- emmeans(I_Fig3_grp1_Po_lm, specs = "ExpCond")
+if ((i <- anova(I_Fig3_grp1_Po_lm)$`Pr(>F)`) <0.05) {
+  
+  I_Fig3_grp1_Po_hoc <- summary(glht(I_Fig3_grp1_Po_lm, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
+I_Fig3_grp1_Force_lm <- lmer(Force ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
+                          data = I_cf)
+I_Fig3_grp1_Force_emm <- emmeans(I_Fig3_grp1_Force_lm, specs = "ExpCond")
+if ((i <- anova(I_Fig3_grp1_Force_lm)$`Pr(>F)`) <0.05) {
+  
+  I_Fig3_grp1_Force_hoc <- summary(glht(I_Fig3_grp1_Force_lm, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
+
+I.IIA_cf <- con_fat_data %>% filter(Fibertypenum == 4)
+I.IIA_Fig3_grp1_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
+                          data = I.IIA_cf)
+I.IIA_Fig3_grp1_Po_emm <- emmeans(I.IIA_Fig3_grp1_Po_lm, specs = "ExpCond")
+if ((j <- anova(I.IIA_Fig3_grp1_Po_lm)$`Pr(>F)`) <0.05) {
+  
+  I.IIA_Fig3_grp1_Po_hoc <- summary(glht(I.IIA_Fig3_grp1_Po_lm, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
+
+IIA_cf <- con_fat_data %>% filter(Fibertypenum == 2)
+IIA_Fig3_grp1_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
+                              data = IIA_cf)
+IIA_Fig3_grp1_Po_emm <- emmeans(IIA_Fig3_grp1_Po_lm, specs = "ExpCond")
+if ((k <- anova(IIA_Fig3_grp1_Po_lm)$`Pr(>F)`) <0.05) {
+  
+  IIA_Fig3_grp1_Po_hoc <- summary(glht(IIA_Fig3_grp1_Po_lm, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
+
+
+### Figure 3: Control + dATP --------------------------------------------------------------
+
 con_fatdatp_data <- read_excel("Aurora_Masters_7-25-22.xlsx") %>%
   filter(Fibertypenum %in% c(1,2,4,5)) %>%
-  filter(ExpCondnum %in% c(1,3) & MSRunNum %in% c(1,2)) %>%
+  filter(Group == 2) %>%
+  filter(ExpCondnum %in% c(1,3)) %>% 
   group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>%
   mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
   mutate(Force = CSA*PoControl25C)
