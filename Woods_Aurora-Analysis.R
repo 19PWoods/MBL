@@ -298,6 +298,38 @@ con_fatdatp_data <- read_excel("Aurora_Masters_7-25-22.xlsx") %>%
   mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
   mutate(Force = CSA*PoControl25C)
 
+I_cdatp <- con_fatdatp_data %>% filter(FiberType == "I")
 
 
+I_Fig3_grp2_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 | SubjectNum),data = I_cdatp)
+I_Fig3_grp2_Po_emm <- emmeans(I_Fig3_grp2_Po_lm, specs = "ExpCond")
+if ((o <- anova(I_Fig3_grp2_Po_lm)$`Pr(>F)`) <0.05) {
+  
+  I_Fig3_grp2_Po_hoc <- summary(glht(I_Fig3_grp2_Po_lm, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
 
+I_Fig3_grp2_Force_lm <- lmer(Force ~ ExpCond + (1 | SubjectNum),data = I_cdatp)
+I_Fig3_grp2_Force_emm <- emmeans(I_Fig3_grp2_Force_lm, specs = "ExpCond")
+if ((p <- anova(I_Fig3_grp2_Force_lm)$`Pr(>F)`) <0.05) {
+  
+  I_Fig3_grp2_Force_hoc <- summary(glht(I_Fig3_grp2_Force_lm, 
+                                        linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
+
+I.IIA_cdatp <- con_fatdatp_data %>% filter(FiberType == "I/IIA")
+I.IIA_Fig3_grp2_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 | SubjectNum),data = I.IIA_cdatp)
+I.IIA_Fig3_grp2_Po_emm <- emmeans(I.IIA_Fig3_grp2_Po_lm, specs = "ExpCond")
+if ((q <- anova(I.IIA_Fig3_grp2_Po_lm)$`Pr(>F)`) <0.05) {
+  
+  I.IIA_Fig3_grp2_Po_hoc <- summary(glht(I.IIA_Fig3_grp2_Po_lm, 
+                                         linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
