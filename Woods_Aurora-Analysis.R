@@ -272,6 +272,21 @@ if ((k <- anova(IIA_Fig3_grp1_Po_lm)$`Pr(>F)`) <0.05) {
   NA
 }
 
+IIA_Fig3_grp1_Force_lm <- lmer(Force ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
+                            data = IIA_cf)
+IIA_Fig3_grp1_Force_emm <- emmeans(IIA_Fig3_grp1_Force_lm, specs = "ExpCond")
+if ((l <- anova(IIA_Fig3_grp1_Force_lm)$`Pr(>F)`) <0.05) {
+  
+  IIA_Fig3_grp1_Force_hoc <- summary(glht(IIA_Fig3_grp1_Force_lm, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
+
+IIAX_cf <- con_fat_data %>% filter(Fibertypenum == 5)
+
+IIAX_Fig3_grp1_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
+                            data = IIAX_cf)
 
 ### Figure 3: Control + dATP --------------------------------------------------------------
 
