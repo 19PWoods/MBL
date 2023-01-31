@@ -229,244 +229,103 @@ con_fat_data <- read_excel("Aurora_Masters_CS.xlsx") %>%
 ## IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
 I_cf <- con_fat_data %>% filter(FiberType == "I")
 
-I_Fig3_B_lm <- lmer(BkNm2 ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                    data = I_cf)
+I_Fig3_B_lm <- lmer(BkNm2 ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I_cf)
 I_Fig3_B_emm <- data.frame(emmeans(I_Fig3_B_lm, specs = "ExpCond"))
-if ((i <- anova(I_Fig3_B_lm)$`Pr(>F)`) <0.05) {
-  
-  I_Fig3_B_hoc <- summary(glht(I_Fig3_B_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+i <- anova(I_Fig3_B_lm)$`Pr(>F)`
 
-I_Fig3_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                    data = I_cf)
+
+I_Fig3_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I_cf)
 I_Fig3_Ae_emm <- data.frame(emmeans(I_Fig3_Ae_lm, specs = "ExpCond"))
-if ((i.1 <- anova(I_Fig3_Ae_lm)$`Pr(>F)`) <0.05) {
-  
-  I_Fig3_Ae_hoc <- summary(glht(I_Fig3_Ae_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+i.1 <- anova(I_Fig3_Ae_lm)$`Pr(>F)` 
 
-I_Fig3_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                     data = I_cf)
+I_Fig3_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I_cf)
 I_Fig3_Av_emm <- data.frame(emmeans(I_Fig3_Av_lm, specs = "ExpCond"))
-if ((i.2 <- anova(I_Fig3_Av_lm)$`Pr(>F)`) <0.05) {
-  
-  I_Fig3_Av_hoc <- summary(glht(I_Fig3_Av_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+i.2 <- anova(I_Fig3_Av_lm)$`Pr(>F)`
 
 
-I_Fig3_2pib_lm <- lmer(twopib ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                       data = I_cf)
+I_Fig3_2pib_lm <- lmer(twopib ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I_cf)
 I_Fig3_2pib_emm <- data.frame(emmeans(I_Fig3_2pib_lm, specs = "ExpCond"))
-if ((j <- anova(I_Fig3_2pib_lm)$`Pr(>F)`) <0.05) {
-  
-  I_Fig3_2pib_hoc <- summary(glht(I_Fig3_2pib_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+j <- anova(I_Fig3_2pib_lm)$`Pr(>F)` 
 
-I_Fig3_ton_lm <- lmer(ton ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                       data = I_cf)
+I_Fig3_ton_lm <- lmer(ton ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I_cf)
 I_Fig3_ton_emm <- data.frame(emmeans(I_Fig3_ton_lm, specs = "ExpCond"))
-if ((k <- anova(I_Fig3_ton_lm)$`Pr(>F)`) <0.05) {
-  
-  I_Fig3_ton_hoc <- summary(glht(I_Fig3_ton_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+k <- anova(I_Fig3_ton_lm)$`Pr(>F)` 
 
 # I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA 
 
 I.IIA_cf <- con_fat_data %>% filter(Fibertypenum == 4)
 
-I.IIA_Fig3_B_lm <- lmer(BkNm2 ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                    data = I.IIA_cf)
+I.IIA_Fig3_B_lm <- lmer(BkNm2 ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = I.IIA_cf)
 I.IIA_Fig3_B_emm <- data.frame(emmeans(I.IIA_Fig3_B_lm, specs = "ExpCond"))
-if ((l <- anova(I.IIA_Fig3_B_lm)$`Pr(>F)`) <0.05) {
-  
-  I.IIA_Fig3_B_hoc <- summary(glht(I.IIA_Fig3_B_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+l <- anova(I.IIA_Fig3_B_lm)$`Pr(>F)`
 
-I.IIA_Fig3_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                     data = I.IIA_cf)
+I.IIA_Fig3_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I.IIA_cf)
 I.IIA_Fig3_Ae_emm <- data.frame(emmeans(I.IIA_Fig3_Ae_lm, specs = "ExpCond"))
-if ((l.1 <- anova(I.IIA_Fig3_Ae_lm)$`Pr(>F)`) <0.05) {
-  
-  I.IIA_Fig3_Ae_hoc <- summary(glht(I.IIA_Fig3_Ae_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+l.1 <- anova(I.IIA_Fig3_Ae_lm)$`Pr(>F)` 
 
-I.IIA_Fig3_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                     data = I.IIA_cf)
+I.IIA_Fig3_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I.IIA_cf)
 I.IIA_Fig3_Av_emm <- data.frame(emmeans(I.IIA_Fig3_Av_lm, specs = "ExpCond"))
-if ((l.2 <- anova(I.IIA_Fig3_Av_lm)$`Pr(>F)`) <0.05) {
-  
-  I.IIA_Fig3_Av_hoc <- summary(glht(I.IIA_Fig3_Av_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+l.2 <- anova(I.IIA_Fig3_Av_lm)$`Pr(>F)`
 
 
-I.IIA_Fig3_2pib_lm <- lmer(twopib ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                       data = I.IIA_cf)
+I.IIA_Fig3_2pib_lm <- lmer(twopib ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I.IIA_cf)
 I.IIA_Fig3_2pib_emm <- data.frame(emmeans(I.IIA_Fig3_2pib_lm, specs = "ExpCond"))
-if ((m <- anova(I.IIA_Fig3_2pib_lm)$`Pr(>F)`) <0.05) {
-  
-  I.IIA_Fig3_2pib_hoc <- summary(glht(I.IIA_Fig3_2pib_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+m <- anova(I.IIA_Fig3_2pib_lm)$`Pr(>F)` 
 
-I.IIA_Fig3_ton_lm <- lmer(ton ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                      data = I.IIA_cf)
+I.IIA_Fig3_ton_lm <- lmer(ton ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I.IIA_cf)
 I.IIA_Fig3_ton_emm <- data.frame(emmeans(I.IIA_Fig3_ton_lm, specs = "ExpCond"))
-if ((n <- anova(I.IIA_Fig3_ton_lm)$`Pr(>F)`) <0.05) {
-  
-  I.IIA_Fig3_ton_hoc <- summary(glht(I.IIA_Fig3_ton_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+n <- anova(I.IIA_Fig3_ton_lm)$`Pr(>F)`
 
 # IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA 
 
 IIA_cf <- con_fat_data %>% filter(Fibertypenum == 2)
 
-IIA_Fig3_B_lm <- lmer(BkNm2 ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                        data = IIA_cf)
+IIA_Fig3_B_lm <- lmer(BkNm2 ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIA_cf)
 IIA_Fig3_B_emm <- data.frame(emmeans(IIA_Fig3_B_lm, specs = "ExpCond"))
-if ((o <- anova(IIA_Fig3_B_lm)$`Pr(>F)`) <0.05) {
-  
-  IIA_Fig3_B_hoc <- summary(glht(IIA_Fig3_B_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+o <- anova(IIA_Fig3_B_lm)$`Pr(>F)` 
 
-IIA_Fig3_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                         data = IIA_cf)
+IIA_Fig3_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIA_cf)
 IIA_Fig3_Ae_emm <- data.frame(emmeans(IIA_Fig3_Ae_lm, specs = "ExpCond"))
-if ((o.1 <- anova(IIA_Fig3_Ae_lm)$`Pr(>F)`) <0.05) {
-  
-  IIA_Fig3_Ae_hoc <- summary(glht(IIA_Fig3_Ae_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+o.1 <- anova(IIA_Fig3_Ae_lm)$`Pr(>F)`
 
-IIA_Fig3_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                         data = IIA_cf)
+IIA_Fig3_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIA_cf)
 IIA_Fig3_Av_emm <- data.frame(emmeans(IIA_Fig3_Av_lm, specs = "ExpCond"))
-if ((o.2 <- anova(IIA_Fig3_Av_lm)$`Pr(>F)`) <0.05) {
-  
-  IIA_Fig3_Av_hoc <- summary(glht(IIA_Fig3_Av_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+o.2 <- anova(IIA_Fig3_Av_lm)$`Pr(>F)`
 
-IIA_Fig3_2pib_lm <- lmer(twopib ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                           data = IIA_cf)
+IIA_Fig3_2pib_lm <- lmer(twopib ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIA_cf)
 IIA_Fig3_2pib_emm <- data.frame(emmeans(IIA_Fig3_2pib_lm, specs = "ExpCond"))
-if ((p <- anova(IIA_Fig3_2pib_lm)$`Pr(>F)`) <0.05) {
-  
-  IIA_Fig3_2pib_hoc <- summary(glht(IIA_Fig3_2pib_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
-IIA_Fig3_ton_lm <- lmer(ton ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                          data = IIA_cf)
+p <- anova(IIA_Fig3_2pib_lm)$`Pr(>F)`
+    
+IIA_Fig3_ton_lm <- lmer(ton ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIA_cf)
 IIA_Fig3_ton_emm <- data.frame(emmeans(IIA_Fig3_ton_lm, specs = "ExpCond"))
-if ((q <- anova(IIA_Fig3_ton_lm)$`Pr(>F)`) <0.05) {
+q <- anova(IIA_Fig3_ton_lm)$`Pr(>F)` 
   
-  IIA_Fig3_ton_hoc <- summary(glht(IIA_Fig3_ton_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
 
 # IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX 
-## Getting error when running lmer(), which I believe is due to small sample size
 
 IIAX_cf <- con_fat_data %>% filter(Fibertypenum == 5)
 
-# IIAX_cf <- my_data %>%
-#   filter(Fibertypenum == 5) %>%
-#   filter(ExpCondnum %in% c(1:3))
 
-IIAX_Fig3_B_lm <- lmer(BkNm2 ~ ExpCond + (1 | SubjectNum),
-                      data = IIAX_cf)
+IIAX_Fig3_B_lm <- lmer(BkNm2 ~ ExpCond + (1 | SubjectNum),data = IIAX_cf)
 
 IIAX_Fig3_B_emm <- data.frame(emmeans(IIAX_Fig3_B_lm, specs = "ExpCond"))
-if ((o <- anova(IIAX_Fig3_B_lm)$`Pr(>F)`) <0.05) {
+o <- anova(IIAX_Fig3_B_lm)$`Pr(>F)` 
 
-  IIAX_Fig3_B_hoc <- summary(glht(IIAX_Fig3_B_lm, linfct = mcp(ExpCond = "Tukey")))
-
-} else{
-  NA
-}
-
-IIAX_Fig3_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),
-                       data = IIAX_cf)
+IIAX_Fig3_Ae_lm <- lmer(Aelastic ~ ExpCond + (1  | SubjectNum),data = IIAX_cf)
 IIAX_Fig3_Ae_emm <- data.frame(emmeans(IIAX_Fig3_Ae_lm, specs = "ExpCond"))
-if ((l.1 <- anova(IIAX_Fig3_Ae_lm)$`Pr(>F)`) <0.05) {
+l.1 <- anova(IIAX_Fig3_Ae_lm)$`Pr(>F)`
 
-  IIAX_Fig3_Ae_hoc <- summary(glht(IIAX_Fig3_Ae_lm, linfct = mcp(ExpCond = "Tukey")))
+IIAX_Fig3_Av_lm <- lmer(Aviscous ~ ExpCond + (1  | SubjectNum),data = IIAX_cf)
+IIAX_Fig3_Av_emm <- data.frame(emmeans(IIAX_Fig3_Av_lm, specs = "ExpCond"))
+l.2 <- anova(IIAX_Fig3_Av_lm)$`Pr(>F)`
 
-} else{
-  NA
-}
+IIAX_Fig3_2pib_lm <- lmer(twopib ~ ExpCond + (1 | SubjectNum),data = IIAX_cf)
+IIAX_Fig3_2pib_emm <- data.frame(emmeans(IIAX_Fig3_2pib_lm, specs = "ExpCond"))
+p <- anova(IIAX_Fig3_2pib_lm)$`Pr(>F)` 
 
-# IIAX_Fig3_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),
-#                        data = IIAX_cf)
-# IIAX_Fig3_Av_emm <- data.frame(emmeans(IIAX_Fig3_Av_lm, specs = "ExpCond"))
-# if ((l.2 <- anova(IIAX_Fig3_Av_lm)$`Pr(>F)`) <0.05) {
-#
-#   IIAX_Fig3_Av_hoc <- summary(glht(IIAX_Fig3_Av_lm, linfct = mcp(ExpCond = "Tukey")))
-#
-# } else{
-#   NA
-# }
-#
-# IIAX_Fig3_2pib_lm <- lmer(twopib ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),
-#                          data = IIAX_cf)
-# IIAX_Fig3_2pib_emm <- data.frame(emmeans(IIAX_Fig3_2pib_lm, specs = "ExpCond"))
-# if ((p <- anova(IIAX_Fig3_2pib_lm)$`Pr(>F)`) <0.05) {
-#
-#   IIAX_Fig3_2pib_hoc <- summary(glht(IIAX_Fig3_2pib_lm, linfct = mcp(ExpCond = "Tukey")))
-#
-# } else{
-#   NA
-# }
-# IIAX_Fig3_ton_lm <- lmer(ton ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),
-#                         data = IIAX_cf)
-# IIAX_Fig3_ton_emm <- data.frame(emmeans(IIAX_Fig3_ton_lm, specs = "ExpCond"))
-# if ((q <- anova(IIAX_Fig3_ton_lm)$`Pr(>F)`) <0.05) {
-#
-#   IIAX_Fig3_ton_hoc <- summary(glht(IIAX_Fig3_ton_lm, linfct = mcp(ExpCond = "Tukey")))
-#
-# } else{
-#   NA
-# }
-
+IIAX_Fig3_ton_lm <- lmer(ton ~ ExpCond + (1 | SubjectNum),data = IIAX_cf)
+IIAX_Fig3_ton_emm <- data.frame(emmeans(IIAX_Fig3_ton_lm, specs = "ExpCond"))
+q <- anova(IIAX_Fig3_ton_lm)$`Pr(>F)`
 
 Fig_3_cf_emm <- rbind(I_Fig3_B_emm,
                       I_Fig3_Ae_emm,
@@ -501,23 +360,11 @@ Fig_3_cf_anova <- data.frame(rbind(i,i.1, i.2, j, k, l, l.1, l.2, m,n, o, o.1, o
                    "B","Aelastic","Aviscous","2pib","ton")) 
 colnames(Fig_3_cf_anova) <- c("p_value", "Fiber_Type", "Value")
 
-Fig_3_cf_posthoc <- data.frame(rbind(table_glht(I_Fig3_Ae_hoc),
-                                  table_glht(I_Fig3_2pib_hoc),
-                                  table_glht(I_Fig3_ton_hoc),
-                                  table_glht(IIA_Fig3_B_hoc),
-                                  table_glht(IIA_Fig3_2pib_hoc),
-                                  table_glht(IIA_Fig3_ton_hoc)
-                                  )) %>% 
-  mutate(Fiber_Type = c("I", "I", "I", "IIA", "IIA", "IIA"), .before = Estimate) %>% 
-  mutate(Comparison = c("Fatigue - Control == 0","Fatigue - Control == 0","Fatigue - Control == 0",
-                        "Fatigue - Control == 0","Fatigue - Control == 0","Fatigue - Control == 0"),
-         .before = Fiber_Type)
 
-Fig3_cf <- list(Fig_3_cf_emm,Fig_3_cf_anova,Fig_3_cf_posthoc)
+Fig3_cf <- list(Fig_3_cf_emm,Fig_3_cf_anova)
 
-names(Fig3_cf) <- c("Figure 3 Control v Fatigue -EMM", 
-                    "Figure 3 Control v Fatigue -Anova", 
-                    "Figure 3 Control v Fatigue - Posthoc")
+names(Fig3_cf) <- c("Figure 3 CvF -EMM", 
+                    "Figure 3 CvF -Anova")
 
 writexl::write_xlsx(Fig3_cf, path = "Woods_AuroraMaster_Figure3_ControlvFatigue.xlsx")
 
@@ -537,111 +384,47 @@ I_cdatp <- con_fatdatp_data %>% filter(FiberType == "I")
 
 I_Fig3_gr2_B_lm <- lmer(BkNm2 ~ ExpCond + (1 + as.factor(ExpCond)| SubjectNum),data = I_cdatp)
 I_Fig3_gr2_B_emm <- data.frame(emmeans(I_Fig3_gr2_B_lm, specs = "ExpCond"))
-if ((r <- anova(I_Fig3_gr2_B_lm)$`Pr(>F)`) <0.05) {
-  
-  I_Fig3_gr2_B_hoc <- summary(glht(I_Fig3_gr2_B_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+r <- anova(I_Fig3_gr2_B_lm)$`Pr(>F)`
 
-I_Fig3_gr2_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                     data = I_cdatp)
+I_Fig3_gr2_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I_cdatp)
 I_Fig3_gr2_Ae_emm <- data.frame(emmeans(I_Fig3_gr2_Ae_lm, specs = "ExpCond"))
-if ((r.1 <- anova(I_Fig3_gr2_Ae_lm)$`Pr(>F)`) <0.05) {
-  
-  I_Fig3_gr2_Ae_hoc <- summary(glht(I_Fig3_gr2_Ae_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+r.1 <- anova(I_Fig3_gr2_Ae_lm)$`Pr(>F)`
 
-I_Fig3_gr2_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                     data = I_cdatp)
+I_Fig3_gr2_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I_cdatp)
 I_Fig3_gr2_Av_emm <- data.frame(emmeans(I_Fig3_gr2_Av_lm, specs = "ExpCond"))
-if ((r.2 <- anova(I_Fig3_gr2_Av_lm)$`Pr(>F)`) <0.05) {
-  
-  I_Fig3_gr2_Av_hoc <- summary(glht(I_Fig3_gr2_Av_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+r.2 <- anova(I_Fig3_gr2_Av_lm)$`Pr(>F)`
 
 
 I_Fig3_gr2_2pib_lm <- lmer(twopib ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I_cdatp)
 I_Fig3_gr2_2pib_emm <- data.frame(emmeans(I_Fig3_gr2_2pib_lm, specs = "ExpCond"))
-if ((s <- anova(I_Fig3_gr2_2pib_lm)$`Pr(>F)`) <0.05) {
-  
-  I_Fig3_gr2_B_hoc <- summary(glht(I_Fig3_gr2_2pib_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+s <- anova(I_Fig3_gr2_2pib_lm)$`Pr(>F)`
 
 I_Fig3_gr2_ton_lm <- lmer(ton ~ ExpCond + (1  + as.factor(ExpCond) | SubjectNum), data = I_cdatp)
 I_Fig3_gr2_ton_emm <- data.frame(emmeans(I_Fig3_gr2_ton_lm, specs = "ExpCond"))
-if ((t <- anova(I_Fig3_gr2_ton_lm)$`Pr(>F)`) <0.05) {
-  
-  I_Fig3_gr2_B_hoc <- summary(glht(I_Fig3_gr2_ton_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+t <- anova(I_Fig3_gr2_ton_lm)$`Pr(>F)`
 
 # I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA 
 I.IIA_cdatp <- con_fatdatp_data %>% filter(Fibertypenum == 4)
 
 I.IIA_Fig3_gr2_B_lm <- lmer(BkNm2 ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I.IIA_cdatp)
 I.IIA_Fig3_gr2_B_emm <- data.frame(emmeans(I.IIA_Fig3_gr2_B_lm, specs = "ExpCond"))
-if ((u <- anova(I.IIA_Fig3_gr2_B_lm)$`Pr(>F)`) <0.05) {
-  
-  I.IIA_Fig3_gr2_B_hoc <- summary(glht(I.IIA_Fig3_gr2_B_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+u <- anova(I.IIA_Fig3_gr2_B_lm)$`Pr(>F)`
 
-I.IIA_Fig3_gr2_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                         data = I.IIA_cdatp)
+I.IIA_Fig3_gr2_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I.IIA_cdatp)
 I.IIA_Fig3_gr2_Ae_emm <- data.frame(emmeans(I.IIA_Fig3_gr2_Ae_lm, specs = "ExpCond"))
-if ((u.1 <- anova(I.IIA_Fig3_gr2_Ae_lm)$`Pr(>F)`) <0.05) {
-  
-  I.IIA_Fig3_gr2_Ae_hoc <- summary(glht(I.IIA_Fig3_gr2_Ae_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+u.1 <- anova(I.IIA_Fig3_gr2_Ae_lm)$`Pr(>F)`
 
-I.IIA_Fig3_gr2_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                         data = I.IIA_cdatp)
+I.IIA_Fig3_gr2_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I.IIA_cdatp)
 I.IIA_Fig3_gr2_Av_emm <- data.frame(emmeans(I.IIA_Fig3_gr2_Av_lm, specs = "ExpCond"))
-if ((u.2 <- anova(I.IIA_Fig3_gr2_Av_lm)$`Pr(>F)`) <0.05) {
-  
-  I.IIA_Fig3_gr2_Av_hoc <- summary(glht(I.IIA_Fig3_gr2_Av_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+u.2 <- anova(I.IIA_Fig3_gr2_Av_lm)$`Pr(>F)`
 
 I.IIA_Fig3_gr2_2pib_lm <- lmer(twopib ~ ExpCond + (1 + as.factor(ExpCond)| SubjectNum),data = I.IIA_cdatp)
 I.IIA_Fig3_gr2_2pib_emm <- data.frame(emmeans(I.IIA_Fig3_gr2_2pib_lm, specs = "ExpCond"))
-if ((v <- anova(I.IIA_Fig3_gr2_2pib_lm)$`Pr(>F)`) <0.05) {
-  
-  I.IIA_Fig3_gr2_B_hoc <- summary(glht(I.IIA_Fig3_gr2_2pib_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+v <- anova(I.IIA_Fig3_gr2_2pib_lm)$`Pr(>F)`
 
 I.IIA_Fig3_gr2_ton_lm <- lmer(ton ~ ExpCond + (1 + as.factor(ExpCond) |SubjectNum),data = I.IIA_cdatp)
 I.IIA_Fig3_gr2_ton_emm <- data.frame(emmeans(I.IIA_Fig3_gr2_ton_lm, specs = "ExpCond"))
-if ((w <- anova(I.IIA_Fig3_gr2_ton_lm)$`Pr(>F)`) <0.05) {
-  
-  I.IIA_Fig3_gr2_B_hoc <- summary(glht(I.IIA_Fig3_gr2_ton_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+w <- anova(I.IIA_Fig3_gr2_ton_lm)$`Pr(>F)`
 
 
 # IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA 
@@ -649,111 +432,48 @@ IIA_cdatp <- con_fatdatp_data %>% filter(Fibertypenum == 2)
 
 IIA_Fig3_gr2_B_lm <- lmer(BkNm2 ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIA_cdatp)
 IIA_Fig3_gr2_B_emm <- data.frame(emmeans(IIA_Fig3_gr2_B_lm, specs = "ExpCond"))
-if ((x <- anova(IIA_Fig3_gr2_B_lm)$`Pr(>F)`) <0.05) {
-  
-  IIA_Fig3_gr2_B_hoc <- summary(glht(IIA_Fig3_gr2_B_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+x <- anova(IIA_Fig3_gr2_B_lm)$`Pr(>F)`
 
-IIA_Fig3_gr2_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                             data = IIA_cdatp)
+IIA_Fig3_gr2_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIA_cdatp)
 IIA_Fig3_gr2_Ae_emm <- data.frame(emmeans(IIA_Fig3_gr2_Ae_lm, specs = "ExpCond"))
-if ((x.1 <- anova(IIA_Fig3_gr2_Ae_lm)$`Pr(>F)`) <0.05) {
-  
-  IIA_Fig3_gr2_Ae_hoc <- summary(glht(IIA_Fig3_gr2_Ae_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+x.1 <- anova(IIA_Fig3_gr2_Ae_lm)$`Pr(>F)`
 
-IIA_Fig3_gr2_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                             data = IIA_cdatp)
+IIA_Fig3_gr2_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIA_cdatp)
 IIA_Fig3_gr2_Av_emm <- data.frame(emmeans(IIA_Fig3_gr2_Av_lm, specs = "ExpCond"))
-if ((x.2 <- anova(IIA_Fig3_gr2_Av_lm)$`Pr(>F)`) <0.05) {
-  
-  IIA_Fig3_gr2_Av_hoc <- summary(glht(IIA_Fig3_gr2_Av_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+x.2 <- anova(IIA_Fig3_gr2_Av_lm)$`Pr(>F)`
 
 IIA_Fig3_gr2_2pib_lm <- lmer(twopib ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIA_cdatp)
 IIA_Fig3_gr2_2pib_emm <- data.frame(emmeans(IIA_Fig3_gr2_2pib_lm, specs = "ExpCond"))
-if ((y <- anova(IIA_Fig3_gr2_2pib_lm)$`Pr(>F)`) <0.05) {
-  
-  IIA_Fig3_gr2_B_hoc <- summary(glht(IIA_Fig3_gr2_2pib_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+y <- anova(IIA_Fig3_gr2_2pib_lm)$`Pr(>F)`
 
 IIA_Fig3_gr2_ton_lm <- lmer(ton ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIA_cdatp)
 IIA_Fig3_gr2_ton_emm <- data.frame(emmeans(IIA_Fig3_gr2_ton_lm, specs = "ExpCond"))
-if ((z <- anova(IIA_Fig3_gr2_ton_lm)$`Pr(>F)`) <0.05) {
-  
-  IIA_Fig3_gr2_B_hoc <- summary(glht(IIA_Fig3_gr2_ton_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+z <- anova(IIA_Fig3_gr2_ton_lm)$`Pr(>F)`
 
 # IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX
 IIAX_cdatp <- con_fatdatp_data %>% filter(Fibertypenum == 5)
 
 IIAX_Fig3_gr2_B_lm <- lmer(BkNm2 ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIAX_cdatp)
 IIAX_Fig3_gr2_B_emm <- data.frame(emmeans(IIAX_Fig3_gr2_B_lm, specs = "ExpCond"))
-if ((z.1 <- anova(IIAX_Fig3_gr2_B_lm)$`Pr(>F)`) <0.05) {
-  
-  IIAX_Fig3_gr2_B_hoc <- summary(glht(IIAX_Fig3_gr2_B_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+z.1 <- anova(IIAX_Fig3_gr2_B_lm)$`Pr(>F)`
 
 
-IIAX_Fig3_gr2_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                             data = IIAX_cdatp)
+IIAX_Fig3_gr2_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIAX_cdatp)
 IIAX_Fig3_gr2_Ae_emm <- data.frame(emmeans(IIAX_Fig3_gr2_Ae_lm, specs = "ExpCond"))
-if ((z.2 <- anova(IIAX_Fig3_gr2_Ae_lm)$`Pr(>F)`) <0.05) {
-  
-  IIAX_Fig3_gr2_Ae_hoc <- summary(glht(IIAX_Fig3_gr2_Ae_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+z.2 <- anova(IIAX_Fig3_gr2_Ae_lm)$`Pr(>F)`
 
-IIAX_Fig3_gr2_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), 
-                             data = IIAX_cdatp)
+IIAX_Fig3_gr2_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIAX_cdatp)
 IIAX_Fig3_gr2_Av_emm <- data.frame(emmeans(IIAX_Fig3_gr2_Av_lm, specs = "ExpCond"))
-if ((z.3 <- anova(IIAX_Fig3_gr2_Av_lm)$`Pr(>F)`) <0.05) {
-  
-  IIAX_Fig3_gr2_Av_hoc <- summary(glht(IIAX_Fig3_gr2_Av_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+z.3 <- anova(IIAX_Fig3_gr2_Av_lm)$`Pr(>F)`
 
 IIAX_Fig3_gr2_2pib_lm <- lmer(twopib ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIAX_cdatp)
 IIAX_Fig3_gr2_2pib_emm <- data.frame(emmeans(IIAX_Fig3_gr2_2pib_lm, specs = "ExpCond"))
-if ((zz <- anova(IIAX_Fig3_gr2_2pib_lm)$`Pr(>F)`) <0.05) {
-  
-  IIAX_Fig3_gr2_B_hoc <- summary(glht(IIAX_Fig3_gr2_2pib_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+zz <- anova(IIAX_Fig3_gr2_2pib_lm)$`Pr(>F)`
+
 
 IIAX_Fig3_gr2_ton_lm <- lmer(ton ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIAX_cdatp)
 IIAX_Fig3_gr2_ton_emm <- data.frame(emmeans(IIAX_Fig3_gr2_ton_lm, specs = "ExpCond"))
-if ((zzz <- anova(IIAX_Fig3_gr2_ton_lm)$`Pr(>F)`) <0.05) {
-  
-  IIAX_Fig3_gr2_B_hoc <- summary(glht(IIAX_Fig3_gr2_ton_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+zzz <- anova(IIAX_Fig3_gr2_ton_lm)$`Pr(>F)`
 
 Fig_3_cdatp_emm <- rbind(I_Fig3_gr2_B_emm,
                       I_Fig3_gr2_Ae_emm,
@@ -798,17 +518,10 @@ Fig_3_cdatp_anova <- data.frame(rbind(r,r.1,r.2,s,t,u,u.1,u.2,v,w,x,x.1,x.2,y,z,
 
 colnames(Fig_3_cdatp_anova) <- c("p_value", "Fiber_Type", "Value")
 
-Fig_3_cdatp_posthoc <- data.frame(rbind(table_glht(I_Fig3_gr2_Ae_hoc),
-                                     table_glht(IIA_Fig3_gr2_B_hoc))) %>% 
-  mutate(Fiber_Type = c("I", "IIA"), .before = Estimate) %>% 
-  mutate(Comparison = c("Fatigue - Control == 0","Fatigue - Control == 0"),
-         .before = Fiber_Type)
+Fig3_cdatp <- list(Fig_3_cdatp_emm,Fig_3_cdatp_anova)
 
-Fig3_cdatp <- list(Fig_3_cdatp_emm,Fig_3_cdatp_anova,Fig_3_cdatp_posthoc)
-
-names(Fig3_cdatp) <- c("Figure 3 Control vs dATP -EMM",
-                       "Figure 3Control vs dATP-Anova", 
-                       "Figure 3Control vs dATP-Posthoc")
+names(Fig3_cdatp) <- c("Figure 3 C v dATP -EMM",
+                       "Figure 3 C vs dATP - Anova")
 
 writexl::write_xlsx(Fig3_cdatp, path = "Woods_AuroraMaster_Figure3_ControlvFatiguedATP.xlsx")
 
@@ -826,160 +539,69 @@ I_ffdatp <- fat_v_datp %>% filter(FiberType == "I")
 
 I_Fig3_fvf_B_lm <- lmer(BkNm2 ~ ExpCond + (1 | SubjectNum),data = I_ffdatp)
 I_Fig3_fvf_B_emm <- data.frame(emmeans(I_Fig3_fvf_B_lm, specs = "ExpCond"))
-if ((aa <- anova(I_Fig3_fvf_B_lm)$`Pr(>F)`) <0.05) {
-  
-  I_Fig3_fvf_B_hoc <- summary(glht(I_Fig3_fvf_B_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+aa <- anova(I_Fig3_fvf_B_lm)$`Pr(>F)`
 
 I_Fig3_fvf_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 | SubjectNum),data = I_ffdatp)
 I_Fig3_fvf_Ae_emm <- data.frame(emmeans(I_Fig3_fvf_Ae_lm, specs = "ExpCond"))
-if ((aa.1 <- anova(I_Fig3_fvf_Ae_lm)$`Pr(>F)`) <0.05) {
-  
-  I_Fig3_fvf_Ae_hoc <- summary(glht(I_Fig3_fvf_Ae_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+aa.1 <- anova(I_Fig3_fvf_Ae_lm)$`Pr(>F)`
 
 I_Fig3_fvf_Av_lm <- lmer(Aviscous ~ ExpCond + (1 | SubjectNum),data = I_ffdatp)
 I_Fig3_fvf_Av_emm <- data.frame(emmeans(I_Fig3_fvf_Av_lm, specs = "ExpCond"))
-if ((aa.2 <- anova(I_Fig3_fvf_Av_lm)$`Pr(>F)`) <0.05) {
-  
-  I_Fig3_fvf_Av_hoc <- summary(glht(I_Fig3_fvf_Av_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+aa.2 <- anova(I_Fig3_fvf_Av_lm)$`Pr(>F)`
 
 I_Fig3_fvf_2pib_lm <- lmer(twopib ~ ExpCond + (1 | SubjectNum),data = I_ffdatp)
 I_Fig3_fvf_2pib_emm <- data.frame(emmeans(I_Fig3_fvf_2pib_lm, specs = "ExpCond"))
-if ((ab <- anova(I_Fig3_fvf_2pib_lm)$`Pr(>F)`) <0.05) {
-  
-  I_Fig3_fvf_2pib_hoc <- summary(glht(I_Fig3_fvf_2pib_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+ab <- anova(I_Fig3_fvf_2pib_lm)$`Pr(>F)`
 
 I_Fig3_fvf_ton_lm <- lmer(ton ~ ExpCond + (1 | SubjectNum),data = I_ffdatp)
 I_Fig3_fvf_ton_emm <- data.frame(emmeans(I_Fig3_fvf_ton_lm, specs = "ExpCond"))
-if ((ac <- anova(I_Fig3_fvf_ton_lm)$`Pr(>F)`) <0.05) {
-  
-  I_Fig3_fvf_ton_hoc <- summary(glht(I_Fig3_fvf_ton_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+ac <- anova(I_Fig3_fvf_ton_lm)$`Pr(>F)`
 
 # MHC I/IIA............................................................................
 I.IIA_ffdatp <- fat_v_datp %>% filter(FiberType == "I/IIA")
 
 I.IIA_Fig3_fvf_B_lm <- lmer(BkNm2 ~ ExpCond + (1 | SubjectNum),data = I.IIA_ffdatp)
 I.IIA_Fig3_fvf_B_emm <- data.frame(emmeans(I.IIA_Fig3_fvf_B_lm, specs = "ExpCond"))
-if ((ad <- anova(I.IIA_Fig3_fvf_B_lm)$`Pr(>F)`) <0.05) {
-  
-  I.IIA_Fig3_fvf_B_hoc <- summary(glht(I.IIA_Fig3_fvf_B_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+ad <- anova(I.IIA_Fig3_fvf_B_lm)$`Pr(>F)`
 
 I.IIA_Fig3_fvf_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 | SubjectNum),data = I.IIA_ffdatp)
 I.IIA_Fig3_fvf_Ae_emm <- data.frame(emmeans(I.IIA_Fig3_fvf_Ae_lm, specs = "ExpCond"))
-if ((ad.1 <- anova(I.IIA_Fig3_fvf_Ae_lm)$`Pr(>F)`) <0.05) {
-  
-  I.IIA_Fig3_fvf_Ae_hoc <- summary(glht(I.IIA_Fig3_fvf_Ae_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+ad.1 <- anova(I.IIA_Fig3_fvf_Ae_lm)$`Pr(>F)`
 
 I.IIA_Fig3_fvf_Av_lm <- lmer(Aviscous ~ ExpCond + (1 | SubjectNum),data = I.IIA_ffdatp)
 I.IIA_Fig3_fvf_Av_emm <- data.frame(emmeans(I.IIA_Fig3_fvf_Av_lm, specs = "ExpCond"))
-if ((ad.2 <- anova(I.IIA_Fig3_fvf_Av_lm)$`Pr(>F)`) <0.05) {
-  
-  I.IIA_Fig3_fvf_Av_hoc <- summary(glht(I.IIA_Fig3_fvf_Av_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+ad.2 <- anova(I.IIA_Fig3_fvf_Av_lm)$`Pr(>F)`
 
 I.IIA_Fig3_fvf_2pib_lm <- lmer(twopib ~ ExpCond + (1 | SubjectNum),data = I.IIA_ffdatp)
 I.IIA_Fig3_fvf_2pib_emm <- data.frame(emmeans(I.IIA_Fig3_fvf_2pib_lm, specs = "ExpCond"))
-if ((ae <- anova(I.IIA_Fig3_fvf_2pib_lm)$`Pr(>F)`) <0.05) {
-  
-  I.IIA_Fig3_fvf_2pib_hoc <- summary(glht(I.IIA_Fig3_fvf_2pib_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+ae <- anova(I.IIA_Fig3_fvf_2pib_lm)$`Pr(>F)`
 
 I.IIA_Fig3_fvf_ton_lm <- lmer(ton ~ ExpCond + (1 | SubjectNum),data = I.IIA_ffdatp)
 I.IIA_Fig3_fvf_ton_emm <- data.frame(emmeans(I.IIA_Fig3_fvf_ton_lm, specs = "ExpCond"))
-if ((af <- anova(I.IIA_Fig3_fvf_ton_lm)$`Pr(>F)`) <0.05) {
-  
-  I.IIA_Fig3_fvf_ton_hoc <- summary(glht(I.IIA_Fig3_fvf_ton_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
-
+af <- anova(I.IIA_Fig3_fvf_ton_lm)$`Pr(>F)`
 # MHC IIA ...............................................................................
 
 IIA_ffdatp <- fat_v_datp %>% filter(FiberType == "IIA")
 
 IIA_Fig3_fvf_B_lm <- lmer(BkNm2 ~ ExpCond + (1 | SubjectNum), data = IIA_ffdatp)
 IIA_Fig3_fvf_B_emm <- data.frame(emmeans(IIA_Fig3_fvf_B_lm, specs = "ExpCond"))
-if ((ag <- anova(IIA_Fig3_fvf_B_lm)$`Pr(>F)`) <0.05) {
-  
-  IIA_Fig3_fvf_B_hoc <- summary(glht(IIA_Fig3_fvf_B_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+ag <- anova(IIA_Fig3_fvf_B_lm)$`Pr(>F)`
 
 IIA_Fig3_fvf_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 | SubjectNum),data = IIA_ffdatp)
 IIA_Fig3_fvf_Ae_emm <- data.frame(emmeans(IIA_Fig3_fvf_Ae_lm, specs = "ExpCond"))
-if ((ag.1 <- anova(IIA_Fig3_fvf_Ae_lm)$`Pr(>F)`) <0.05) {
-  
-  IIA_Fig3_fvf_Ae_hoc <- summary(glht(IIA_Fig3_fvf_Ae_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+ag.1 <- anova(IIA_Fig3_fvf_Ae_lm)$`Pr(>F)`
 
 IIA_Fig3_fvf_Av_lm <- lmer(Aviscous ~ ExpCond + (1 | SubjectNum),data = IIA_ffdatp)
 IIA_Fig3_fvf_Av_emm <- data.frame(emmeans(IIA_Fig3_fvf_Av_lm, specs = "ExpCond"))
-if ((ag.2 <- anova(IIA_Fig3_fvf_Av_lm)$`Pr(>F)`) <0.05) {
-  
-  IIA_Fig3_fvf_Av_hoc <- summary(glht(IIA_Fig3_fvf_Av_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+ag.2 <- anova(IIA_Fig3_fvf_Av_lm)$`Pr(>F)`
 
 IIA_Fig3_fvf_2pib_lm <- lmer(twopib ~ ExpCond + (1 | SubjectNum),data = IIA_ffdatp)
 IIA_Fig3_fvf_2pib_emm <- data.frame(emmeans(IIA_Fig3_fvf_2pib_lm, specs = "ExpCond"))
-if ((ah <- anova(IIA_Fig3_fvf_2pib_lm)$`Pr(>F)`) <0.05) {
-  
-  IIA_Fig3_fvf_2pib_hoc <- summary(glht(IIA_Fig3_fvf_2pib_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+ah <- anova(IIA_Fig3_fvf_2pib_lm)$`Pr(>F)`
 
 IIA_Fig3_fvf_ton_lm <- lmer(ton ~ ExpCond + (1 | SubjectNum),data = IIA_ffdatp)
 IIA_Fig3_fvf_ton_emm <- data.frame(emmeans(IIA_Fig3_fvf_ton_lm, specs = "ExpCond"))
-if ((ai <- anova(IIA_Fig3_fvf_ton_lm)$`Pr(>F)`) <0.05) {
-  
-  IIA_Fig3_fvf_ton_hoc <- summary(glht(IIA_Fig3_fvf_ton_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+ai <- anova(IIA_Fig3_fvf_ton_lm)$`Pr(>F)`
 
 # MHC IIAX .......................................................................
 
@@ -987,54 +609,24 @@ IIAX_ffdatp <- fat_v_datp %>% filter(FiberType == "IIA/IIX")
 
 IIAX_Fig3_fvf_B_lm <- lmer(BkNm2 ~ ExpCond + (1 | SubjectNum), data = IIAX_ffdatp)
 IIAX_Fig3_fvf_B_emm <- data.frame(emmeans(IIAX_Fig3_fvf_B_lm, specs = "ExpCond"))
-if ((aj <- anova(IIAX_Fig3_fvf_B_lm)$`Pr(>F)`) <0.05) {
-  
-  IIAX_Fig3_fvf_B_hoc <- summary(glht(IIAX_Fig3_fvf_B_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+aj <- anova(IIAX_Fig3_fvf_B_lm)$`Pr(>F)`
 
 IIAX_Fig3_fvf_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 | SubjectNum),data = IIAX_ffdatp)
 IIAX_Fig3_fvf_Ae_emm <- data.frame(emmeans(IIAX_Fig3_fvf_Ae_lm, specs = "ExpCond"))
-if ((aj.1 <- anova(IIAX_Fig3_fvf_Ae_lm)$`Pr(>F)`) <0.05) {
-  
-  IIAX_Fig3_fvf_Ae_hoc <- summary(glht(IIAX_Fig3_fvf_Ae_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+aj.1 <- anova(IIAX_Fig3_fvf_Ae_lm)$`Pr(>F)`
 
 IIAX_Fig3_fvf_Av_lm <- lmer(Aviscous ~ ExpCond + (1 | SubjectNum),data = IIAX_ffdatp)
 IIAX_Fig3_fvf_Av_emm <- data.frame(emmeans(IIAX_Fig3_fvf_Av_lm, specs = "ExpCond"))
-if ((aj.2 <- anova(IIAX_Fig3_fvf_Av_lm)$`Pr(>F)`) <0.05) {
-  
-  IIAX_Fig3_fvf_Av_hoc <- summary(glht(IIAX_Fig3_fvf_Av_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+aj.2 <- anova(IIAX_Fig3_fvf_Av_lm)$`Pr(>F)`
 
 
 IIAX_Fig3_fvf_2pib_lm <- lmer(twopib ~ ExpCond + (1 | SubjectNum),data = IIAX_ffdatp)
 IIAX_Fig3_fvf_2pib_emm <- data.frame(emmeans(IIAX_Fig3_fvf_2pib_lm, specs = "ExpCond"))
-if ((ak <- anova(IIAX_Fig3_fvf_2pib_lm)$`Pr(>F)`) <0.05) {
-  
-  IIAX_Fig3_fvf_2pib_hoc <- summary(glht(IIAX_Fig3_fvf_2pib_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+ak <- anova(IIAX_Fig3_fvf_2pib_lm)$`Pr(>F)`
 
 IIAX_Fig3_fvf_ton_lm <- lmer(ton ~ ExpCond + (1 | SubjectNum),data = IIAX_ffdatp)
 IIAX_Fig3_fvf_ton_emm <- data.frame(emmeans(IIAX_Fig3_fvf_ton_lm, specs = "ExpCond"))
-if ((al <- anova(IIAX_Fig3_fvf_ton_lm)$`Pr(>F)`) <0.05) {
-  
-  IIAX_Fig3_fvf_ton_hoc <- summary(glht(IIAX_Fig3_fvf_ton_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+al <- anova(IIAX_Fig3_fvf_ton_lm)$`Pr(>F)`
 
 
 
@@ -1081,27 +673,10 @@ Fig_3_fvf_anova <- data.frame(rbind(aa,aa.1,aa.2,ab,ac,ad,ad.1,ad.2,ae,af,ag,ag.
 
 colnames(Fig_3_fvf_anova) <- c("p_value", "Fiber_Type", "Value")
 
-Fig_3_fvf_posthoc <- data.frame(rbind(table_glht(I_Fig3_fvf_B_hoc),
-                                      table_glht(I_Fig3_Ae_hoc),
-                                      table_glht(I_Fig3_fvf_Av_hoc),
-                                      table_glht(I_Fig3_fvf_2pib_hoc),
-                                      table_glht(I_Fig3_fvf_ton_hoc),
-                                      table_glht(I.IIA_Fig3_fvf_B_hoc),
-                                      table_glht(I.IIA_Fig3_fvf_2pib_hoc),
-                                      table_glht(I.IIA_Fig3_fvf_ton_hoc),
-                                      table_glht(IIA_Fig3_fvf_B_hoc),
-                                      table_glht(IIA_Fig3_fvf_B_hoc),
-                                      
-                                        )) %>% 
-  mutate(Fiber_Type = c("I", "IIA"), .before = Estimate) %>% 
-  mutate(Comparison = c("Fatigue - Control == 0","Fatigue - Control == 0"),
-         .before = Fiber_Type)
+Fig3_fvf <- list(Fig_3_cdatp_emm,Fig_3_cdatp_anova)
 
-Fig3_fvf <- list(Fig_3_cdatp_emm,Fig_3_cdatp_anova,Fig_3_cdatp_posthoc)
-
-names(Fig3_fvf) <- c("Figure 3 Fatigue vs dATP -EMM",
-                       "Figure 3 Fatigue vs dATP-Anova", 
-                       "Figure 3 Fatgie vs dATP-Posthoc")
+names(Fig3_fvf) <- c("Figure 3 Fat vs dATP - EMM",
+                       "Figure 3 Fat vs dATP-Anova")
 
 writexl::write_xlsx(Fig3_cdatp, path = "Woods_AuroraMaster_Figure3_ControlvFatiguedATP.xlsx")
 
@@ -1116,23 +691,13 @@ I_Fig4 <- read_excel("Aurora_Masters_CS.xlsx") %>%
 
 I_Fig4_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = I_Fig4)
 I_Fig4_Po_emm <- data.frame(emmeans(I_Fig4_Po_lm, specs = "ExpCond"))  
-if ((am <- anova(I_Fig4_Po_lm)$`Pr(>F)`) <0.05) {
-  
-  I_Fig4_Po_hoc <- summary(glht(I_Fig4_Po_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+am <- anova(I_Fig4_Po_lm)$`Pr(>F)`
 
 I_Fig4_Force_lm <- lmer(Force ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = I_Fig4)
 I_Fig4_Force_emm <- data.frame(emmeans(I_Fig4_Force_lm, specs = "ExpCond"))  
-if ((an <- anova(I_Fig4_Force_lm)$`Pr(>F)`) <0.05) {
-  
-  I_Fig4_Force_hoc <- summary(glht(I_Fig4_Force_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+an <- anova(I_Fig4_Force_lm)$`Pr(>F)`
+
+
 
 IIA_Fig4 <- read_excel("Aurora_Masters_CS.xlsx") %>%
   filter(Fibertypenum == 2) %>% 
@@ -1143,20 +708,41 @@ IIA_Fig4 <- read_excel("Aurora_Masters_CS.xlsx") %>%
 
 IIA_Fig4_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = IIA_Fig4)
 IIA_Fig4_Po_emm <- data.frame(emmeans(IIA_Fig4_Po_lm, specs = "ExpCond"))  
-if ((ao <- anova(IIA_Fig4_Po_lm)$`Pr(>F)`) <0.05) {
-  
-  IIA_Fig4_Po_hoc <- summary(glht(IIA_Fig4_Po_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
+ao <- anova(IIA_Fig4_Po_lm)$`Pr(>F)`
 
 IIA_Fig4_Force_lm <- lmer(Force ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = IIA_Fig4)
 IIA_Fig4_Force_emm <- data.frame(emmeans(IIA_Fig4_Force_lm, specs = "ExpCond"))  
-if ((ap <- anova(IIA_Fig4_Force_lm)$`Pr(>F)`) <0.05) {
+ap <- anova(IIA_Fig4_Force_lm)$`Pr(>F)`
+
+Fig4_emm <- rbind(I_Fig4_Po_emm,
+                  I_Fig4_Force_emm,
+                  IIA_Fig4_Po_emm,
+                  IIA_Fig4_Force_emm) %>%
+  mutate(Fiber_Type = c("I", "I","I", "I", "IIA", "IIA","IIA", "IIA"), .before = emmean) %>% 
+  mutate(Value = c("Force", "ST", "Force", "ST","Force", "ST", "Force", "ST"), .before = emmean)
+
   
-  IIA_Fig4_Force_hoc <- summary(glht(IIA_Fig4_Force_lm, linfct = mcp(ExpCond = "Tukey")))
+ Fig4_anova <- data.frame(rbind(am, an, ao, ap)) %>% 
+   mutate(Fiber_Type = c("I", "I", "IIA", "IIA")) %>% 
+   mutate(Value = c("Force", "ST", "Force", "ST"))
   
-} else{
-  NA
-}
+ colnames( Fig4_anova) <- c("p_value", "Fiber_Type", "Value")
+ names(Fig4_anova) <- c("Figure 4- EMM",
+                      "Figure 4-Anova")
+
+ writexl::write_xlsx(Fig3_cdatp, path = "Woods_AuroraMaster_Figure4.xlsx")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
