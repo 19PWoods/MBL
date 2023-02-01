@@ -309,23 +309,23 @@ IIAX_cf <- con_fat_data %>% filter(Fibertypenum == 5)
 IIAX_Fig3_B_lm <- lmer(BkNm2 ~ ExpCond + (1 | SubjectNum),data = IIAX_cf)
 
 IIAX_Fig3_B_emm <- data.frame(emmeans(IIAX_Fig3_B_lm, specs = "ExpCond"))
-o <- anova(IIAX_Fig3_B_lm)$`Pr(>F)` 
+q.1 <- anova(IIAX_Fig3_B_lm)$`Pr(>F)` 
 
 IIAX_Fig3_Ae_lm <- lmer(Aelastic ~ ExpCond + (1  | SubjectNum),data = IIAX_cf)
 IIAX_Fig3_Ae_emm <- data.frame(emmeans(IIAX_Fig3_Ae_lm, specs = "ExpCond"))
-l.1 <- anova(IIAX_Fig3_Ae_lm)$`Pr(>F)`
+q.2 <- anova(IIAX_Fig3_Ae_lm)$`Pr(>F)`
 
 IIAX_Fig3_Av_lm <- lmer(Aviscous ~ ExpCond + (1  | SubjectNum),data = IIAX_cf)
 IIAX_Fig3_Av_emm <- data.frame(emmeans(IIAX_Fig3_Av_lm, specs = "ExpCond"))
-l.2 <- anova(IIAX_Fig3_Av_lm)$`Pr(>F)`
+q.3 <- anova(IIAX_Fig3_Av_lm)$`Pr(>F)`
 
 IIAX_Fig3_2pib_lm <- lmer(twopib ~ ExpCond + (1 | SubjectNum),data = IIAX_cf)
 IIAX_Fig3_2pib_emm <- data.frame(emmeans(IIAX_Fig3_2pib_lm, specs = "ExpCond"))
-p <- anova(IIAX_Fig3_2pib_lm)$`Pr(>F)` 
+q.4 <- anova(IIAX_Fig3_2pib_lm)$`Pr(>F)` 
 
 IIAX_Fig3_ton_lm <- lmer(ton ~ ExpCond + (1 | SubjectNum),data = IIAX_cf)
 IIAX_Fig3_ton_emm <- data.frame(emmeans(IIAX_Fig3_ton_lm, specs = "ExpCond"))
-q <- anova(IIAX_Fig3_ton_lm)$`Pr(>F)`
+q.5 <- anova(IIAX_Fig3_ton_lm)$`Pr(>F)`
 
 Fig_3_cf_emm <- rbind(I_Fig3_B_emm,
                       I_Fig3_Ae_emm,
@@ -341,21 +341,30 @@ Fig_3_cf_emm <- rbind(I_Fig3_B_emm,
                       IIA_Fig3_Ae_emm,
                       IIA_Fig3_Av_emm,
                       IIA_Fig3_2pib_emm,
-                      IIA_Fig3_ton_emm) %>% 
+                      IIA_Fig3_ton_emm,
+                      IIAX_Fig3_B_emm,
+                      IIAX_Fig3_Ae_emm,
+                      IIAX_Fig3_Av_emm,
+                      IIAX_Fig3_2pib_emm,
+                      IIAX_Fig3_ton_emm) %>% 
   mutate(Fiber_Type = c("I","I","I",'I',"I","I","I","I","I","I",
                         "I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA",
-                        "IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA"
+                        "IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA",
+                        "IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX"
                         ), .before = emmean) %>% 
   mutate(Value = c("B","B", "Aelastic", "Aelastic", "Aviscous","Aviscous", "2pib", "2pib", "ton", "ton",
+                   "B","B", "Aelastic", "Aelastic", "Aviscous","Aviscous", "2pib", "2pib", "ton", "ton",
                    "B","B", "Aelastic", "Aelastic", "Aviscous","Aviscous", "2pib", "2pib", "ton", "ton",
                    "B","B", "Aelastic", "Aelastic", "Aviscous","Aviscous", "2pib", "2pib", "ton", "ton"
                    ), .before = emmean)
 
-Fig_3_cf_anova <- data.frame(rbind(i,i.1, i.2, j, k, l, l.1, l.2, m,n, o, o.1, o.2, p, q)) %>% 
+Fig_3_cf_anova <- data.frame(rbind(i,i.1, i.2, j, k, l, l.1, l.2, m,n, o, o.1, o.2, p, q, q.1,q.2,q.3,q.4,q.5)) %>% 
   mutate(Fiber_Type = c("I","I","I","I","I", 
                         "I/IIA","I/IIA","I/IIA","I/IIA","I/IIA",
-                        "IIA","IIA", "IIA","IIA","IIA")) %>%   
+                        "IIA","IIA", "IIA","IIA","IIA",
+                        "IIAX","IIAX","IIAX","IIAX","IIAX")) %>%   
   mutate(Value = c("B","Aelastic","Aviscous","2pib","ton",
+                   "B","Aelastic","Aviscous","2pib","ton",
                    "B","Aelastic","Aviscous","2pib","ton",
                    "B","Aelastic","Aviscous","2pib","ton")) 
 colnames(Fig_3_cf_anova) <- c("p_value", "Fiber_Type", "Value")
@@ -673,12 +682,12 @@ Fig_3_fvf_anova <- data.frame(rbind(aa,aa.1,aa.2,ab,ac,ad,ad.1,ad.2,ae,af,ag,ag.
 
 colnames(Fig_3_fvf_anova) <- c("p_value", "Fiber_Type", "Value")
 
-Fig3_fvf <- list(Fig_3_cdatp_emm,Fig_3_cdatp_anova)
+Fig3_fvf <- list(Fig_3_fvf_emm,Fig_3_fvf_anova)
 
 names(Fig3_fvf) <- c("Figure 3 Fat vs dATP - EMM",
                        "Figure 3 Fat vs dATP-Anova")
 
-writexl::write_xlsx(Fig3_cdatp, path = "Woods_AuroraMaster_Figure3_ControlvFatiguedATP.xlsx")
+writexl::write_xlsx(Fig3_fvf, path = "Woods_AuroraMaster_Figure3_FatiguevFatiguedATP.xlsx")
 
 ### Figure 4----------------------------------------------------------------------------
 
@@ -726,11 +735,15 @@ Fig4_emm <- rbind(I_Fig4_Po_emm,
    mutate(Fiber_Type = c("I", "I", "IIA", "IIA")) %>% 
    mutate(Value = c("Force", "ST", "Force", "ST"))
   
- colnames( Fig4_anova) <- c("p_value", "Fiber_Type", "Value")
- names(Fig4_anova) <- c("Figure 4- EMM",
+ colnames(Fig4_anova) <- c("p_value", "Fiber_Type", "Value")
+ 
+Fig4 <- list(Fig4_emm, Fig4_anova)
+  
+names(Fig4) <- c("Figure 4- EMM",
                       "Figure 4-Anova")
 
- writexl::write_xlsx(Fig3_cdatp, path = "Woods_AuroraMaster_Figure4.xlsx")
+
+writexl::write_xlsx(Fig4, path = "Woods_AuroraMaster_Figure4.xlsx")
 
 
 
