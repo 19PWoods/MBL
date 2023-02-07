@@ -689,6 +689,174 @@ names(Fig3_fvf) <- c("Figure 3 Fat vs dATP - EMM",
 
 writexl::write_xlsx(Fig3_fvf, path = "Woods_AuroraMaster_Figure3_FatiguevFatiguedATP.xlsx")
 
+### Figure 3: Fatigue Control vs Fatigue dATP Control ------------------------------------------
+control_fat <- read_excel("Aurora_Masters_CS.xlsx") %>%
+  filter(Fibertypenum %in% c(1,2,4,5)) %>%
+  filter(ExpCondnum == 1 & Grp == 1) %>% 
+  mutate(ExpCond = "Control_Fat")
+
+control_datp <- read_excel("Aurora_Masters_CS.xlsx") %>%
+  filter(Fibertypenum %in% c(1,2,4,5)) %>%
+  filter(ExpCondnum == 1 & Grp == 2) %>% 
+  mutate(ExpCond = "Control_dATP")
+
+control_df <- rbind(control_fat, control_datp) %>% 
+  group_by(ExpCondnum, SubjectNum, FiberType, Fibertypenum)
+
+# MHC I .................................................................
+I_cc <- control_df %>% filter(FiberType == "I")
+
+I_cc_B_lm <- lmer(BkNm2 ~ ExpCond + (1 | SubjectNum), data = I_cc)
+I_cc_B_emm <- data.frame(emmeans(I_cc_B_lm , specs = "ExpCond"))
+za <- anova(I_cc_B_lm)$`Pr(>F)`
+
+I_cc_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 | SubjectNum), data = I_cc)
+I_cc_Ae_emm <- data.frame(emmeans(I_cc_Ae_lm , specs = "ExpCond"))
+zb <- anova(I_cc_Ae_lm)$`Pr(>F)`
+
+I_cc_Av_lm <- lmer(Aviscous ~ ExpCond + (1 | SubjectNum), data = I_cc)
+I_cc_Av_emm <- data.frame(emmeans(I_cc_Av_lm , specs = "ExpCond"))
+zc <- anova(I_cc_Av_lm)$`Pr(>F)`
+
+I_cc_2pib_lm <- lmer(twopib ~ ExpCond + (1 | SubjectNum), data = I_cc)
+I_cc_2pib_emm <- data.frame(emmeans(I_cc_Av_lm , specs = "ExpCond"))
+zd <- anova(I_cc_2pib_lm)$`Pr(>F)`
+
+I_cc_ton_lm <- lmer(ton ~ ExpCond + (1 | SubjectNum), data = I_cc)
+I_cc_ton_emm <- data.frame(emmeans(I_cc_ton_lm , specs = "ExpCond"))
+ze <- anova(I_cc_ton_lm)$`Pr(>F)`
+
+
+# MHC I/IIA...............................................................
+I.IIA_cc <- control_df %>% filter(FiberType == "I/IIA")
+
+I.IIA_cc_B_lm <- lmer(BkNm2 ~ ExpCond + (1 | SubjectNum), data = I.IIA_cc)
+I.IIA_cc_B_emm <- data.frame(emmeans(I.IIA_cc_B_lm , specs = "ExpCond"))
+zf <- anova(I.IIA_cc_B_lm)$`Pr(>F)`
+
+I.IIA_cc_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 | SubjectNum), data = I.IIA_cc)
+I.IIA_cc_Ae_emm <- data.frame(emmeans(I.IIA_cc_Ae_lm , specs = "ExpCond"))
+zg <- anova(I.IIA_cc_Ae_lm)$`Pr(>F)`
+
+I.IIA_cc_Av_lm <- lmer(Aviscous ~ ExpCond + (1 | SubjectNum), data = I.IIA_cc)
+I.IIA_cc_Av_emm <- data.frame(emmeans(I.IIA_cc_Av_lm , specs = "ExpCond"))
+zh <- anova(I.IIA_cc_Av_lm)$`Pr(>F)`
+
+I.IIA_cc_2pib_lm <- lmer(twopib ~ ExpCond + (1 | SubjectNum), data = I.IIA_cc)
+I.IIA_cc_2pib_emm <- data.frame(emmeans(I.IIA_cc_Av_lm , specs = "ExpCond"))
+zi <- anova(I.IIA_cc_2pib_lm)$`Pr(>F)`
+
+I.IIA_cc_ton_lm <- lmer(ton ~ ExpCond + (1 | SubjectNum), data = I.IIA_cc)
+I.IIA_cc_ton_emm <- data.frame(emmeans(I.IIA_cc_ton_lm , specs = "ExpCond"))
+zj <- anova(I.IIA_cc_ton_lm)$`Pr(>F)`
+
+# MHC II.........................................................................
+IIA_cc <- control_df %>% filter(FiberType == "IIA")
+
+IIA_cc_B_lm <- lmer(BkNm2 ~ ExpCond + (1 | SubjectNum), data = IIA_cc)
+IIA_cc_B_emm <- data.frame(emmeans(IIA_cc_B_lm , specs = "ExpCond"))
+zk <- anova(IIA_cc_B_lm)$`Pr(>F)`
+
+IIA_cc_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 | SubjectNum), data = IIA_cc)
+IIA_cc_Ae_emm <- data.frame(emmeans(IIA_cc_Ae_lm , specs = "ExpCond"))
+zl <- anova(IIA_cc_Ae_lm)$`Pr(>F)`
+
+IIA_cc_Av_lm <- lmer(Aviscous ~ ExpCond + (1 | SubjectNum), data = IIA_cc)
+IIA_cc_Av_emm <- data.frame(emmeans(IIA_cc_Av_lm , specs = "ExpCond"))
+zm <- anova(IIA_cc_Av_lm)$`Pr(>F)`
+
+IIA_cc_2pib_lm <- lmer(twopib ~ ExpCond + (1 | SubjectNum), data = IIA_cc)
+IIA_cc_2pib_emm <- data.frame(emmeans(IIA_cc_Av_lm , specs = "ExpCond"))
+zn <- anova(IIA_cc_2pib_lm)$`Pr(>F)`
+
+IIA_cc_ton_lm <- lmer(ton ~ ExpCond + (1 | SubjectNum), data = IIA_cc)
+IIA_cc_ton_emm <- data.frame(emmeans(IIA_cc_ton_lm , specs = "ExpCond"))
+zo <- anova(IIA_cc_ton_lm)$`Pr(>F)`
+
+# MHC IIX ........................................................
+IIAX_cc <- control_df %>% filter(FiberType == "IIA/IIX")
+
+IIAX_cc_B_lm <- lmer(BkNm2 ~ ExpCond + (1 | SubjectNum), data = IIAX_cc)
+IIAX_cc_B_emm <- data.frame(emmeans(IIAX_cc_B_lm , specs = "ExpCond"))
+zp <- anova(IIAX_cc_B_lm)$`Pr(>F)`
+
+IIAX_cc_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 | SubjectNum), data = IIAX_cc)
+IIAX_cc_Ae_emm <- data.frame(emmeans(IIAX_cc_Ae_lm , specs = "ExpCond"))
+zq <- anova(IIAX_cc_Ae_lm)$`Pr(>F)`
+
+IIAX_cc_Av_lm <- lmer(Aviscous ~ ExpCond + (1 | SubjectNum), data = IIAX_cc)
+IIAX_cc_Av_emm <- data.frame(emmeans(IIAX_cc_Av_lm , specs = "ExpCond"))
+zr <- anova(IIAX_cc_Av_lm)$`Pr(>F)`
+
+IIAX_cc_2pib_lm <- lmer(twopib ~ ExpCond + (1 | SubjectNum), data = IIAX_cc)
+IIAX_cc_2pib_emm <- data.frame(emmeans(IIAX_cc_Av_lm , specs = "ExpCond"))
+zs <- anova(IIAX_cc_2pib_lm)$`Pr(>F)`
+
+IIAX_cc_ton_lm <- lmer(ton ~ ExpCond + (1 | SubjectNum), data = IIAX_cc)
+IIAX_cc_ton_emm <- data.frame(emmeans(IIAX_cc_ton_lm , specs = "ExpCond"))
+zt <- anova(IIAX_cc_ton_lm)$`Pr(>F)`
+
+Fig_3_cc_emm <- rbind(I_cc_B_emm,
+                       I_cc_Ae_emm,
+                       I_cc_Av_emm,
+                       I_cc_2pib_emm,
+                       I_cc_ton_emm,
+                       I.IIA_cc_B_emm,
+                       I.IIA_cc_Ae_emm,
+                       I.IIA_cc_Av_emm,
+                       I.IIA_cc_2pib_emm,
+                       I.IIA_cc_ton_emm,
+                       IIA_cc_B_emm,
+                       IIA_cc_Ae_emm,
+                       IIA_cc_Av_emm,
+                       IIA_cc_2pib_emm,
+                       IIA_cc_ton_emm,
+                       IIAX_cc_B_emm,
+                       IIAX_cc_Ae_emm,
+                       IIAX_cc_Av_emm,
+                       IIAX_cc_2pib_emm,
+                       IIAX_cc_ton_emm) %>% 
+  mutate(Fiber_Type = c("I","I","I",'I',"I","I","I","I","I","I",
+                        "I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA",
+                        "IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA",
+                        "IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX"
+  ), .before = emmean) %>% 
+  mutate(Value = c("B","B", "Aelastic", "Aelastic", "Aviscous","Aviscous", "2pib", "2pib", "ton", "ton",
+                   "B","B", "Aelastic", "Aelastic", "Aviscous","Aviscous", "2pib", "2pib", "ton", "ton",
+                   "B","B", "Aelastic", "Aelastic", "Aviscous","Aviscous", "2pib", "2pib", "ton", "ton",
+                   "B","B", "Aelastic", "Aelastic", "Aviscous","Aviscous", "2pib", "2pib", "ton", "ton"
+  ), .before = emmean)
+
+Fig_3_cc_anova <- data.frame(rbind(za,zb,zc,zd,ze,zf,zg,zh,zi,zj,zk,zl,zm,zn,zo,zp,zq,zr,zs,zt)) %>%   
+  mutate(Fiber_Type = c("I","I","I","I","I", 
+                        "I/IIA","I/IIA","I/IIA","I/IIA","I/IIA",
+                        "IIA","IIA", "IIA","IIA","IIA",
+                        "IIAX","IIAX","IIAX","IIAX","IIAX")) %>%    
+  mutate(Value = c("B","Aelastic","Aviscous","2pib","ton",
+                   "B","Aelastic","Aviscous","2pib","ton",
+                   "B","Aelastic","Aviscous","2pib","ton",
+                   "B","Aelastic","Aviscous","2pib","ton")) 
+
+colnames(Fig_3_cc_anova) <- c("p_value", "Fiber_Type", "Value")
+
+Fig3_cc <- list(Fig_3_cc_emm,Fig_3_cc_anova)
+
+names(Fig3_cc) <- c("Figure 3 Con vs Con - EMM",
+                     "Figure 3 Con vs Con -Anova")
+
+writexl::write_xlsx(Fig3_cc, path = "Woods_AuroraMaster_Figure3_ControlvsControl.xlsx")
+
+
+
+
+
+
+
+
+
+
+
+
 ### Figure 4----------------------------------------------------------------------------
 
 I_Fig4 <- read_excel("Aurora_Masters_CS.xlsx") %>%
