@@ -3,8 +3,10 @@ library(readxl)
 library(emmeans)
 library(multcomp)
 library(lmerTest)
+theme_set(theme_classic())
 
-setwd("C:/Users/Phil/Dropbox/MBL/Aurora Fatigue Data")
+
+setwd("C:/Users/Phil/Aurora Fatigue Data")
 
 
 my_data <- read_excel("Aurora_Masters_CS.xlsx") %>%
@@ -27,7 +29,7 @@ table_glht <- function(x) {
   
 }
 
-### Figure 1-----------------------------------------------------------------
+### Figure 1: Bar Graphs-----------------------------------------------------------------
 
 I <- read_excel("Aurora_Masters_CS.xlsx") %>%
   filter(Fibertypenum == 1) %>% 
@@ -214,6 +216,64 @@ Figure_1_Final <- list(Fig_1_emm,Fig_1_anova,Fig_1_posthoc)
 names(Figure_1_Final) <- c("Figure 1-EMM", "Figure 1-Anova", "Figure 1-Posthoc")
 
 writexl::write_xlsx(Figure_1_Final, path = "Woods_AuroraMaster_Figure1.xlsx")
+
+### Figure 1: Scatter Plots ---------------------------------------------
+I <- read_excel("Aurora_Masters_CS.xlsx") %>%
+  filter(Fibertypenum == 1) %>% 
+  filter(ExpCondnum %in% c(1:3)) %>% 
+  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
+  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
+  mutate(Force = CSA*PoControl25C) 
+
+I_F1_con <- I %>% filter(ExpCond == "Control")
+I_F1_con_lm <- lm(I_F1_con$Force ~ I_F1_con$csa)
+I_F1_con$mdl <- predict(I_F1_con_lm)
+
+I_F1_fat <- I %>% filter(ExpCond == "Fatigue")
+I_F1_fat_lm <- lm(I_F1_fat$Force ~ I_F1_fat$csa)
+I_F1_fat$mdl <- predict(I_F1_fat_lm)
+
+I_F1_fatdatp <- I %>% filter(ExpCondnum == 3)
+I_F1_fatdatp_lm <- lm(I_F1_fatdatp$Force ~ I_F1_fatdatp$csa)
+I_F1_fatdatp$mdl <- predict(I_F1_fatdatp_lm)
+
+
+(I_Fig1_scat <- ggplot(data = I,
+                      aes(x = csa, y = Force)) +
+  geom_point(aes(shape = ExpCond), size = 1.5) +
+  geom_line(data = I_F1_con, aes(y = mdl), linetype = "solid", size = 1) +
+  geom_line(data = I_F1_fat, aes(y = mdl), linetype = "longdash", size = 1) +
+  geom_line(data = I_F1_fatdatp, aes(y = mdl), linetype = "dotted", size = 1)
+)
+
+IIA <- read_excel("Aurora_Masters_CS.xlsx") %>%
+  filter(Fibertypenum ==2 ) %>% 
+  filter(ExpCondnum %in% c(1:3)) %>% 
+  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
+  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
+  mutate(Force = CSA*PoControl25C) 
+
+IIA_F1_con <- IIA %>% filter(ExpCond == "Control")
+IIA_F1_con_lm <- lm(IIA_F1_con$Force ~ IIA_F1_con$csa)
+IIA_F1_con$mdl <- predict(IIA_F1_con_lm)
+
+IIA_F1_fat <- IIA %>% filter(ExpCond == "Fatigue")
+IIA_F1_fat_lm <- lm(IIA_F1_fat$Force ~ IIA_F1_fat$csa)
+IIA_F1_fat$mdl <- predict(IIA_F1_fat_lm)
+
+IIA_F1_fatdatp <- IIA %>% filter(ExpCondnum == 3)
+IIA_F1_fatdatp_lm <- lm(IIA_F1_fatdatp$Force ~ IIA_F1_fatdatp$csa)
+IIA_F1_fatdatp$mdl <- predict(IIA_F1_fatdatp_lm)
+
+
+(IIA_Fig1_scat <- ggplot(data = I,
+                       aes(x = csa, y = Force)) +
+    geom_point(aes(shape = ExpCond), size = 1.5) +
+    geom_line(data = IIA_F1_con, aes(y = mdl), linetype = "solid", size = 1) +
+    geom_line(data = IIA_F1_fat, aes(y = mdl), linetype = "longdash", size = 1) +
+    geom_line(data = IIA_F1_fatdatp, aes(y = mdl), linetype = "dotted", size = 1)
+)
+
 
 ## Figure 3: Control + Fatigue  -----------------------------------------------------------------------------------
 
@@ -857,7 +917,7 @@ writexl::write_xlsx(Fig3_cc, path = "Woods_AuroraMaster_Figure3_ControlvsControl
 
 
 
-### Figure 4----------------------------------------------------------------------------
+### Figure 4: Bar Graphs-----------------------------------------------------------------------
 
 I_Fig4 <- read_excel("Aurora_Masters_CS.xlsx") %>%
   filter(Fibertypenum == 1) %>% 
@@ -924,6 +984,55 @@ writexl::write_xlsx(Fig4, path = "Woods_AuroraMaster_Figure4.xlsx")
 
 
 
+
+
+
+
+### Figure 4: Scatter plots ---------------------------------------------------
+
+I_Fig4 <- read_excel("Aurora_Masters_CS.xlsx") %>%
+  filter(Fibertypenum == 1) %>% 
+  filter(ExpCondnum %in% c(10,4)) %>% 
+  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
+  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
+  mutate(Force = CSA*PoControl25C) 
+
+IIA_Fig4 <- read_excel("Aurora_Masters_CS.xlsx") %>%
+  filter(Fibertypenum == 2) %>% 
+  filter(ExpCondnum %in% c(10,4)) %>% 
+  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
+  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
+  mutate(Force = CSA*PoControl25C) 
+
+I_Fig4_con <- I_Fig4 %>% filter(ExpCondnum == 10)
+I_Fig4_con_lm <- lm(I_Fig4_con$Force ~ I_Fig4_con$csa)
+I_Fig4_con$mdl <- predict(I_Fig4_con_lm)
+
+I_Fig4_condatp <- I_Fig4 %>% filter(ExpCondnum == 4)
+I_Fig4_condatp_lm <- lm(I_Fig4_condatp$Force ~ I_Fig4_condatp$csa)
+I_Fig4_condatp$mdl <- predict(I_Fig4_condatp_lm)
+
+(I_Fig4_scat <- ggplot(data = I_Fig4,
+                       aes(x = csa, y = Force)) +
+    geom_point(aes(shape = ExpCond), size = 1.5) +
+    geom_line(data = I_Fig4_con , aes(y = mdl), linetype = "solid", size = 1) +
+    geom_line(data = I_Fig4_condatp, aes(y = mdl), linetype = "longdash", size = 1)
+)
+
+IIA_Fig4_con <- IIA_Fig4 %>% filter(ExpCondnum == 10)
+IIA_Fig4_con_lm <- lm(IIA_Fig4_con$Force ~ IIA_Fig4_con$csa)
+IIA_Fig4_con$mdl <- predict(IIA_Fig4_con_lm)
+
+IIA_Fig4_condatp <- IIA_Fig4 %>% filter(ExpCondnum == 4)
+IIA_Fig4_condatp_lm <- lm(IIA_Fig4_condatp$Force ~ IIA_Fig4_condatp$csa)
+IIA_Fig4_condatp$mdl <- predict(IIA_Fig4_condatp_lm)
+
+(IIA_Fig4_scat <- ggplot(data = IIA_Fig4,
+                       aes(x = csa, y = Force)) +
+    geom_point(aes(shape = ExpCond), size = 1.5) +
+    geom_line(data = IIA_Fig4_con , aes(y = mdl), linetype = "solid", size = 1) +
+    geom_line(data = IIA_Fig4_condatp, aes(y = mdl), linetype = "longdash", size = 1)
+)
 
 
 
