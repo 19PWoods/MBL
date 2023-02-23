@@ -6,28 +6,28 @@ library(lmerTest)
 theme_set(theme_classic())
 
 
-setwd("C:/Users/Phil/Aurora Fatigue Data")
+setwd("C:/Users/Phil/Dropbox/MBL/Aurora Fatigue Data")
 
 
-my_data <- read_excel("Aurora_Masters_CS.xlsx") %>%
-  filter(Fibertypenum %in% c(1,2,4,5)) %>%
-  filter(ExpCondnum %in% c(1:3)) %>%
-  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>%
-  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
-  mutate(Force = CSA*PoControl25C)
-  # select(SubjectNum, AgeGrp, Sex,Leg, FiberType,Fibertypenum,Fibernum,ExpCond,ExpCondnum,
-  #        CSA,Force,PoControl25C,MSRunNum, AkNm2,k,BkNm2,lbHz,CkNm2,lcHz,ton,twopib)
+# my_data <- read_excel("Aurora_Masters_CS.xlsx") %>%
+#   filter(Fibertypenum %in% c(1,2,4,5)) %>%
+#   filter(ExpCondnum %in% c(1:3)) %>%
+#   group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>%
+#   mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
+#   mutate(Force = CSA*PoControl25C)
+#   # select(SubjectNum, AgeGrp, Sex,Leg, FiberType,Fibertypenum,Fibernum,ExpCond,ExpCondnum,
+#   #        CSA,Force,PoControl25C,MSRunNum, AkNm2,k,BkNm2,lbHz,CkNm2,lcHz,ton,twopib)
 
-table_glht <- function(x) {
-  pq <- summary(x)$test
-  mtests <- cbind(pq$coefficients, pq$sigma, pq$tstat, pq$pvalues)
-  error <- attr(pq$pvalues, "error")
-  pname <- switch(x$alternativ, less = paste("Pr(<", ifelse(x$df ==0, "z", "t"), ")", sep = ""), 
-                  greater = paste("Pr(>", ifelse(x$df == 0, "z", "t"), ")", sep = ""), two.sided = paste("Pr(>|",ifelse(x$df == 0, "z", "t"), "|)", sep = ""))
-  colnames(mtests) <- c("Estimate", "Std. Error", ifelse(x$df ==0, "z value", "t value"), pname)
-  return(mtests)
-  
-}
+# table_glht <- function(x) {
+#   pq <- summary(x)$test
+#   mtests <- cbind(pq$coefficients, pq$sigma, pq$tstat, pq$pvalues)
+#   error <- attr(pq$pvalues, "error")
+#   pname <- switch(x$alternativ, less = paste("Pr(<", ifelse(x$df ==0, "z", "t"), ")", sep = ""), 
+#                   greater = paste("Pr(>", ifelse(x$df == 0, "z", "t"), ")", sep = ""), two.sided = paste("Pr(>|",ifelse(x$df == 0, "z", "t"), "|)", sep = ""))
+#   colnames(mtests) <- c("Estimate", "Std. Error", ifelse(x$df ==0, "z value", "t value"), pname)
+#   return(mtests)
+#   
+# }
 
 ### Figure 1: Bar Graphs-----------------------------------------------------------------
 
@@ -975,19 +975,6 @@ writexl::write_xlsx(Fig4, path = "Woods_AuroraMaster_Figure4.xlsx")
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### Figure 4: Scatter plots ---------------------------------------------------
 
 I_Fig4 <- read_excel("Aurora_Masters_CS.xlsx") %>%
@@ -1033,6 +1020,34 @@ IIA_Fig4_condatp$mdl <- predict(IIA_Fig4_condatp_lm)
     geom_line(data = IIA_Fig4_con , aes(y = mdl), linetype = "solid", size = 1) +
     geom_line(data = IIA_Fig4_condatp, aes(y = mdl), linetype = "longdash", size = 1)
 )
+
+
+
+
+### Figure 5: Bar Plots --------------------------------------------------
+
+my_data <- read_excel("Aurora_Masters_CS.xlsx") %>%
+  filter(Fibertypenum %in% c(1,2)) %>%
+  filter(ExpCondnum %in% c(2:4)) %>%
+  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) 
+
+
+## going to need to adjust the excel sheet either in excel or in r to long format
+
+# Fig5_I <- my_data %>% filter(FiberType == "I")
+# 
+# Fig5_I_A_lmer <- lmer(percdiff_A ~ ExpCond + (1 + as.factor(ExpCond)| SubjectNum),data = Fig5_I)
+# Fig5_I_A_emm <- data.frame(emmeans(Fig5_I_A_lmer, specs = "ExpCond"))
+# if ((ba <- anova(Fig5_I_A_lmer)$`Pr(>F)`) <0.05) {
+#   
+#   Fig5_I_A_posthoc <- summary(glht(Fig5_I_A_lmer, linfct = mcp(ExpCond = "Tukey")))
+#   
+# } else{
+#   NA
+# }
+
+
+
 
 
 
