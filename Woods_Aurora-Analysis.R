@@ -18,16 +18,16 @@ setwd("C:/Users/Phil/Dropbox/MBL/Aurora Fatigue Data")
 #   # select(SubjectNum, AgeGrp, Sex,Leg, FiberType,Fibertypenum,Fibernum,ExpCond,ExpCondnum,
 #   #        CSA,Force,PoControl25C,MSRunNum, AkNm2,k,BkNm2,lbHz,CkNm2,lcHz,ton,twopib)
 
-# table_glht <- function(x) {
-#   pq <- summary(x)$test
-#   mtests <- cbind(pq$coefficients, pq$sigma, pq$tstat, pq$pvalues)
-#   error <- attr(pq$pvalues, "error")
-#   pname <- switch(x$alternativ, less = paste("Pr(<", ifelse(x$df ==0, "z", "t"), ")", sep = ""), 
-#                   greater = paste("Pr(>", ifelse(x$df == 0, "z", "t"), ")", sep = ""), two.sided = paste("Pr(>|",ifelse(x$df == 0, "z", "t"), "|)", sep = ""))
-#   colnames(mtests) <- c("Estimate", "Std. Error", ifelse(x$df ==0, "z value", "t value"), pname)
-#   return(mtests)
-#   
-# }
+table_glht <- function(x) {
+  pq <- summary(x)$test
+  mtests <- cbind(pq$coefficients, pq$sigma, pq$tstat, pq$pvalues)
+  error <- attr(pq$pvalues, "error")
+  pname <- switch(x$alternativ, less = paste("Pr(<", ifelse(x$df ==0, "z", "t"), ")", sep = ""),
+                  greater = paste("Pr(>", ifelse(x$df == 0, "z", "t"), ")", sep = ""), two.sided = paste("Pr(>|",ifelse(x$df == 0, "z", "t"), "|)", sep = ""))
+  colnames(mtests) <- c("Estimate", "Std. Error", ifelse(x$df ==0, "z value", "t value"), pname)
+  return(mtests)
+
+}
 
 ### Figure 1: Bar Graphs-----------------------------------------------------------------
 
@@ -908,15 +908,6 @@ writexl::write_xlsx(Fig3_cc, path = "Woods_AuroraMaster_Figure3_ControlvsControl
 
 
 
-
-
-
-
-
-
-
-
-
 ### Figure 4: Bar Graphs-----------------------------------------------------------------------
 
 I_Fig4 <- read_excel("Aurora_Masters_CS.xlsx") %>%
@@ -1026,28 +1017,214 @@ IIA_Fig4_condatp$mdl <- predict(IIA_Fig4_condatp_lm)
 
 ### Figure 5: Bar Plots --------------------------------------------------
 
-my_data <- read_excel("Aurora_Masters_CS.xlsx") %>%
-  filter(Fibertypenum %in% c(1,2)) %>%
-  filter(ExpCondnum %in% c(2:4)) %>%
-  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) 
+df5 <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
+  filter(FiberTypeNum %in% c(1,2)) %>%
+  filter(ExpCondNum %in% c(2:4)) %>%
+  group_by(SubjectNum, FiberType, FiberTypeNum, ExpCondNum) %>% 
+  mutate(Pdiff_Aelastic = Pdiff_Aelastic + 100) %>% 
+  mutate(Pdiff_Aviscous = Pdiff_Aviscous + 100) %>% 
+  mutate(Pdiff_B = Pdiff_B + 100) %>% 
+  mutate(Pdiff_ton = Pdiff_ton + 100) %>% 
+  mutate(Pdiff_2pib = Pdiff_2pib + 100)
 
+df6 <- read_excel("Woods_PercDiff_SpecificTension.xlsx") %>% 
+  mutate(Pdiff_ST = Pdiff_ST + 100)
+df6_I <- df6 %>% filter(FiberType == "I")
+df6_IIA <- df6 %>% filter(FiberType == "IIA")
 
-## going to need to adjust the excel sheet either in excel or in r to long format
+## MHC I.........................................................................
+Fig5_I <- df5 %>% filter(FiberType == "I")
 
-# Fig5_I <- my_data %>% filter(FiberType == "I")
-# 
-# Fig5_I_A_lmer <- lmer(percdiff_A ~ ExpCond + (1 + as.factor(ExpCond)| SubjectNum),data = Fig5_I)
-# Fig5_I_A_emm <- data.frame(emmeans(Fig5_I_A_lmer, specs = "ExpCond"))
-# if ((ba <- anova(Fig5_I_A_lmer)$`Pr(>F)`) <0.05) {
-#   
-#   Fig5_I_A_posthoc <- summary(glht(Fig5_I_A_lmer, linfct = mcp(ExpCond = "Tukey")))
-#   
-# } else{
-#   NA
-# }
+Fig5_I_ST_lmer <- lmer(Pdiff_ST  ~ ExpCond + (1 | SubjectNum), data = df6_I)
+Fig5_I_ST_emm <- data.frame(emmeans(Fig5_I_ST_lmer, specs = "ExpCond"))
+if ((a1.0 <- anova(Fig5_I_ST_lmer)$`Pr(>F)`) <0.05) {
+  
+  Fig5_I_ST_posthoc <- summary(glht(Fig5_I_ST_lmer, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
 
+Fig5_I_Aelastic_lmer <- lmer(Pdiff_Aelastic ~ ExpCond + (1 | SubjectNum),data = Fig5_I)
+Fig5_I_Aelastic_emm <- data.frame(emmeans(Fig5_I_Aelastic_lmer, specs = "ExpCond"))
+if ((a1 <- anova(Fig5_I_Aelastic_lmer)$`Pr(>F)`) <0.05) {
 
+  Fig5_I_Aelastic_posthoc <- summary(glht(Fig5_I_Aelastic_lmer, linfct = mcp(ExpCond = "Tukey")))
 
+} else{
+  NA
+}
 
+Fig5_I_Aviscous_lmer <- lmer(Pdiff_Aviscous ~ ExpCond + (1 | SubjectNum),data = Fig5_I)
+Fig5_I_Aviscous_emm <- data.frame(emmeans(Fig5_I_Aviscous_lmer, specs = "ExpCond"))
+if ((a2 <- anova(Fig5_I_Aviscous_lmer)$`Pr(>F)`) <0.05) {
+  
+  Fig5_I_Aviscous_posthoc <- summary(glht(Fig5_I_Aviscous_lmer, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
 
+Fig5_I_B_lmer <- lmer(Pdiff_B ~ ExpCond + (1 | SubjectNum),data = Fig5_I)
+Fig5_I_B_emm <- data.frame(emmeans(Fig5_I_B_lmer, specs = "ExpCond"))
+if ((a3 <- anova(Fig5_I_B_lmer)$`Pr(>F)`) <0.05) {
+  
+  Fig5_I_B_posthoc <- summary(glht(Fig5_I_B_lmer, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
 
+Fig5_I_2pib_lmer <- lmer(Pdiff_2pib ~ ExpCond + (1 | SubjectNum),data = Fig5_I)
+Fig5_I_2pib_emm <- data.frame(emmeans(Fig5_I_2pib_lmer, specs = "ExpCond"))
+if ((a4 <- anova(Fig5_I_2pib_lmer)$`Pr(>F)`) <0.05) {
+  
+  Fig5_I_2pib_posthoc <- summary(glht(Fig5_I_2pib_lmer, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
+
+Fig5_I_ton_lmer <- lmer(Pdiff_ton ~ ExpCond + (1 | SubjectNum),data = Fig5_I)
+Fig5_I_ton_emm <- data.frame(emmeans(Fig5_I_ton_lmer, specs = "ExpCond"))
+if ((a5 <- anova(Fig5_I_ton_lmer)$`Pr(>F)`) <0.05) {
+  
+  Fig5_I_ton_posthoc <- summary(glht(Fig5_I_ton_lmer, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
+
+## MHC IIA ..............................................
+Fig5_IIA <- df5 %>% filter(FiberType == "IIA")
+
+Fig5_IIA_ST_lmer <- lmer(Pdiff_ST  ~ ExpCond + (1 | SubjectNum), data = df6_IIA)
+Fig5_IIA_ST_emm <- data.frame(emmeans(Fig5_IIA_ST_lmer, specs = "ExpCond"))
+if ((a6 <- anova(Fig5_IIA_ST_lmer)$`Pr(>F)`) <0.05) {
+  
+  Fig5_IIA_ST_posthoc <- summary(glht(Fig5_IIA_ST_lmer, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
+
+Fig5_IIA_Aelastic_lmer <- lmer(Pdiff_Aelastic ~ ExpCond + (1 | SubjectNum),data = Fig5_IIA)
+Fig5_IIA_Aelastic_emm <- data.frame(emmeans(Fig5_IIA_Aelastic_lmer, specs = "ExpCond"))
+if ((a7 <- anova(Fig5_IIA_Aelastic_lmer)$`Pr(>F)`) <0.05) {
+  
+  Fig5_IIA_Aelastic_posthoc <- summary(glht(Fig5_IIA_Aelastic_lmer, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
+
+Fig5_IIA_Aviscous_lmer <- lmer(Pdiff_Aviscous ~ ExpCond + (1 | SubjectNum),data = Fig5_IIA)
+Fig5_IIA_Aviscous_emm <- data.frame(emmeans(Fig5_IIA_Aviscous_lmer, specs = "ExpCond"))
+if ((a8 <- anova(Fig5_IIA_Aviscous_lmer)$`Pr(>F)`) <0.05) {
+  
+  Fig5_IIA_Aviscous_posthoc <- summary(glht(Fig5_IIA_Aviscous_lmer, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
+
+Fig5_IIA_B_lmer <- lmer(Pdiff_B ~ ExpCond + (1 | SubjectNum),data = Fig5_IIA)
+Fig5_IIA_B_emm <- data.frame(emmeans(Fig5_IIA_B_lmer, specs = "ExpCond"))
+if ((a9 <- anova(Fig5_IIA_B_lmer)$`Pr(>F)`) <0.05) {
+  
+  Fig5_IIA_B_posthoc <- summary(glht(Fig5_IIA_B_lmer, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
+
+Fig5_IIA_2pib_lmer <- lmer(Pdiff_2pib ~ ExpCond + (1 | SubjectNum),data = Fig5_IIA)
+Fig5_IIA_2pib_emm <- data.frame(emmeans(Fig5_IIA_2pib_lmer, specs = "ExpCond"))
+if ((a10 <- anova(Fig5_IIA_2pib_lmer)$`Pr(>F)`) <0.05) {
+  
+  Fig5_IIA_2pib_posthoc <- summary(glht(Fig5_IIA_2pib_lmer, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
+
+Fig5_IIA_ton_lmer <- lmer(Pdiff_ton ~ ExpCond + (1 | SubjectNum),data = Fig5_IIA)
+Fig5_IIA_ton_emm <- data.frame(emmeans(Fig5_IIA_ton_lmer, specs = "ExpCond"))
+if ((a11 <- anova(Fig5_IIA_ton_lmer)$`Pr(>F)`) <0.05) {
+  
+  Fig5_IIA_ton_posthoc <- summary(glht(Fig5_IIA_ton_lmer, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
+
+Fig5_emm <- rbind(Fig5_I_ST_emm,
+                  Fig5_IIA_ST_emm,
+                  Fig5_I_Aelastic_emm,
+                  Fig5_IIA_Aelastic_emm,
+                  Fig5_I_Aviscous_emm,
+                  Fig5_IIA_Aviscous_emm,
+                  Fig5_I_B_emm,
+                  Fig5_IIA_B_emm,
+                  Fig5_I_2pib_emm,
+                  Fig5_IIA_2pib_emm,
+                  Fig5_I_ton_emm,
+                  Fig5_IIA_ton_emm) %>% 
+  mutate(FiberType = c("I","I","I", "IIA","IIA","IIA",
+                       "I","I","I", "IIA","IIA","IIA",
+                       "I","I","I", "IIA","IIA","IIA",
+                       "I","I","I", "IIA","IIA","IIA",
+                       "I","I","I", "IIA","IIA","IIA",
+                       "I","I","I", "IIA" ,"IIA","IIA"), .before = emmean) %>% 
+  mutate(Variable = c("Specific Tension", "Specific Tension", "Specific Tension", "Specific Tension", "Specific Tension", "Specific Tension", 
+                      "Aelastic", "Aelastic", "Aelastic","Aelastic","Aelastic","Aelastic",
+                      "Aviscous", "Aviscous","Aviscous","Aviscous","Aviscous","Aviscous",
+                      "B", "B", "B","B","B","B",
+                      "2pib", "2pib","2pib","2pib","2pib","2pib",
+                      "ton","ton","ton","ton","ton", "ton"), .before = ExpCond)
+
+Fig5_anova <- data.frame(rbind(a1.0,a6, a1,a7,a2,a8,a3,a9,a4,a10,a5,a11)) %>% 
+  mutate(FiberType = c("I", "IIA","I", "IIA","I", "IIA","I", "IIA","I", "IIA","I", "IIA" )) %>% 
+  mutate(Variable = c("Specific Tension", "Specific Tension",
+                      "Aleastic", "Aleastic",
+                      "Aviscous", "Aviscous",
+                      "B", "B",
+                      "2pib", "2pib",
+                      "ton", "ton"))
+colnames(Fig5_anova) <- c("p-value", "Fiber Type", "Variable")
+
+Fig5_posthoc <- data.frame(rbind(table_glht(Fig5_I_ST_posthoc),
+                                 table_glht(Fig5_IIA_ST_posthoc),
+                                 table_glht(Fig5_IIA_Aviscous_posthoc),
+                                 table_glht(Fig5_I_B_posthoc),
+                                 table_glht(Fig5_I_2pib_posthoc),
+                                 table_glht(Fig5_IIA_2pib_posthoc),
+                                 table_glht(Fig5_I_ton_posthoc),
+                                 table_glht(Fig5_IIA_ton_posthoc))) %>% 
+  mutate(FiberType = c("I","I","I",
+                       "IIA","IIA","IIA",
+                       "IIA","IIA","IIA",
+                       "I","I","I",
+                       "I","I","I",
+                       "IIA","IIA","IIA",
+                       "I","I","I",
+                       "IIA","IIA","IIA" ), .before = Estimate) %>% 
+  mutate(Variable = c("Specific Tension","Specific Tension","Specific Tension",
+                      "Specific Tension","Specific Tension","Specific Tension",
+                      "Aviscous","Aviscous","Aviscous",
+                      "B","B","B",
+                      "2pib","2pib","2pib",
+                      "2pib","2pib","2pib",
+                      "ton","ton","ton",
+                      "ton","ton","ton"), .before = FiberType) %>% 
+  mutate(Comparison = c("Fatigue vs. ControldATP", "FatiguedATP vs. ControldATP", "Fatigue vs. FatiguedATP",
+                        "Fatigue vs. ControldATP", "FatiguedATP vs. ControldATP", "Fatigue vs. FatiguedATP",
+                        "Fatigue vs. ControldATP", "FatiguedATP vs. ControldATP", "Fatigue vs. FatiguedATP",
+                        "Fatigue vs. ControldATP", "FatiguedATP vs. ControldATP", "Fatigue vs. FatiguedATP",
+                        "Fatigue vs. ControldATP", "FatiguedATP vs. ControldATP", "Fatigue vs. FatiguedATP",
+                        "Fatigue vs. ControldATP", "FatiguedATP vs. ControldATP", "Fatigue vs. FatiguedATP",
+                        "Fatigue vs. ControldATP", "FatiguedATP vs. ControldATP", "Fatigue vs. FatiguedATP",
+                        "Fatigue vs. ControldATP", "FatiguedATP vs. ControldATP", "Fatigue vs. FatiguedATP"), .after = Variable)
+
+Fig5_analysis <- list(Fig5_emm, Fig5_anova, Fig5_posthoc)
+writexl::write_xlsx(Fig5_analysis, "Aurora_Figure5_Analysis_normalized.xlsx")
