@@ -7,7 +7,16 @@ library(lmerTest)
 setwd("C:/Users/Phil/Dropbox/MBL/Tension + AaBbCc/R21-MAT")
 
 my_data <- read_excel("R21-Tension+AkBbCc__PW_R_3-27-23.xlsx",
-                      sheet = "Final - Run only")
+                      sheet = "Final - Run only") %>% 
+  mutate(AgexWeight = as.factor(AgexWeight)) %>% 
+  mutate(AgexWeightxSex = as.factor(AgexWeightxSex))
+
+my_data_I <- my_data %>% 
+  filter(FiberType == "I") 
+my_data_IIA <- my_data %>% 
+  filter(FiberType == "IIA")
+my_data_IIAX <- my_data %>% 
+  filter(FiberType == "IIAX") 
 
 table_glht <- function(x) {
   pq <- summary(x)$test
@@ -19,179 +28,249 @@ table_glht <- function(x) {
   return(mtests)
   
 }
-
-my_data_I <- my_data %>% 
-  filter(FiberType == "I") 
-my_data_IIA <- my_data %>% 
-  filter(FiberType == "IIA") %>% 
-  mutate(AgexWeightxSex = as.factor(AgexWeightxSex))
-my_data_IIAX <- my_data %>% 
-  filter(FiberType == "IIAX") %>% 
-  mutate(AgexWeightxSex = as.factor(AgexWeightxSex))
 ### MHC I: Age x Weight --------------------------------------------------
-I_Force_AxW_mdl <- lmer(Force ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_I)
+I_Force_AxW_mdl <- lmer(Force ~ AgexWeight + (1| SubjNum), data = my_data_I)
 I_Force_AxW_emm <- emmeans(I_Force_AxW_mdl, specs = "AgexWeight")
-if ((a <- anova(I_Force_AxW_mdl)$`Pr(>F)`) <0.05) {  I_Force_AxW_hoc <- summary(glht(I_Force_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((a <- anova(I_Force_AxW_mdl)$`Pr(>F)`) <0.05) {  I_Force_AxW_hoc <- summary(glht(I_Force_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-I_CSA_AxW_mdl <- lmer(CSA ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_I)
+I_CSA_AxW_mdl <- lmer(CSA ~ AgexWeight + (1| SubjNum), data = my_data_I)
 I_CSA_AxW_emm <- emmeans(I_CSA_AxW_mdl, specs = "AgexWeight")
-if ((b <- anova(I_CSA_AxW_mdl)$`Pr(>F)`) <0.05) {  I_CSA_AxW_hoc <- summary(glht(I_CSA_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((b <- anova(I_CSA_AxW_mdl)$`Pr(>F)`) <0.05) {  I_CSA_AxW_hoc <- summary(glht(I_CSA_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-I_Tension_AxW_mdl <- lmer(Tension ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_I)
+I_Tension_AxW_mdl <- lmer(Tension ~ AgexWeight + (1| SubjNum), data = my_data_I)
 I_Tension_AxW_emm <- emmeans(I_Tension_AxW_mdl, specs = "AgexWeight")
-if ((c <- anova(I_Tension_AxW_mdl)$`Pr(>F)`) <0.05) {  I_Tension_AxW_hoc <- summary(glht(I_Tension_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((c <- anova(I_Tension_AxW_mdl)$`Pr(>F)`) <0.05) {  I_Tension_AxW_hoc <- summary(glht(I_Tension_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-I_A_AxW_mdl <- lmer(A ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_I)
+I_A_AxW_mdl <- lmer(A ~ AgexWeight + (1| SubjNum), data = my_data_I)
 I_A_AxW_emm <- emmeans(I_A_AxW_mdl, specs = "AgexWeight")
-if ((d <- anova(I_A_AxW_mdl)$`Pr(>F)`) <0.05) {  I_A_AxW_hoc <- summary(glht(I_A_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((d <- anova(I_A_AxW_mdl)$`Pr(>F)`) <0.05) {  I_A_AxW_hoc <- summary(glht(I_A_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-I_k_AxW_mdl <- lmer(k ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_I)
+I_k_AxW_mdl <- lmer(k ~ AgexWeight + (1| SubjNum), data = my_data_I)
 I_k_AxW_emm <- emmeans(I_k_AxW_mdl, specs = "AgexWeight")
-if ((e <- anova(I_k_AxW_mdl)$`Pr(>F)`) <0.05) {  I_k_AxW_hoc <- summary(glht(I_k_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((e <- anova(I_k_AxW_mdl)$`Pr(>F)`) <0.05) {  I_k_AxW_hoc <- summary(glht(I_k_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-I_B_AxW_mdl <- lmer(B ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_I)
+I_B_AxW_mdl <- lmer(B ~ AgexWeight + (1| SubjNum), data = my_data_I)
 I_B_AxW_emm <- emmeans(I_B_AxW_mdl, specs = "AgexWeight")
-if ((f <- anova(I_B_AxW_mdl)$`Pr(>F)`) <0.05) {  I_B_AxW_hoc <- summary(glht(I_B_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((f <- anova(I_B_AxW_mdl)$`Pr(>F)`) <0.05) {  I_B_AxW_hoc <- summary(glht(I_B_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-I_ton_AxW_mdl <- lmer(ton ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_I)
+I_ton_AxW_mdl <- lmer(ton ~ AgexWeight + (1| SubjNum), data = my_data_I)
 I_ton_AxW_emm <- emmeans(I_ton_AxW_mdl, specs = "AgexWeight")
-if ((g <- anova(I_ton_AxW_mdl)$`Pr(>F)`) <0.05) {  I_ton_AxW_hoc <- summary(glht(I_ton_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((g <- anova(I_ton_AxW_mdl)$`Pr(>F)`) <0.05) {  I_ton_AxW_hoc <- summary(glht(I_ton_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-I_twopib_AxW_mdl <- lmer(twopib ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_I)
+I_twopib_AxW_mdl <- lmer(twopib ~ AgexWeight + (1| SubjNum), data = my_data_I)
 I_twopib_AxW_emm <- emmeans(I_twopib_AxW_mdl, specs = "AgexWeight")
-if ((h <- anova(I_twopib_AxW_mdl)$`Pr(>F)`) <0.05) {  I_twopib_AxW_hoc <- summary(glht(I_twopib_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((h <- anova(I_twopib_AxW_mdl)$`Pr(>F)`) <0.05) {  I_twopib_AxW_hoc <- summary(glht(I_twopib_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-I_Aelastic_AxW_mdl <- lmer(Aelastic ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_I)
+I_Aelastic_AxW_mdl <- lmer(Aelastic ~ AgexWeight + (1| SubjNum), data = my_data_I)
 I_Aelastic_AxW_emm <- emmeans(I_Aelastic_AxW_mdl, specs = "AgexWeight")
-if ((i <- anova(I_Aelastic_AxW_mdl)$`Pr(>F)`) <0.05) {  I_Aelastic_AxW_hoc <- summary(glht(I_Aelastic_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((i <- anova(I_Aelastic_AxW_mdl)$`Pr(>F)`) <0.05) {  I_Aelastic_AxW_hoc <- summary(glht(I_Aelastic_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-I_Aviscous_AxW_mdl <- lmer(Aviscous ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_I)
+I_Aviscous_AxW_mdl <- lmer(Aviscous ~ AgexWeight + (1| SubjNum), data = my_data_I)
 I_Aviscous_AxW_emm <- emmeans(I_Aviscous_AxW_mdl, specs = "AgexWeight")
-if ((j <- anova(I_Aviscous_AxW_mdl)$`Pr(>F)`) <0.05) {  I_Aviscous_AxW_hoc <- summary(glht(I_Aviscous_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((j <- anova(I_Aviscous_AxW_mdl)$`Pr(>F)`) <0.05) {  I_Aviscous_AxW_hoc <- summary(glht(I_Aviscous_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
 ### MHC I: Age x Weight x Sex --------------------------------------------------------------------------------------------------------
-I_Force_AxWxS_mdl <- lmer(Force ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_I)
+I_Force_AxWxS_mdl <- lmer(Force ~ AgexWeightxSex + (1| SubjNum), data = my_data_I)
 I_Force_AxWxS_emm <- emmeans(I_Force_AxWxS_mdl, specs = "AgexWeightxSex")
-if ((k <- anova(I_Force_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_Force_AxWxS_hoc <- summary(glht(I_Force_AxWxS_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((k <- anova(I_Force_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_Force_AxWxS_hoc <- summary(glht(I_Force_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
 
-I_CSA_AxWxS_mdl <- lmer(CSA ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_I)
+I_CSA_AxWxS_mdl <- lmer(CSA ~ AgexWeightxSex + (1| SubjNum), data = my_data_I)
 I_CSA_AxWxS_emm <- emmeans(I_CSA_AxWxS_mdl, specs = "AgexWeightxSex")
-if ((l <- anova(I_CSA_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_CSA_AxWxS_hoc <- summary(glht(I_CSA_AxWxS_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((l <- anova(I_CSA_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_CSA_AxWxS_hoc <- summary(glht(I_CSA_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
 
-I_Tension_AxWxS_mdl <- lmer(Tension ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_I)
+I_Tension_AxWxS_mdl <- lmer(Tension ~ AgexWeightxSex + (1| SubjNum), data = my_data_I)
 I_Tension_AxWxS_emm <- emmeans(I_Tension_AxWxS_mdl, specs = "AgexWeightxSex")
-if ((m <- anova(I_Tension_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_Tension_AxWxS_hoc <- summary(glht(I_Tension_AxWxS_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((m <- anova(I_Tension_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_Tension_AxWxS_hoc <- summary(glht(I_Tension_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
 
-I_A_AxWxS_mdl <- lmer(A ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_I)
+I_A_AxWxS_mdl <- lmer(A ~ AgexWeightxSex + (1| SubjNum), data = my_data_I)
 I_A_AxWxS_emm <- emmeans(I_A_AxWxS_mdl, specs = "AgexWeightxSex")
-if ((n <- anova(I_A_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_A_AxWxS_hoc <- summary(glht(I_A_AxWxS_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((n <- anova(I_A_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_A_AxWxS_hoc <- summary(glht(I_A_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
 
-I_k_AxWxS_mdl <- lmer(k ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_I)
+I_k_AxWxS_mdl <- lmer(k ~ AgexWeightxSex + (1| SubjNum), data = my_data_I)
 I_k_AxWxS_emm <- emmeans(I_k_AxWxS_mdl, specs = "AgexWeightxSex")
-if ((o <- anova(I_k_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_k_AxWxS_hoc <- summary(glht(I_k_AxWxS_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((o <- anova(I_k_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_k_AxWxS_hoc <- summary(glht(I_k_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
 
-I_B_AxWxS_mdl <- lmer(B ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_I)
+I_B_AxWxS_mdl <- lmer(B ~ AgexWeightxSex + (1| SubjNum), data = my_data_I)
 I_B_AxWxS_emm <- emmeans(I_B_AxWxS_mdl, specs = "AgexWeightxSex")
-if ((p <- anova(I_B_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_B_AxWxS_hoc <- summary(glht(I_B_AxWxS_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((p <- anova(I_B_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_B_AxWxS_hoc <- summary(glht(I_B_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
 
-I_ton_AxWxS_mdl <- lmer(ton ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_I)
+I_ton_AxWxS_mdl <- lmer(ton ~ AgexWeightxSex + (1| SubjNum), data = my_data_I)
 I_ton_AxWxS_emm <- emmeans(I_ton_AxWxS_mdl, specs = "AgexWeightxSex")
-if ((q <- anova(I_ton_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_ton_AxWxS_hoc <- summary(glht(I_ton_AxWxS_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((q <- anova(I_ton_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_ton_AxWxS_hoc <- summary(glht(I_ton_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
 
-I_twopib_AxWxS_mdl <- lmer(twopib ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_I)
+I_twopib_AxWxS_mdl <- lmer(twopib ~ AgexWeightxSex + (1| SubjNum), data = my_data_I)
 I_twopib_AxWxS_emm <- emmeans(I_twopib_AxWxS_mdl, specs = "AgexWeightxSex")
-if ((r <- anova(I_twopib_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_twopib_AxWxS_hoc <- summary(glht(I_twopib_AxWxS_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((r <- anova(I_twopib_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_twopib_AxWxS_hoc <- summary(glht(I_twopib_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
 
-I_Aelastic_AxWxS_mdl <- lmer(Aelastic ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_I)
+I_Aelastic_AxWxS_mdl <- lmer(Aelastic ~ AgexWeightxSex + (1| SubjNum), data = my_data_I)
 I_Aelastic_AxWxS_emm <- emmeans(I_Aelastic_AxWxS_mdl, specs = "AgexWeightxSex")
-if ((s <- anova(I_Aelastic_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_Aelastic_AxWxS_hoc <- summary(glht(I_Aelastic_AxWxS_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((s <- anova(I_Aelastic_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_Aelastic_AxWxS_hoc <- summary(glht(I_Aelastic_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
 
-I_Aviscous_AxWxS_mdl <- lmer(Aviscous ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_I)
+I_Aviscous_AxWxS_mdl <- lmer(Aviscous ~ AgexWeightxSex + (1| SubjNum), data = my_data_I)
 I_Aviscous_AxWxS_emm <- emmeans(I_Aviscous_AxWxS_mdl, specs = "AgexWeightxSex")
-if ((t <- anova(I_Aviscous_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_Aviscous_AxWxS_hoc <- summary(glht(I_Aviscous_AxWxS_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((t <- anova(I_Aviscous_AxWxS_mdl)$`Pr(>F)`) <0.05) {  I_Aviscous_AxWxS_hoc <- summary(glht(I_Aviscous_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
 
 ### MHC IIA : Age x Weight-------------------------------------------------------------------------------------------------------
-IIA_Force_AxW_mdl <- lmer(Force ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_IIA)
+IIA_Force_AxW_mdl <- lmer(Force ~ AgexWeight + (1| SubjNum), data = my_data_IIA)
 IIA_Force_AxW_emm <- emmeans(IIA_Force_AxW_mdl, specs = "AgexWeight")
-if ((a <- anova(IIA_Force_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_Force_AxW_hoc <- summary(glht(IIA_Force_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((a1 <- anova(IIA_Force_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_Force_AxW_hoc <- summary(glht(IIA_Force_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-IIA_CSA_AxW_mdl <- lmer(CSA ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_IIA)
+IIA_CSA_AxW_mdl <- lmer(CSA ~ AgexWeight + (1| SubjNum), data = my_data_IIA)
 IIA_CSA_AxW_emm <- emmeans(IIA_CSA_AxW_mdl, specs = "AgexWeight")
-if ((b <- anova(IIA_CSA_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_CSA_AxW_hoc <- summary(glht(IIA_CSA_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((b1 <- anova(IIA_CSA_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_CSA_AxW_hoc <- summary(glht(IIA_CSA_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-IIA_Tension_AxW_mdl <- lmer(Tension ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_IIA)
+IIA_Tension_AxW_mdl <- lmer(Tension ~ AgexWeight + (1| SubjNum), data = my_data_IIA)
 IIA_Tension_AxW_emm <- emmeans(IIA_Tension_AxW_mdl, specs = "AgexWeight")
-if ((c <- anova(IIA_Tension_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_Tension_AxW_hoc <- summary(glht(IIA_Tension_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((c1 <- anova(IIA_Tension_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_Tension_AxW_hoc <- summary(glht(IIA_Tension_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-IIA_A_AxW_mdl <- lmer(A ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_IIA)
+IIA_A_AxW_mdl <- lmer(A ~ AgexWeight + (1| SubjNum), data = my_data_IIA)
 IIA_A_AxW_emm <- emmeans(IIA_A_AxW_mdl, specs = "AgexWeight")
-if ((d <- anova(IIA_A_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_A_AxW_hoc <- summary(glht(IIA_A_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((d1 <- anova(IIA_A_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_A_AxW_hoc <- summary(glht(IIA_A_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-IIA_k_AxW_mdl <- lmer(k ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_IIA)
+IIA_k_AxW_mdl <- lmer(k ~ AgexWeight + (1| SubjNum), data = my_data_IIA)
 IIA_k_AxW_emm <- emmeans(IIA_k_AxW_mdl, specs = "AgexWeight")
-if ((e <- anova(IIA_k_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_k_AxW_hoc <- summary(glht(IIA_k_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((e1 <- anova(IIA_k_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_k_AxW_hoc <- summary(glht(IIA_k_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-IIA_B_AxW_mdl <- lmer(B ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_IIA)
+IIA_B_AxW_mdl <- lmer(B ~ AgexWeight + (1| SubjNum), data = my_data_IIA)
 IIA_B_AxW_emm <- emmeans(IIA_B_AxW_mdl, specs = "AgexWeight")
-if ((f <- anova(IIA_B_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_B_AxW_hoc <- summary(glht(IIA_B_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((f1 <- anova(IIA_B_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_B_AxW_hoc <- summary(glht(IIA_B_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-IIA_ton_AxW_mdl <- lmer(ton ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_IIA)
+IIA_ton_AxW_mdl <- lmer(ton ~ AgexWeight + (1| SubjNum), data = my_data_IIA)
 IIA_ton_AxW_emm <- emmeans(IIA_ton_AxW_mdl, specs = "AgexWeight")
-if ((g <- anova(IIA_ton_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_ton_AxW_hoc <- summary(glht(IIA_ton_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((g1 <- anova(IIA_ton_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_ton_AxW_hoc <- summary(glht(IIA_ton_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-IIA_twopib_AxW_mdl <- lmer(twopib ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_IIA)
+IIA_twopib_AxW_mdl <- lmer(twopib ~ AgexWeight + (1| SubjNum), data = my_data_IIA)
 IIA_twopib_AxW_emm <- emmeans(IIA_twopib_AxW_mdl, specs = "AgexWeight")
-if ((h <- anova(IIA_twopib_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_twopib_AxW_hoc <- summary(glht(IIA_twopib_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((h1 <- anova(IIA_twopib_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_twopib_AxW_hoc <- summary(glht(IIA_twopib_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-IIA_Aelastic_AxW_mdl <- lmer(Aelastic ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_IIA)
+IIA_Aelastic_AxW_mdl <- lmer(Aelastic ~ AgexWeight + (1| SubjNum), data = my_data_IIA)
 IIA_Aelastic_AxW_emm <- emmeans(IIA_Aelastic_AxW_mdl, specs = "AgexWeight")
-if ((i <- anova(IIA_Aelastic_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_Aelastic_AxW_hoc <- summary(glht(IIA_Aelastic_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((i1 <- anova(IIA_Aelastic_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_Aelastic_AxW_hoc <- summary(glht(IIA_Aelastic_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
-IIA_Aviscous_AxW_mdl <- lmer(Aviscous ~ as.factor(AgexWeight) + (1| SubjNum), data = my_data_IIA)
+IIA_Aviscous_AxW_mdl <- lmer(Aviscous ~ AgexWeight + (1| SubjNum), data = my_data_IIA)
 IIA_Aviscous_AxW_emm <- emmeans(IIA_Aviscous_AxW_mdl, specs = "AgexWeight")
-if ((j <- anova(IIA_Aviscous_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_Aviscous_AxW_hoc <- summary(glht(IIA_Aviscous_AxW_mdl, linfct = mcp(ExpCond = "Tukey")))}else{NA}
+if ((j1 <- anova(IIA_Aviscous_AxW_mdl)$`Pr(>F)`) <0.05) {  IIA_Aviscous_AxW_hoc <- summary(glht(IIA_Aviscous_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
 
 ### MHC IIA: Age x Weight x Sex ------------------------------------------------------------------------------------------
-IIA_Force_AxWxS_mdl <- lmer(Force ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_IIA)
+IIA_Force_AxWxS_mdl <- lmer(Force ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIA)
 IIA_Force_AxWxS_emm <- emmeans(IIA_Force_AxWxS_mdl, specs = "AgexWeightxSex")
-if ((u <- anova(IIA_Force_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_Force_AxWxS_hoc <- summary(glht(IIA_Force_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+if ((k1 <- anova(IIA_Force_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_Force_AxWxS_hoc <- summary(glht(IIA_Force_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
 
+IIA_CSA_AxWxS_mdl <- lmer(CSA ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIA)
+IIA_CSA_AxWxS_emm <- emmeans(IIA_CSA_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((l1 <- anova(IIA_CSA_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_CSA_AxWxS_hoc <- summary(glht(IIA_CSA_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
 
-# having difficulty with the posthoc test.
+IIA_Tension_AxWxS_mdl <- lmer(Tension ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIA)
+IIA_Tension_AxWxS_emm <- emmeans(IIA_Tension_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((m1 <- anova(IIA_Tension_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_Tension_AxWxS_hoc <- summary(glht(IIA_Tension_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
 
-# IIA_CSA_AxWxS_mdl <- lmer(CSA ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_IIA)
-# IIA_CSA_AxWxS_emm <- emmeans(IIA_CSA_AxWxS_mdl, specs = "AgexWeightxSex")
-# if ((v <- anova(IIA_CSA_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_CSA_AxWxS_hoc <- summary(glht(IIA_CSA_AxWxS_mdl, linfct = mcp(as.factor(AgexWeightxSex) = "Tukey")))}else{NA}
-# 
-# IIA_Tension_AxWxS_mdl <- lmer(Tension ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_IIA)
-# IIA_Tension_AxWxS_emm <- emmeans(IIA_Tension_AxWxS_mdl, specs = "AgexWeightxSex")
-# if ((w <- anova(IIA_Tension_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_Tension_AxWxS_hoc <- summary(glht(IIA_Tension_AxWxS_mdl, linfct = mcp(as.factor(AgexWeightxSex) = "Tukey")))}else{NA}
-# 
-# IIA_A_AxWxS_mdl <- lmer(A ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_IIA)
-# IIA_A_AxWxS_emm <- emmeans(IIA_A_AxWxS_mdl, specs = "AgexWeightxSex")
-# if ((x <- anova(IIA_A_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_A_AxWxS_hoc <- summary(glht(IIA_A_AxWxS_mdl, linfct = mcp(as.factor(AgexWeightxSex) = "Tukey")))}else{NA}
-# 
-# IIA_k_AxWxS_mdl <- lmer(k ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_IIA)
-# IIA_k_AxWxS_emm <- emmeans(IIA_k_AxWxS_mdl, specs = "AgexWeightxSex")
-# if ((y <- anova(IIA_k_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_k_AxWxS_hoc <- summary(glht(IIA_k_AxWxS_mdl, linfct = mcp(as.factor(AgexWeightxSex) = "Tukey")))}else{NA}
-# 
-# IIA_B_AxWxS_mdl <- lmer(B ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_IIA)
-# IIA_B_AxWxS_emm <- emmeans(IIA_B_AxWxS_mdl, specs = "AgexWeightxSex")
-# if ((z <- anova(IIA_B_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_B_AxWxS_hoc <- summary(glht(IIA_B_AxWxS_mdl, linfct = mcp(as.factor(AgexWeightxSex) = "Tukey")))}else{NA}
-# 
-# IIA_ton_AxWxS_mdl <- lmer(ton ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_IIA)
-# IIA_ton_AxWxS_emm <- emmeans(IIA_ton_AxWxS_mdl, specs = "AgexWeightxSex")
-# if ((zz <- anova(IIA_ton_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_ton_AxWxS_hoc <- summary(glht(IIA_ton_AxWxS_mdl, linfct = mcp(as.factor(AgexWeightxSex) = "Tukey")))}else{NA}
-# 
-# IIA_twopib_AxWxS_mdl <- lmer(twopib ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_IIA)
-# IIA_twopib_AxWxS_emm <- emmeans(IIA_twopib_AxWxS_mdl, specs = "AgexWeightxSex")
-# if ((zzz <- anova(IIA_twopib_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_twopib_AxWxS_hoc <- summary(glht(IIA_twopib_AxWxS_mdl, linfct = mcp(as.factor(AgexWeightxSex) = "Tukey")))}else{NA}
-# 
-# IIA_Aelastic_AxWxS_mdl <- lmer(Aelastic ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_IIA)
-# IIA_Aelastic_AxWxS_emm <- emmeans(IIA_Aelastic_AxWxS_mdl, specs = "AgexWeightxSex")
-# if ((zzzz <- anova(IIA_Aelastic_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_Aelastic_AxWxS_hoc <- summary(glht(IIA_Aelastic_AxWxS_mdl, linfct = mcp(as.factor(AgexWeightxSex) = "Tukey")))}else{NA}
-# 
-# IIA_Aviscous_AxWxS_mdl <- lmer(Aviscous ~ as.factor(AgexWeightxSex) + (1| SubjNum), data = my_data_IIA)
-# IIA_Aviscous_AxWxS_emm <- emmeans(IIA_Aviscous_AxWxS_mdl, specs = "AgexWeightxSex")
-# if ((zzzzz <- anova(IIA_Aviscous_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_Aviscous_AxWxS_hoc <- summary(glht(IIA_Aviscous_AxWxS_mdl, linfct = mcp(as.factor(AgexWeightxSex) = "Tukey")))}else{NA}
-# 
+IIA_A_AxWxS_mdl <- lmer(A ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIA)
+IIA_A_AxWxS_emm <- emmeans(IIA_A_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((n1 <- anova(IIA_A_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_A_AxWxS_hoc <- summary(glht(IIA_A_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+
+IIA_k_AxWxS_mdl <- lmer(k ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIA)
+IIA_k_AxWxS_emm <- emmeans(IIA_k_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((o1 <- anova(IIA_k_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_k_AxWxS_hoc <- summary(glht(IIA_k_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+
+IIA_B_AxWxS_mdl <- lmer(B ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIA)
+IIA_B_AxWxS_emm <- emmeans(IIA_B_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((p1 <- anova(IIA_B_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_B_AxWxS_hoc <- summary(glht(IIA_B_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+
+IIA_ton_AxWxS_mdl <- lmer(ton ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIA)
+IIA_ton_AxWxS_emm <- emmeans(IIA_ton_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((q1 <- anova(IIA_ton_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_ton_AxWxS_hoc <- summary(glht(IIA_ton_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+
+IIA_twopib_AxWxS_mdl <- lmer(twopib ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIA)
+IIA_twopib_AxWxS_emm <- emmeans(IIA_twopib_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((r1 <- anova(IIA_twopib_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_twopib_AxWxS_hoc <- summary(glht(IIA_twopib_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+
+IIA_Aelastic_AxWxS_mdl <- lmer(Aelastic ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIA)
+IIA_Aelastic_AxWxS_emm <- emmeans(IIA_Aelastic_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((s1 <- anova(IIA_Aelastic_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_Aelastic_AxWxS_hoc <- summary(glht(IIA_Aelastic_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+
+IIA_Aviscous_AxWxS_mdl <- lmer(Aviscous ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIA)
+IIA_Aviscous_AxWxS_emm <- emmeans(IIA_Aviscous_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((t1 <- anova(IIA_Aviscous_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIA_Aviscous_AxWxS_hoc <- summary(glht(IIA_Aviscous_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+
+### MHC IIAX: Age x Weight --------------------------------------------------------------------------------------------
+IIAX_Force_AxW_mdl <- lmer(Force ~ AgexWeight + (1| SubjNum), data = my_data_IIAX)
+IIAX_Force_AxW_emm <- emmeans(IIAX_Force_AxW_mdl, specs = "AgexWeight")
+if ((a2 <- anova(IIAX_Force_AxW_mdl)$`Pr(>F)`) <0.05) {  IIAX_Force_AxW_hoc <- summary(glht(IIAX_Force_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
+
+IIAX_CSA_AxW_mdl <- lmer(CSA ~ AgexWeight + (1| SubjNum), data = my_data_IIAX)
+IIAX_CSA_AxW_emm <- emmeans(IIAX_CSA_AxW_mdl, specs = "AgexWeight")
+if ((b2 <- anova(IIAX_CSA_AxW_mdl)$`Pr(>F)`) <0.05) {  IIAX_CSA_AxW_hoc <- summary(glht(IIAX_CSA_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
+
+IIAX_Tension_AxW_mdl <- lmer(Tension ~ AgexWeight + (1| SubjNum), data = my_data_IIAX)
+IIAX_Tension_AxW_emm <- emmeans(IIAX_Tension_AxW_mdl, specs = "AgexWeight")
+if ((c2 <- anova(IIAX_Tension_AxW_mdl)$`Pr(>F)`) <0.05) {  IIAX_Tension_AxW_hoc <- summary(glht(IIAX_Tension_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
+
+IIAX_A_AxW_mdl <- lmer(A ~ AgexWeight + (1| SubjNum), data = my_data_IIAX)
+IIAX_A_AxW_emm <- emmeans(IIAX_A_AxW_mdl, specs = "AgexWeight")
+if ((d2 <- anova(IIAX_A_AxW_mdl)$`Pr(>F)`) <0.05) {  IIAX_A_AxW_hoc <- summary(glht(IIAX_A_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
+
+IIAX_k_AxW_mdl <- lmer(k ~ AgexWeight + (1| SubjNum), data = my_data_IIAX)
+IIAX_k_AxW_emm <- emmeans(IIAX_k_AxW_mdl, specs = "AgexWeight")
+if ((e2 <- anova(IIAX_k_AxW_mdl)$`Pr(>F)`) <0.05) {  IIAX_k_AxW_hoc <- summary(glht(IIAX_k_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
+
+IIAX_B_AxW_mdl <- lmer(B ~ AgexWeight + (1| SubjNum), data = my_data_IIAX)
+IIAX_B_AxW_emm <- emmeans(IIAX_B_AxW_mdl, specs = "AgexWeight")
+if ((f2 <- anova(IIAX_B_AxW_mdl)$`Pr(>F)`) <0.05) {  IIAX_B_AxW_hoc <- summary(glht(IIAX_B_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
+
+IIAX_ton_AxW_mdl <- lmer(ton ~ AgexWeight + (1| SubjNum), data = my_data_IIAX)
+IIAX_ton_AxW_emm <- emmeans(IIAX_ton_AxW_mdl, specs = "AgexWeight")
+if ((g2 <- anova(IIAX_ton_AxW_mdl)$`Pr(>F)`) <0.05) {  IIAX_ton_AxW_hoc <- summary(glht(IIAX_ton_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
+
+IIAX_twopib_AxW_mdl <- lmer(twopib ~ AgexWeight + (1| SubjNum), data = my_data_IIAX)
+IIAX_twopib_AxW_emm <- emmeans(IIAX_twopib_AxW_mdl, specs = "AgexWeight")
+if ((h2 <- anova(IIAX_twopib_AxW_mdl)$`Pr(>F)`) <0.05) {  IIAX_twopib_AxW_hoc <- summary(glht(IIAX_twopib_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
+
+IIAX_Aelastic_AxW_mdl <- lmer(Aelastic ~ AgexWeight + (1| SubjNum), data = my_data_IIAX)
+IIAX_Aelastic_AxW_emm <- emmeans(IIAX_Aelastic_AxW_mdl, specs = "AgexWeight")
+if ((i2 <- anova(IIAX_Aelastic_AxW_mdl)$`Pr(>F)`) <0.05) {  IIAX_Aelastic_AxW_hoc <- summary(glht(IIAX_Aelastic_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
+
+IIAX_Aviscous_AxW_mdl <- lmer(Aviscous ~ AgexWeight + (1| SubjNum), data = my_data_IIAX)
+IIAX_Aviscous_AxW_emm <- emmeans(IIAX_Aviscous_AxW_mdl, specs = "AgexWeight")
+if ((j2 <- anova(IIAX_Aviscous_AxW_mdl)$`Pr(>F)`) <0.05) {  IIAX_Aviscous_AxW_hoc <- summary(glht(IIAX_Aviscous_AxW_mdl, linfct = mcp(AgexWeight = "Tukey")))}else{NA}
+
+### MHC IIAX: Age x Weight x Sex ---------------------------------------------------------------
+IIAX_Force_AxWxS_mdl <- lmer(Force ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIAX)
+IIAX_Force_AxWxS_emm <- emmeans(IIAX_Force_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((k2 <- anova(IIAX_Force_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIAX_Force_AxWxS_hoc <- summary(glht(IIAX_Force_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+
+IIAX_CSA_AxWxS_mdl <- lmer(CSA ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIAX)
+IIAX_CSA_AxWxS_emm <- emmeans(IIAX_CSA_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((l2 <- anova(IIAX_CSA_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIAX_CSA_AxWxS_hoc <- summary(glht(IIAX_CSA_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+
+IIAX_Tension_AxWxS_mdl <- lmer(Tension ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIAX)
+IIAX_Tension_AxWxS_emm <- emmeans(IIAX_Tension_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((m2 <- anova(IIAX_Tension_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIAX_Tension_AxWxS_hoc <- summary(glht(IIAX_Tension_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+
+IIAX_A_AxWxS_mdl <- lmer(A ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIAX)
+IIAX_A_AxWxS_emm <- emmeans(IIAX_A_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((n2 <- anova(IIAX_A_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIAX_A_AxWxS_hoc <- summary(glht(IIAX_A_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+
+IIAX_k_AxWxS_mdl <- lmer(k ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIAX)
+IIAX_k_AxWxS_emm <- emmeans(IIAX_k_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((o2 <- anova(IIAX_k_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIAX_k_AxWxS_hoc <- summary(glht(IIAX_k_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+
+IIAX_B_AxWxS_mdl <- lmer(B ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIAX)
+IIAX_B_AxWxS_emm <- emmeans(IIAX_B_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((p2 <- anova(IIAX_B_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIAX_B_AxWxS_hoc <- summary(glht(IIAX_B_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+
+IIAX_ton_AxWxS_mdl <- lmer(ton ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIAX)
+IIAX_ton_AxWxS_emm <- emmeans(IIAX_ton_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((q2 <- anova(IIAX_ton_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIAX_ton_AxWxS_hoc <- summary(glht(IIAX_ton_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+
+IIAX_twopib_AxWxS_mdl <- lmer(twopib ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIAX)
+IIAX_twopib_AxWxS_emm <- emmeans(IIAX_twopib_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((r2 <- anova(IIAX_twopib_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIAX_twopib_AxWxS_hoc <- summary(glht(IIAX_twopib_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+
+IIAX_Aelastic_AxWxS_mdl <- lmer(Aelastic ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIAX)
+IIAX_Aelastic_AxWxS_emm <- emmeans(IIAX_Aelastic_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((s2 <- anova(IIAX_Aelastic_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIAX_Aelastic_AxWxS_hoc <- summary(glht(IIAX_Aelastic_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+
+IIAX_Aviscous_AxWxS_mdl <- lmer(Aviscous ~ AgexWeightxSex + (1| SubjNum), data = my_data_IIAX)
+IIAX_Aviscous_AxWxS_emm <- emmeans(IIAX_Aviscous_AxWxS_mdl, specs = "AgexWeightxSex")
+if ((t2 <- anova(IIAX_Aviscous_AxWxS_mdl)$`Pr(>F)`) <0.05) {  IIAX_Aviscous_AxWxS_hoc <- summary(glht(IIAX_Aviscous_AxWxS_mdl, linfct = mcp(AgexWeightxSex = "Tukey")))}else{NA}
+
