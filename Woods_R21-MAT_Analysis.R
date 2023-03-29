@@ -4,9 +4,8 @@ library(emmeans)
 library(multcomp)
 library(lmerTest)
 
-#this is testing 
-
-setwd("C:/Users/Phil/Dropbox/MBL/Tension + AaBbCc/R21-MAT")
+# setwd("C:/Users/Phil/Dropbox/MBL/Tension + AaBbCc/R21-MAT")
+setwd("C:/Users/pcw00/Dropbox/MBL/Tension + AaBbCc/R21-MAT")
 
 my_data <- read_excel("R21-Tension+AkBbCc__PW_R_3-27-23.xlsx",
                       sheet = "Final - Run only") %>% 
@@ -507,4 +506,12 @@ mhcIIAX_anova <- data.frame(rbind(a2,b2,c2,d2,e2,f2,g2,h2,i2,j2,k2,l2,m2,n2,o2,p
 colnames(mhcIIAX_anova) <- c("p-value", "MHC", "Value", "Condition")
 
 
-
+posthoc <- rbind(table_glht(IIA_Force_AxWxS_hoc),
+                 table_glht(IIA_CSA_AxW_emm),
+                 table_glht(IIAX_Force_AxW_hoc),
+                 table_glht(IIAX_Force_AxWxS_hoc),
+                 table_glht(IIAX_CSA_AxW_hoc),
+                 table_glht(IIAX_CSA_AxWxS_hoc),
+                 table_glht(IIAX_k_AxW_hoc),
+                 table_glht(IIAX_B_AxW_hoc))  
+  # mutate(FiberType = c("I"))
