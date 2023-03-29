@@ -4,6 +4,8 @@ library(emmeans)
 library(multcomp)
 library(lmerTest)
 
+#this is testing 
+
 setwd("C:/Users/Phil/Dropbox/MBL/Tension + AaBbCc/R21-MAT")
 
 my_data <- read_excel("R21-Tension+AkBbCc__PW_R_3-27-23.xlsx",
