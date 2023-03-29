@@ -7,7 +7,7 @@ theme_set(theme_classic())
 
 
 setwd("C:/Users/Phil/Dropbox/MBL/Aurora Fatigue Data")
-
+setwd("C:/Users/pcw00/Dropbox/MBL/Aurora Fatigue Data")
 
 # my_data <- read_excel("Aurora_Masters_CS.xlsx") %>%
 #   filter(Fibertypenum %in% c(1,2,4,5)) %>%
