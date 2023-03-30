@@ -506,12 +506,50 @@ mhcIIAX_anova <- data.frame(rbind(a2,b2,c2,d2,e2,f2,g2,h2,i2,j2,k2,l2,m2,n2,o2,p
 colnames(mhcIIAX_anova) <- c("p-value", "MHC", "Value", "Condition")
 
 
-posthoc <- rbind(table_glht(IIA_Force_AxWxS_hoc),
-                 table_glht(IIA_CSA_AxW_emm),
+phocs <- data.frame(rbind(table_glht(IIA_Force_AxWxS_hoc),
+                 table_glht(IIA_CSA_AxWxS_hoc),
                  table_glht(IIAX_Force_AxW_hoc),
                  table_glht(IIAX_Force_AxWxS_hoc),
                  table_glht(IIAX_CSA_AxW_hoc),
                  table_glht(IIAX_CSA_AxWxS_hoc),
                  table_glht(IIAX_k_AxW_hoc),
-                 table_glht(IIAX_B_AxW_hoc))  
-  # mutate(FiberType = c("I"))
+                 table_glht(IIAX_B_AxW_hoc)))  %>%
+  mutate(FiberType = c("IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA",
+                       "IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA",
+                       "IIAX","IIAX","IIAX",
+                       "IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX",
+                       "IIAX","IIAX","IIAX",
+                       "IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX",
+                       "IIAX","IIAX","IIAX",
+                       "IIAX","IIAX","IIAX"), .before = Estimate) %>% 
+  mutate(Condition = c("AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS",
+                       "AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS",
+                       "AxW","AxW","AxW",
+                       "AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS",
+                       "AxW","AxW","AxW",
+                       "AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS","AxWxS",
+                       "AxW","AxW","AxW",
+                       "AxW","AxW","AxW"), .before = Estimate) %>% 
+  mutate(Comparison = c("1-0", "2-0", "3-0", "4-0", "5-0", "2-1", "3-1", "4-1", "5-1", "3-2", "4-2", "5-2", "4-3", "5-3", "5-4",
+                        "1-0", "2-0", "3-0", "4-0", "5-0", "2-1", "3-1", "4-1", "5-1", "3-2", "4-2", "5-2", "4-3", "5-3", "5-4",
+                        "1-0", "2-0", "2-1",
+                        "1-0", "2-0", "3-0", "4-0", "5-0", "2-1", "3-1", "4-1", "5-1", "3-2", "4-2", "5-2", "4-3", "5-3", "5-4",
+                        "1-0", "2-0", "2-1",
+                        "1-0", "2-0", "3-0", "4-0", "5-0", "2-1", "3-1", "4-1", "5-1", "3-2", "4-2", "5-2", "4-3", "5-3", "5-4",
+                        "1-0", "2-0", "2-1",
+                        "1-0", "2-0", "2-1"), .before = FiberType) %>% 
+  mutate(Value = c("Force","Force","Force","Force","Force","Force","Force","Force","Force","Force","Force","Force","Force","Force","Force",
+                   "CSA","CSA","CSA","CSA","CSA","CSA","CSA","CSA","CSA","CSA","CSA","CSA","CSA","CSA","CSA",
+                   "Force","Force","Force",
+                   "Force","Force","Force","Force","Force","Force","Force","Force","Force","Force","Force","Force","Force","Force","Force",
+                   "CSA","CSA","CSA",
+                   "CSA","CSA","CSA","CSA","CSA","CSA","CSA","CSA","CSA","CSA","CSA","CSA","CSA","CSA","CSA",
+                   "k","k","k",
+                   "B","B","B"), .before = FiberType)
+
+Final <- list(mhcI_AxW_emm,mhcI_AxWxS_emm,mhcI_anova,mhcIIA_AxW_emm, 
+              mhcIIA_AxWxS_emm,mhcIIA_anova,
+              mhcIIAX_AxW_emm,mhcIIAX_AxWxS_emm,mhcIIAX_anova,
+              phocs)
+
+writexl::write_xlsx(Final, "R21_AxW+AxWxS_Comparison_PW.xlsx")
