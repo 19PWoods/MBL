@@ -31,11 +31,10 @@ table_glht <- function(x) {
 
 ### Figure 1: Bar Graphs-----------------------------------------------------------------
 
-I <- read_excel("Aurora_Masters_CS.xlsx") %>%
+I <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum == 1) %>% 
   filter(ExpCondnum %in% c(1:3)) %>% 
   group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
-  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
   mutate(Force = CSA*PoControl25C) 
 
 
@@ -59,38 +58,36 @@ if ((b<- anova(I_Force_lm)$`Pr(>F)`) <0.05) {
   NA
 }
 
-I.IIA <- read_excel("Aurora_Masters_CS.xlsx") %>%
+I.IIA <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum == 4) %>% 
   filter(ExpCondnum %in% c(1:3)) %>% 
   group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
-  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
   mutate(Force = CSA*PoControl25C) 
 
-IIA_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = I.IIA)
-IIA_Po_emm <- data.frame(emmeans(IIA_Po_lm, specs = "ExpCond"))  
-if ((c <- anova(IIA_Po_lm)$`Pr(>F)`) <0.05) {
+I.IIA_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = I.IIA)
+I.IIA_Po_emm <- data.frame(emmeans(I.IIA_Po_lm, specs = "ExpCond"))  
+if ((c <- anova(I.IIA_Po_lm)$`Pr(>F)`) <0.05) {
   
-  IIA_Po_hoc <- summary(glht(IIA_Po_lm, linfct = mcp(ExpCond = "Tukey")))
-  
-} else{
-  NA
-}
-
-IIA_Force_lm <- lmer(Force ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = I.IIA)
-IIA_Force_emm <- data.frame(emmeans(IIA_Force_lm, specs = "ExpCond"))  
-if ((d <- anova(IIA_Force_lm)$`Pr(>F)`) <0.05) {
-  
-  IIA_Force_hoc <- summary(glht(IIA_Force_lm, linfct = mcp(ExpCond = "Tukey")))
+  I.IIA_Po_hoc <- summary(glht(I.IIA_Po_lm, linfct = mcp(ExpCond = "Tukey")))
   
 } else{
   NA
 }
 
-IIA <- read_excel("Aurora_Masters_CS.xlsx") %>%
+I.IIA_Force_lm <- lmer(Force ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = I.IIA)
+I.IIA_Force_emm <- data.frame(emmeans(I.IIA_Force_lm, specs = "ExpCond"))  
+if ((d <- anova(I.IIA_Force_lm)$`Pr(>F)`) <0.05) {
+  
+  I.IIA_Force_hoc <- summary(glht(I.IIA_Force_lm, linfct = mcp(ExpCond = "Tukey")))
+  
+} else{
+  NA
+}
+
+IIA <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum == 2) %>% 
   filter(ExpCondnum %in% c(1:3)) %>% 
   group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
-  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
   mutate(Force = CSA*PoControl25C) 
 
 IIA_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = IIA)
@@ -113,11 +110,10 @@ if ((f <- anova(IIA_Force_lm)$`Pr(>F)`) <0.05) {
   NA
 }
 
-IIAX <- read_excel("Aurora_Masters_CS.xlsx") %>%
+IIAX <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum == 5) %>% 
   filter(ExpCondnum %in% c(1:3)) %>% 
   group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
-  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
   mutate(Force = CSA*PoControl25C) 
 
 IIAX_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = IIAX)
@@ -143,8 +139,8 @@ if ((h<- anova(IIAX_Force_lm)$`Pr(>F)`) <0.05) {
 
 Fig_1_emm <- rbind(I_Po_emm,
                         I_Force_emm,
-                        IIA_Po_emm,
-                        IIA_Force_emm,
+                        I.IIA_Po_emm,
+                        I.IIA_Force_emm,
                         IIA_Po_emm,
                         IIA_Force_emm,
                         IIAX_Po_emm,
@@ -169,7 +165,7 @@ colnames(Fig_1_anova) <- c("p_value", "Fiber_Type", "Value")
 
 Fig_1_posthoc <- data.frame(rbind(table_glht(I_Po_hoc),
                             table_glht(I_Force_hoc),
-                            table_glht(IIA_Po_hoc),
+                            table_glht(I.IIA_Po_hoc),
                             table_glht(IIA_Po_hoc),
                             table_glht(IIA_Force_hoc),
                             table_glht(IIAX_Po_hoc),
@@ -218,11 +214,10 @@ names(Figure_1_Final) <- c("Figure 1-EMM", "Figure 1-Anova", "Figure 1-Posthoc")
 writexl::write_xlsx(Figure_1_Final, path = "Woods_AuroraMaster_Figure1.xlsx")
 
 ### Figure 1: Scatter Plots ---------------------------------------------
-I <- read_excel("Aurora_Masters_CS.xlsx") %>%
+I <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum == 1) %>% 
   filter(ExpCondnum %in% c(1:3)) %>% 
   group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
-  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
   mutate(Force = CSA*PoControl25C) 
 
 I_F1_con <- I %>% filter(ExpCond == "Control")
@@ -246,11 +241,10 @@ I_F1_fatdatp$mdl <- predict(I_F1_fatdatp_lm)
   geom_line(data = I_F1_fatdatp, aes(y = mdl), linetype = "dotted", size = 1)
 )
 
-IIA <- read_excel("Aurora_Masters_CS.xlsx") %>%
+IIA <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum ==2 ) %>% 
   filter(ExpCondnum %in% c(1:3)) %>% 
   group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
-  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
   mutate(Force = CSA*PoControl25C) 
 
 IIA_F1_con <- IIA %>% filter(ExpCond == "Control")
@@ -277,12 +271,11 @@ IIA_F1_fatdatp$mdl <- predict(IIA_F1_fatdatp_lm)
 
 ## Figure 3: Control + Fatigue  -----------------------------------------------------------------------------------
 
-con_fat_data <- read_excel("Aurora_Masters_CS.xlsx") %>%
+con_fat_data <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum %in% c(1,2,4,5)) %>%
   filter(Grp == 1) %>%
   filter(ExpCondnum %in% c(1,2)) %>% 
   group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>%
-  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
   mutate(Force = CSA*PoControl25C)
 
 
@@ -292,7 +285,6 @@ I_cf <- con_fat_data %>% filter(FiberType == "I")
 I_Fig3_B_lm <- lmer(BkNm2 ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I_cf)
 I_Fig3_B_emm <- data.frame(emmeans(I_Fig3_B_lm, specs = "ExpCond"))
 i <- anova(I_Fig3_B_lm)$`Pr(>F)`
-
 
 I_Fig3_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I_cf)
 I_Fig3_Ae_emm <- data.frame(emmeans(I_Fig3_Ae_lm, specs = "ExpCond"))
@@ -439,7 +431,7 @@ writexl::write_xlsx(Fig3_cf, path = "Woods_AuroraMaster_Figure3_ControlvFatigue.
 
 ### Figure 3: Control + dATP --------------------------------------------------------------
 
-con_fatdatp_data <- read_excel("Aurora_Masters_CS.xlsx") %>%
+con_fatdatp_data <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum %in% c(1,2,4,5)) %>%
   filter(Grp == 2) %>%
   filter(ExpCondnum %in% c(1,3)) %>% 
@@ -596,7 +588,7 @@ writexl::write_xlsx(Fig3_cdatp, path = "Woods_AuroraMaster_Figure3_ControlvFatig
 
 ### Figure 3: Fatigue vs Fatigue dATP -----------------------------------------------------------------------
 
-fat_v_datp <- read_excel("Aurora_Masters_CS.xlsx") %>%
+fat_v_datp <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum %in% c(1,2,4,5)) %>%
   filter(ExpCondnum %in% c(2,3)) %>% 
   group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>%
@@ -750,12 +742,12 @@ names(Fig3_fvf) <- c("Figure 3 Fat vs dATP - EMM",
 writexl::write_xlsx(Fig3_fvf, path = "Woods_AuroraMaster_Figure3_FatiguevFatiguedATP.xlsx")
 
 ### Figure 3: Fatigue Control vs Fatigue dATP Control ------------------------------------------
-control_fat <- read_excel("Aurora_Masters_CS.xlsx") %>%
+control_fat <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum %in% c(1,2,4,5)) %>%
   filter(ExpCondnum == 1 & Grp == 1) %>% 
   mutate(ExpCond = "Control_Fat")
 
-control_datp <- read_excel("Aurora_Masters_CS.xlsx") %>%
+control_datp <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum %in% c(1,2,4,5)) %>%
   filter(ExpCondnum == 1 & Grp == 2) %>% 
   mutate(ExpCond = "Control_dATP")
@@ -910,11 +902,10 @@ writexl::write_xlsx(Fig3_cc, path = "Woods_AuroraMaster_Figure3_ControlvsControl
 
 ### Figure 4: Bar Graphs-----------------------------------------------------------------------
 
-I_Fig4 <- read_excel("Aurora_Masters_CS.xlsx") %>%
+I_Fig4 <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum == 1) %>% 
   filter(ExpCondnum %in% c(10,4)) %>% 
   group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
-  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
   mutate(Force = CSA*PoControl25C) 
 
 I_Fig4_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = I_Fig4)
@@ -927,11 +918,10 @@ an <- anova(I_Fig4_Force_lm)$`Pr(>F)`
 
 
 
-IIA_Fig4 <- read_excel("Aurora_Masters_CS.xlsx") %>%
+IIA_Fig4 <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum == 2) %>% 
   filter(ExpCondnum %in% c(10,4)) %>% 
   group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
-  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
   mutate(Force = CSA*PoControl25C) 
 
 IIA_Fig4_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = IIA_Fig4)
@@ -968,18 +958,16 @@ writexl::write_xlsx(Fig4, path = "Woods_AuroraMaster_Figure4.xlsx")
 
 ### Figure 4: Scatter plots ---------------------------------------------------
 
-I_Fig4 <- read_excel("Aurora_Masters_CS.xlsx") %>%
+I_Fig4 <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum == 1) %>% 
   filter(ExpCondnum %in% c(10,4)) %>% 
   group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
-  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
   mutate(Force = CSA*PoControl25C) 
 
-IIA_Fig4 <- read_excel("Aurora_Masters_CS.xlsx") %>%
+IIA_Fig4 <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum == 2) %>% 
   filter(ExpCondnum %in% c(10,4)) %>% 
   group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
-  mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
   mutate(Force = CSA*PoControl25C) 
 
 I_Fig4_con <- I_Fig4 %>% filter(ExpCondnum == 10)
