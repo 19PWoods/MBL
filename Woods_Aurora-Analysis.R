@@ -937,12 +937,12 @@ Fig4_emm <- rbind(I_Fig4_Po_emm,
                   IIA_Fig4_Po_emm,
                   IIA_Fig4_Force_emm) %>%
   mutate(Fiber_Type = c("I", "I","I", "I", "IIA", "IIA","IIA", "IIA"), .before = emmean) %>% 
-  mutate(Value = c("Force", "ST", "Force", "ST","Force", "ST", "Force", "ST"), .before = emmean)
+  mutate(Value = c("ST", "Force","ST", "Force","ST", "Force","ST", "Force"), .before = emmean)
 
   
  Fig4_anova <- data.frame(rbind(am, an, ao, ap)) %>% 
    mutate(Fiber_Type = c("I", "I", "IIA", "IIA")) %>% 
-   mutate(Value = c("Force", "ST", "Force", "ST"))
+   mutate(Value = c("ST", "Force", "ST", "Force"))
   
  colnames(Fig4_anova) <- c("p_value", "Fiber_Type", "Value")
  
@@ -999,9 +999,6 @@ IIA_Fig4_condatp$mdl <- predict(IIA_Fig4_condatp_lm)
     geom_line(data = IIA_Fig4_con , aes(y = mdl), linetype = "solid", size = 1) +
     geom_line(data = IIA_Fig4_condatp, aes(y = mdl), linetype = "longdash", size = 1)
 )
-
-
-
 
 ### Figure 5: Bar Plots --------------------------------------------------
 
