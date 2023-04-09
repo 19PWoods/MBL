@@ -39,7 +39,7 @@ I <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   mutate(Force = CSA*PoControl25C) 
 
 
-I_Po_lm <- lmer(PoControl25C ~ CondxSex + (1 + CondxSex | SubjectNum), data = I)
+I_Po_lm <- lmer(PoControl25C ~ CondxSex + (1 | SubjectNum), data = I)
 I_Po_emm <- data.frame(emmeans(I_Po_lm, specs = "CondxSex"))  
 if ((a <- anova(I_Po_lm)$`Pr(>F)`) <0.05) {
  
@@ -49,7 +49,7 @@ if ((a <- anova(I_Po_lm)$`Pr(>F)`) <0.05) {
      NA
 }
 
-I_Force_lm <- lmer(Force ~ CondxSex + (1 + CondxSex | SubjectNum), data = I)
+I_Force_lm <- lmer(Force ~ CondxSex + (1  | SubjectNum), data = I)
 I_Force_emm <- data.frame(emmeans(I_Force_lm, specs = "CondxSex"))  
 if ((b<- anova(I_Force_lm)$`Pr(>F)`) <0.05) {
   
@@ -93,7 +93,7 @@ IIA <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   group_by(SubjectNum, FiberType, Fibertypenum, CondxSex) %>% 
   mutate(Force = CSA*PoControl25C) 
 
-IIA_Po_lm <- lmer(PoControl25C ~ CondxSex + (1 + CondxSex | SubjectNum), data = IIA)
+IIA_Po_lm <- lmer(PoControl25C ~ CondxSex + (1  | SubjectNum), data = IIA)
 IIA_Po_emm <- data.frame(emmeans(IIA_Po_lm, specs = "CondxSex"))  
 if ((e<- anova(IIA_Po_lm)$`Pr(>F)`) <0.05) {
   
@@ -103,7 +103,7 @@ if ((e<- anova(IIA_Po_lm)$`Pr(>F)`) <0.05) {
   NA
 }
 
-IIA_Force_lm <- lmer(Force ~ CondxSex + (1 + CondxSex | SubjectNum), data = IIA)
+IIA_Force_lm <- lmer(Force ~ CondxSex + (1  | SubjectNum), data = IIA)
 IIA_Force_emm <- data.frame(emmeans(IIA_Force_lm, specs = "CondxSex"))  
 if ((f <- anova(IIA_Force_lm)$`Pr(>F)`) <0.05) {
   
@@ -230,56 +230,97 @@ writexl::write_xlsx(Figure_1_Final, path = "Woods_AuroraMaster_Figure1_SexSpecif
 ### Figure 1: Scatter Plots ---------------------------------------------
 I <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum == 1) %>% 
-  filter(ExpCondnum %in% c(1:3)) %>% 
-  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
+  filter(CondxSex %in% c(0:5)) %>% 
+  mutate(CondxSex = as.factor(CondxSex)) %>%  
+  group_by(SubjectNum, FiberType, Fibertypenum, CondxSex) %>% 
   mutate(Force = CSA*PoControl25C) 
 
-I_F1_con <- I %>% filter(ExpCond == "Control")
-I_F1_con_lm <- lm(I_F1_con$Force ~ I_F1_con$csa)
-I_F1_con$mdl <- predict(I_F1_con_lm)
+I_F1_con_males <- I %>% filter(ExpCond == "Control" & CondxSex == 0)
+I_F1_con_lm_males <- lm(I_F1_con_males$Force ~ I_F1_con_males$CSA)
+I_F1_con_males$mdl <- predict(I_F1_con_lm_males)
 
-I_F1_fat <- I %>% filter(ExpCond == "Fatigue")
-I_F1_fat_lm <- lm(I_F1_fat$Force ~ I_F1_fat$csa)
-I_F1_fat$mdl <- predict(I_F1_fat_lm)
+I_F1_con_females <- I %>% filter(ExpCond == "Control" & CondxSex == 1)
+I_F1_con_lm_females <- lm(I_F1_con_females$Force ~ I_F1_con_females$CSA)
+I_F1_con_females$mdl <- predict(I_F1_con_lm_females)
 
-I_F1_fatdatp <- I %>% filter(ExpCondnum == 3)
-I_F1_fatdatp_lm <- lm(I_F1_fatdatp$Force ~ I_F1_fatdatp$csa)
-I_F1_fatdatp$mdl <- predict(I_F1_fatdatp_lm)
+
+
+I_F1_fat_males <- I %>% filter(ExpCond == "Fatigue" & CondxSex == 2)
+I_F1_fat_lm_males <- lm(I_F1_fat_males$Force ~ I_F1_fat_males$CSA)
+I_F1_fat_males$mdl <- predict(I_F1_fat_lm_males)
+
+I_F1_fat_females <- I %>% filter(ExpCond == "Fatigue" & CondxSex == 3)
+I_F1_fat_lm_females <- lm(I_F1_fat_females$Force ~ I_F1_fat_females$CSA)
+I_F1_fat_females$mdl <- predict(I_F1_fat_lm_females)
+
+
+
+I_F1_fatdatp_males <- I %>% filter(ExpCondnum == 3 & CondxSex == 4)
+I_F1_fatdatp_lm_males <- lm(I_F1_fatdatp_males$Force ~ I_F1_fatdatp_males$CSA)
+I_F1_fatdatp_males$mdl <- predict(I_F1_fatdatp_lm_males)
+
+I_F1_fatdatp_females <- I %>% filter(ExpCondnum == 3 & CondxSex == 5)
+I_F1_fatdatp_lm_females <- lm(I_F1_fatdatp_females$Force ~ I_F1_fatdatp_females$CSA)
+I_F1_fatdatp_females$mdl <- predict(I_F1_fatdatp_lm_females)
 
 
 (I_Fig1_scat <- ggplot(data = I,
-                      aes(x = csa, y = Force)) +
+                      aes(x = CSA, y = Force)) +
   geom_point(aes(shape = ExpCond), size = 1.5) +
-  geom_line(data = I_F1_con, aes(y = mdl), linetype = "solid", size = 1) +
-  geom_line(data = I_F1_fat, aes(y = mdl), linetype = "longdash", size = 1) +
-  geom_line(data = I_F1_fatdatp, aes(y = mdl), linetype = "dotted", size = 1)
+  geom_line(data = I_F1_con_males, aes(y = mdl), linetype = "solid",col="red", size = 1) +
+  geom_line(data = I_F1_con_females, aes(y = mdl), linetype = "solid",col="blue", size = 1) +
+  geom_line(data = I_F1_fat_males, aes(y = mdl), linetype = "longdash",col= "red", size = 1) +
+  geom_line(data = I_F1_fat_females, aes(y = mdl), linetype = "longdash",col= "blue", size = 1) +
+  geom_line(data = I_F1_fatdatp_males, aes(y = mdl), linetype = "dotted", col = "blue",size = 1) +
+  geom_line(data = I_F1_fatdatp_females, aes(y = mdl), linetype = "dotted", col = "red",size = 1)  
 )
 
 IIA <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum ==2 ) %>% 
-  filter(ExpCondnum %in% c(1:3)) %>% 
-  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
+  filter(CondxSex %in% c(0:5)) %>% 
+  mutate(CondxSex = as.factor(CondxSex)) %>%  
+  group_by(SubjectNum, FiberType, Fibertypenum, CondxSex) %>% 
   mutate(Force = CSA*PoControl25C) 
 
-IIA_F1_con <- IIA %>% filter(ExpCond == "Control")
-IIA_F1_con_lm <- lm(IIA_F1_con$Force ~ IIA_F1_con$csa)
-IIA_F1_con$mdl <- predict(IIA_F1_con_lm)
+IIA_F1_con_males <- IIA %>% filter(ExpCond == "Control" & CondxSex == 0)
+IIA_F1_con_lm_males <- lm(IIA_F1_con_males$Force ~ IIA_F1_con_males$CSA)
+IIA_F1_con_males$mdl <- predict(IIA_F1_con_lm_males)
 
-IIA_F1_fat <- IIA %>% filter(ExpCond == "Fatigue")
-IIA_F1_fat_lm <- lm(IIA_F1_fat$Force ~ IIA_F1_fat$csa)
-IIA_F1_fat$mdl <- predict(IIA_F1_fat_lm)
-
-IIA_F1_fatdatp <- IIA %>% filter(ExpCondnum == 3)
-IIA_F1_fatdatp_lm <- lm(IIA_F1_fatdatp$Force ~ IIA_F1_fatdatp$csa)
-IIA_F1_fatdatp$mdl <- predict(IIA_F1_fatdatp_lm)
+IIA_F1_con_females <- IIA %>% filter(ExpCond == "Control" & CondxSex == 1)
+IIA_F1_con_lm_females <- lm(IIA_F1_con_females$Force ~ IIA_F1_con_females$CSA)
+IIA_F1_con_females$mdl <- predict(IIA_F1_con_lm_females)
 
 
-(IIA_Fig1_scat <- ggplot(data = I,
-                       aes(x = csa, y = Force)) +
+
+IIA_F1_fat_males <- IIA %>% filter(ExpCond == "Fatigue" & CondxSex == 2)
+IIA_F1_fat_lm_males <- lm(IIA_F1_fat_males$Force ~ IIA_F1_fat_males$CSA)
+IIA_F1_fat_males$mdl <- predict(IIA_F1_fat_lm_males)
+
+IIA_F1_fat_females <- IIA %>% filter(ExpCond == "Fatigue" & CondxSex == 3)
+IIA_F1_fat_lm_females <- lm(IIA_F1_fat_females$Force ~ IIA_F1_fat_females$CSA)
+IIA_F1_fat_females$mdl <- predict(IIA_F1_fat_lm_females)
+
+
+
+IIA_F1_fatdatp_males <- IIA %>% filter(ExpCondnum == 3 & CondxSex == 4)
+IIA_F1_fatdatp_lm_males <- lm(IIA_F1_fatdatp_males$Force ~ IIA_F1_fatdatp_males$CSA)
+IIA_F1_fatdatp_males$mdl <- predict(IIA_F1_fatdatp_lm_males)
+
+IIA_F1_fatdatp_females <- IIA %>% filter(ExpCondnum == 3 & CondxSex == 5)
+IIA_F1_fatdatp_lm_females <- lm(IIA_F1_fatdatp_females$Force ~ IIA_F1_fatdatp_females$CSA)
+IIA_F1_fatdatp_females$mdl <- predict(IIA_F1_fatdatp_lm_females)
+
+
+
+(IIA_Fig1_scat <- ggplot(data = IIA,
+                       aes(x = CSA, y = Force)) +
     geom_point(aes(shape = ExpCond), size = 1.5) +
-    geom_line(data = IIA_F1_con, aes(y = mdl), linetype = "solid", size = 1) +
-    geom_line(data = IIA_F1_fat, aes(y = mdl), linetype = "longdash", size = 1) +
-    geom_line(data = IIA_F1_fatdatp, aes(y = mdl), linetype = "dotted", size = 1)
+    geom_line(data = IIA_F1_con_males, aes(y = mdl), linetype = "solid",col="red", size = 1) +
+    geom_line(data = IIA_F1_con_females, aes(y = mdl), linetype = "solid",col="blue", size = 1) +
+    geom_line(data = IIA_F1_fat_males, aes(y = mdl), linetype = "longdash",col= "red", size = 1) +
+    geom_line(data = IIA_F1_fat_females, aes(y = mdl), linetype = "longdash",col= "blue", size = 1) +
+    geom_line(data = IIA_F1_fatdatp_males, aes(y = mdl), linetype = "dotted", col = "blue",size = 1) +
+    geom_line(data = IIA_F1_fatdatp_females, aes(y = mdl), linetype = "dotted", col = "red",size = 1)  
 )
 
 
