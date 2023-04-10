@@ -329,83 +329,115 @@ IIA_F1_fatdatp_females$mdl <- predict(IIA_F1_fatdatp_lm_females)
 con_fat_data <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum %in% c(1,2,4,5)) %>%
   filter(Grp == 1) %>%
-  filter(ExpCondnum %in% c(1,2)) %>% 
-  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>%
+  filter(CondxSex %in% c(0:5)) %>% 
+  mutate(CondxSex = as.factor(CondxSex)) %>% 
+  group_by(SubjectNum, FiberType, Fibertypenum, CondxSex) %>%
   mutate(Force = CSA*PoControl25C)
 
 
 ## IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
 I_cf <- con_fat_data %>% filter(FiberType == "I")
 
-I_Fig3_B_lm <- lmer(BkNm2 ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I_cf)
-I_Fig3_B_emm <- data.frame(emmeans(I_Fig3_B_lm, specs = "ExpCond"))
-i <- anova(I_Fig3_B_lm)$`Pr(>F)`
-
-I_Fig3_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I_cf)
-I_Fig3_Ae_emm <- data.frame(emmeans(I_Fig3_Ae_lm, specs = "ExpCond"))
-i.1 <- anova(I_Fig3_Ae_lm)$`Pr(>F)` 
-
-I_Fig3_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I_cf)
-I_Fig3_Av_emm <- data.frame(emmeans(I_Fig3_Av_lm, specs = "ExpCond"))
-i.2 <- anova(I_Fig3_Av_lm)$`Pr(>F)`
+I_Fig3_B_lm <- lmer(BkNm2 ~ CondxSex + (1 | SubjectNum),data = I_cf)
+I_Fig3_B_emm <- data.frame(emmeans(I_Fig3_B_lm, specs = "CondxSex"))
+if((i <- anova(I_Fig3_B_lm)$`Pr(>F)`) <0.05){
+  I_Fig3_B_hoc <- summary(glht(I_Fig3_B_lm, linfct = mcp(CondxSex = "Tukey")))
+}else{NA}
 
 
-I_Fig3_2pib_lm <- lmer(twopib ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I_cf)
-I_Fig3_2pib_emm <- data.frame(emmeans(I_Fig3_2pib_lm, specs = "ExpCond"))
-j <- anova(I_Fig3_2pib_lm)$`Pr(>F)` 
+I_Fig3_Ae_lm <- lmer(Aelastic ~ CondxSex + (1  | SubjectNum),data = I_cf)
+I_Fig3_Ae_emm <- data.frame(emmeans(I_Fig3_Ae_lm, specs = "CondxSex"))
+if((i.1 <- anova(I_Fig3_Ae_lm)$`Pr(>F)`) <0.05){
+  I_Fig3_Ae_hoc <- summary(glht(I_Fig3_Ae_lm, linfct = mcp(CondxSex = "Tukey")))
+}else{NA}
 
-I_Fig3_ton_lm <- lmer(ton ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I_cf)
-I_Fig3_ton_emm <- data.frame(emmeans(I_Fig3_ton_lm, specs = "ExpCond"))
-k <- anova(I_Fig3_ton_lm)$`Pr(>F)` 
+I_Fig3_Av_lm <- lmer(Aviscous ~ CondxSex + (1  | SubjectNum),data = I_cf)
+I_Fig3_Av_emm <- data.frame(emmeans(I_Fig3_Av_lm, specs = "CondxSex"))
+if((i.2 <- anova(I_Fig3_Av_lm)$`Pr(>F)`)<0.05){
+  I_Fig3_Av_hoc <- summary(glht(I_Fig3_Av_lm, linfct = mcp(CondxSex = "Tukey")))
+}else{NA}
+
+
+I_Fig3_2pib_lm <- lmer(twopib ~ CondxSex + (1  | SubjectNum),data = I_cf)
+I_Fig3_2pib_emm <- data.frame(emmeans(I_Fig3_2pib_lm, specs = "CondxSex"))
+if((j <- anova(I_Fig3_2pib_lm)$`Pr(>F)`)< 0.05) {
+  I_Fig3_2pib_hoc <- summary(glht(I_Fig3_2pib_lm, linfct = mcp(CondxSex = "Tukey")))
+} else{NA}
+
+I_Fig3_ton_lm <- lmer(ton ~ CondxSex + (1  | SubjectNum),data = I_cf)
+I_Fig3_ton_emm <- data.frame(emmeans(I_Fig3_ton_lm, specs = "CondxSex"))
+if((k <- anova(I_Fig3_ton_lm)$`Pr(>F)`)<0.05){
+  I_Fig3_ton_hoc <- summary(glht(I_Fig3_ton_lm, linfct = mcp(CondxSex = "Tukey")))
+} else{NA}
 
 # I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA I/IIA 
 
 I.IIA_cf <- con_fat_data %>% filter(Fibertypenum == 4)
 
-I.IIA_Fig3_B_lm <- lmer(BkNm2 ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = I.IIA_cf)
-I.IIA_Fig3_B_emm <- data.frame(emmeans(I.IIA_Fig3_B_lm, specs = "ExpCond"))
-l <- anova(I.IIA_Fig3_B_lm)$`Pr(>F)`
+I.IIA_Fig3_B_lm <- lmer(BkNm2 ~ CondxSex + (1 | SubjectNum), data = I.IIA_cf)
+I.IIA_Fig3_B_emm <- data.frame(emmeans(I.IIA_Fig3_B_lm, specs = "CondxSex"))
+if((l <- anova(I.IIA_Fig3_B_lm)$`Pr(>F)`)<0.05){
+  I.IIA_Fig3_B_hoc <- summary(glht(I.IIA_Fig3_B_lm, linfct = mcp(CondxSex = "Tukey")))
+}else{NA}
 
-I.IIA_Fig3_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I.IIA_cf)
-I.IIA_Fig3_Ae_emm <- data.frame(emmeans(I.IIA_Fig3_Ae_lm, specs = "ExpCond"))
-l.1 <- anova(I.IIA_Fig3_Ae_lm)$`Pr(>F)` 
+I.IIA_Fig3_Ae_lm <- lmer(Aelastic ~ CondxSex + (1  | SubjectNum),data = I.IIA_cf)
+I.IIA_Fig3_Ae_emm <- data.frame(emmeans(I.IIA_Fig3_Ae_lm, specs = "CondxSex"))
+if((l.1 <- anova(I.IIA_Fig3_Ae_lm)$`Pr(>F)`)<0.05){
+  I.IIA_Fig3_Ae_hoc <- summary(glht(I.IIA_Fig3_Ae_lm, linfct = mcp(CondxSex = "Tukey")))
+} else{NA}
 
-I.IIA_Fig3_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I.IIA_cf)
-I.IIA_Fig3_Av_emm <- data.frame(emmeans(I.IIA_Fig3_Av_lm, specs = "ExpCond"))
-l.2 <- anova(I.IIA_Fig3_Av_lm)$`Pr(>F)`
+I.IIA_Fig3_Av_lm <- lmer(Aviscous ~ CondxSex + (1  | SubjectNum),data = I.IIA_cf)
+I.IIA_Fig3_Av_emm <- data.frame(emmeans(I.IIA_Fig3_Av_lm, specs = "CondxSex"))
+if((l.2 <- anova(I.IIA_Fig3_Av_lm)$`Pr(>F)`)<0.05){
+  I.IIA_Fig3_Av_hoc <- summary(glht(I.IIA_Fig3_Av_lm, linfct = mcp(CondxSex = "Tukey")))
+}else{NA}
 
 
-I.IIA_Fig3_2pib_lm <- lmer(twopib ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I.IIA_cf)
-I.IIA_Fig3_2pib_emm <- data.frame(emmeans(I.IIA_Fig3_2pib_lm, specs = "ExpCond"))
-m <- anova(I.IIA_Fig3_2pib_lm)$`Pr(>F)` 
+I.IIA_Fig3_2pib_lm <- lmer(twopib ~ CondxSex + (1  | SubjectNum),data = I.IIA_cf)
+I.IIA_Fig3_2pib_emm <- data.frame(emmeans(I.IIA_Fig3_2pib_lm, specs = "CondxSex"))
+if((m <- anova(I.IIA_Fig3_2pib_lm)$`Pr(>F)`) <0.05){
+  I.IIA_Fig3_2pib_hoc <- summary(glht(I.IIA_Fig3_2pib_lm, linfct = mcp(CondxSex = "Tukey")))
+} else{NA}
 
-I.IIA_Fig3_ton_lm <- lmer(ton ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = I.IIA_cf)
-I.IIA_Fig3_ton_emm <- data.frame(emmeans(I.IIA_Fig3_ton_lm, specs = "ExpCond"))
-n <- anova(I.IIA_Fig3_ton_lm)$`Pr(>F)`
+I.IIA_Fig3_ton_lm <- lmer(ton ~ CondxSex + (1  | SubjectNum),data = I.IIA_cf)
+I.IIA_Fig3_ton_emm <- data.frame(emmeans(I.IIA_Fig3_ton_lm, specs = "CondxSex"))
+if((n <- anova(I.IIA_Fig3_ton_lm)$`Pr(>F)`) <0.05) {
+  I.IIA_Fig3_ton_hoc <- summary(glht(I.IIA_Fig3_ton_lm, linfct = mcp(CondxSex = "Tukey")))
+}else{NA}
 
 # IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA IIA 
 
 IIA_cf <- con_fat_data %>% filter(Fibertypenum == 2)
 
-IIA_Fig3_B_lm <- lmer(BkNm2 ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIA_cf)
-IIA_Fig3_B_emm <- data.frame(emmeans(IIA_Fig3_B_lm, specs = "ExpCond"))
-o <- anova(IIA_Fig3_B_lm)$`Pr(>F)` 
+IIA_Fig3_B_lm <- lmer(BkNm2 ~ CondxSex + (1  | SubjectNum),data = IIA_cf)
+IIA_Fig3_B_emm <- data.frame(emmeans(IIA_Fig3_B_lm, specs = "CondxSex"))
+if((o <- anova(IIA_Fig3_B_lm)$`Pr(>F)`)<0.05){
+  IIA_Fig3_B_hoc <- summary(glht(IIA_Fig3_B_lm, linfct = mcp(CondxSex = "Tukey")))
+} else{NA}
 
-IIA_Fig3_Ae_lm <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIA_cf)
-IIA_Fig3_Ae_emm <- data.frame(emmeans(IIA_Fig3_Ae_lm, specs = "ExpCond"))
-o.1 <- anova(IIA_Fig3_Ae_lm)$`Pr(>F)`
+IIA_Fig3_Ae_lm <- lmer(Aelastic ~ CondxSex + (1  | SubjectNum),data = IIA_cf)
+IIA_Fig3_Ae_emm <- data.frame(emmeans(IIA_Fig3_Ae_lm, specs = "CondxSex"))
+if((o.1 <- anova(IIA_Fig3_Ae_lm)$`Pr(>F)`) <0.05){
+  IIA_Fig3_Ae_hoc <- summary(glht(IIA_Fig3_Ae_lm, linfct = mcp(CondxSex = "Tukey")))
+} else{NA}
 
-IIA_Fig3_Av_lm <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIA_cf)
-IIA_Fig3_Av_emm <- data.frame(emmeans(IIA_Fig3_Av_lm, specs = "ExpCond"))
-o.2 <- anova(IIA_Fig3_Av_lm)$`Pr(>F)`
+IIA_Fig3_Av_lm <- lmer(Aviscous ~ CondxSex + (1  | SubjectNum),data = IIA_cf)
+IIA_Fig3_Av_emm <- data.frame(emmeans(IIA_Fig3_Av_lm, specs = "CondxSex"))
+if((o.2 <- anova(IIA_Fig3_Av_lm)$`Pr(>F)`)<0.05){
+  IIA_Fig3_Av_hoc <- summary(glht(IIA_Fig3_Av_lm, linfct = mcp(CondxSex = "Tukey")))
+} else{NA}
 
-IIA_Fig3_2pib_lm <- lmer(twopib ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIA_cf)
-IIA_Fig3_2pib_emm <- data.frame(emmeans(IIA_Fig3_2pib_lm, specs = "ExpCond"))
-p <- anova(IIA_Fig3_2pib_lm)$`Pr(>F)`
+IIA_Fig3_2pib_lm <- lmer(twopib ~ CondxSex + (1  | SubjectNum),data = IIA_cf)
+IIA_Fig3_2pib_emm <- data.frame(emmeans(IIA_Fig3_2pib_lm, specs = "CondxSex"))
+if((p <- anova(IIA_Fig3_2pib_lm)$`Pr(>F)`)<0.05){
+  IIA_Fig3_2pib_hoc <- summary(glht(IIA_Fig3_2pib_lm, linfct = mcp(CondxSex = "Tukey")))
+} else{NA}
     
-IIA_Fig3_ton_lm <- lmer(ton ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum),data = IIA_cf)
-IIA_Fig3_ton_emm <- data.frame(emmeans(IIA_Fig3_ton_lm, specs = "ExpCond"))
-q <- anova(IIA_Fig3_ton_lm)$`Pr(>F)` 
+IIA_Fig3_ton_lm <- lmer(ton ~ CondxSex + (1  | SubjectNum),data = IIA_cf)
+IIA_Fig3_ton_emm <- data.frame(emmeans(IIA_Fig3_ton_lm, specs = "CondxSex"))
+if((q <- anova(IIA_Fig3_ton_lm)$`Pr(>F)`)<0.05){
+  IIA_Fig3_ton_hoc <- summary(glht(IIA_Fig3_ton_lm, linfct = mcp(CondxSex = "Tukey")))
+} else{NA} 
   
 
 # IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX IIAX 
@@ -413,28 +445,37 @@ q <- anova(IIA_Fig3_ton_lm)$`Pr(>F)`
 IIAX_cf <- con_fat_data %>% filter(Fibertypenum == 5)
 
 
-IIAX_Fig3_B_lm <- lmer(BkNm2 ~ ExpCond + (1 | SubjectNum),data = IIAX_cf)
+IIAX_Fig3_B_lm <- lmer(BkNm2 ~ CondxSex + (1 | SubjectNum),data = IIAX_cf)
+IIAX_Fig3_B_emm <- data.frame(emmeans(IIAX_Fig3_B_lm, specs = "CondxSex"))
+if((q.1 <- anova(IIAX_Fig3_B_lm)$`Pr(>F)`)<0.05){
+  IIAX_Fig3_B_hoc <- summary(glht(IIAX_Fig3_B_lm, linfct = mcp(CondxSex = "Tukey")))
+} else{NA}
 
-IIAX_Fig3_B_emm <- data.frame(emmeans(IIAX_Fig3_B_lm, specs = "ExpCond"))
-q.1 <- anova(IIAX_Fig3_B_lm)$`Pr(>F)` 
+IIAX_Fig3_Ae_lm <- lmer(Aelastic ~ CondxSex + (1  | SubjectNum),data = IIAX_cf)
+IIAX_Fig3_Ae_emm <- data.frame(emmeans(IIAX_Fig3_Ae_lm, specs = "CondxSex"))
+if((q.2 <- anova(IIAX_Fig3_Ae_lm)$`Pr(>F)`)<0.05){
+  IIAX_Fig3_Ae_hoc <- summary(glht(IIAX_Fig3_Ae_lm, linfct = mcp(CondxSex = "Tukey")))
+} else{NA}
 
-IIAX_Fig3_Ae_lm <- lmer(Aelastic ~ ExpCond + (1  | SubjectNum),data = IIAX_cf)
-IIAX_Fig3_Ae_emm <- data.frame(emmeans(IIAX_Fig3_Ae_lm, specs = "ExpCond"))
-q.2 <- anova(IIAX_Fig3_Ae_lm)$`Pr(>F)`
+IIAX_Fig3_Av_lm <- lmer(Aviscous ~ CondxSex + (1  | SubjectNum),data = IIAX_cf)
+IIAX_Fig3_Av_emm <- data.frame(emmeans(IIAX_Fig3_Av_lm, specs = "CondxSex"))
+if((q.3 <- anova(IIAX_Fig3_Av_lm)$`Pr(>F)`)<0.05){
+  IIAX_Fig3_Av_hoc <- summary(glht(IIAX_Fig3_Av_lm, linfct = mcp(CondxSex = "Tukey")))
+} else{NA}
 
-IIAX_Fig3_Av_lm <- lmer(Aviscous ~ ExpCond + (1  | SubjectNum),data = IIAX_cf)
-IIAX_Fig3_Av_emm <- data.frame(emmeans(IIAX_Fig3_Av_lm, specs = "ExpCond"))
-q.3 <- anova(IIAX_Fig3_Av_lm)$`Pr(>F)`
+IIAX_Fig3_2pib_lm <- lmer(twopib ~ CondxSex + (1 | SubjectNum),data = IIAX_cf)
+IIAX_Fig3_2pib_emm <- data.frame(emmeans(IIAX_Fig3_2pib_lm, specs = "CondxSex"))
+if((q.4 <- anova(IIAX_Fig3_2pib_lm)$`Pr(>F)`)<0.05){
+  IIAX_Fig3_2pib_hoc <- summary(glht(IIAX_Fig3_2pib_lm, linfct = mcp(CondxSex = "Tukey")))
+} else{NA} 
 
-IIAX_Fig3_2pib_lm <- lmer(twopib ~ ExpCond + (1 | SubjectNum),data = IIAX_cf)
-IIAX_Fig3_2pib_emm <- data.frame(emmeans(IIAX_Fig3_2pib_lm, specs = "ExpCond"))
-q.4 <- anova(IIAX_Fig3_2pib_lm)$`Pr(>F)` 
+IIAX_Fig3_ton_lm <- lmer(ton ~ CondxSex + (1 | SubjectNum),data = IIAX_cf)
+IIAX_Fig3_ton_emm <- data.frame(emmeans(IIAX_Fig3_ton_lm, specs = "CondxSex"))
+if((q.5 <- anova(IIAX_Fig3_ton_lm)$`Pr(>F)`)<0.05){
+  IIAX_Fig3_ton_hoc <- summary(glht(IIAX_Fig3_ton_lm, linfct = mcp(CondxSex = "Tukey")))
+} else{NA}
 
-IIAX_Fig3_ton_lm <- lmer(ton ~ ExpCond + (1 | SubjectNum),data = IIAX_cf)
-IIAX_Fig3_ton_emm <- data.frame(emmeans(IIAX_Fig3_ton_lm, specs = "ExpCond"))
-q.5 <- anova(IIAX_Fig3_ton_lm)$`Pr(>F)`
-
-Fig_3_cf_emm <- rbind(I_Fig3_B_emm,
+Fig_3_cf_sexdiff_emm <- rbind(I_Fig3_B_emm,
                       I_Fig3_Ae_emm,
                       I_Fig3_Av_emm,
                       I_Fig3_2pib_emm,
@@ -454,18 +495,21 @@ Fig_3_cf_emm <- rbind(I_Fig3_B_emm,
                       IIAX_Fig3_Av_emm,
                       IIAX_Fig3_2pib_emm,
                       IIAX_Fig3_ton_emm) %>% 
-  mutate(Fiber_Type = c("I","I","I",'I',"I","I","I","I","I","I",
+  mutate(Fiber_Type = c("I","I","I",'I',"I","I","I","I","I","I","I","I","I",'I',"I","I","I","I","I","I",
+                        "I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA",
                         "I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA","I/IIA",
                         "IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA",
+                        "IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA",
+                        "IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX",
                         "IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX","IIAX"
                         ), .before = emmean) %>% 
-  mutate(Value = c("B","B", "Aelastic", "Aelastic", "Aviscous","Aviscous", "2pib", "2pib", "ton", "ton",
-                   "B","B", "Aelastic", "Aelastic", "Aviscous","Aviscous", "2pib", "2pib", "ton", "ton",
-                   "B","B", "Aelastic", "Aelastic", "Aviscous","Aviscous", "2pib", "2pib", "ton", "ton",
-                   "B","B", "Aelastic", "Aelastic", "Aviscous","Aviscous", "2pib", "2pib", "ton", "ton"
+  mutate(Value = c("B","B","B","B", "Aelastic", "Aelastic", "Aelastic", "Aelastic","Aviscous","Aviscous","Aviscous","Aviscous", "2pib", "2pib","2pib", "2pib", "ton", "ton","ton", "ton",
+                   "B","B","B","B", "Aelastic", "Aelastic", "Aelastic", "Aelastic","Aviscous","Aviscous","Aviscous","Aviscous", "2pib", "2pib","2pib", "2pib", "ton", "ton","ton", "ton",
+                   "B","B","B","B", "Aelastic", "Aelastic", "Aelastic", "Aelastic","Aviscous","Aviscous","Aviscous","Aviscous", "2pib", "2pib","2pib", "2pib", "ton", "ton","ton", "ton",
+                   "B","B","B","B", "Aelastic", "Aelastic", "Aelastic", "Aelastic","Aviscous","Aviscous","Aviscous","Aviscous", "2pib", "2pib","2pib", "2pib", "ton", "ton","ton", "ton"
                    ), .before = emmean)
 
-Fig_3_cf_anova <- data.frame(rbind(i,i.1, i.2, j, k, l, l.1, l.2, m,n, o, o.1, o.2, p, q, q.1,q.2,q.3,q.4,q.5)) %>% 
+Fig_3_cf_sexdiff_anova <- data.frame(rbind(i,i.1, i.2, j, k, l, l.1, l.2, m,n, o, o.1, o.2, p, q, q.1,q.2,q.3,q.4,q.5)) %>% 
   mutate(Fiber_Type = c("I","I","I","I","I", 
                         "I/IIA","I/IIA","I/IIA","I/IIA","I/IIA",
                         "IIA","IIA", "IIA","IIA","IIA",
@@ -474,15 +518,59 @@ Fig_3_cf_anova <- data.frame(rbind(i,i.1, i.2, j, k, l, l.1, l.2, m,n, o, o.1, o
                    "B","Aelastic","Aviscous","2pib","ton",
                    "B","Aelastic","Aviscous","2pib","ton",
                    "B","Aelastic","Aviscous","2pib","ton")) 
-colnames(Fig_3_cf_anova) <- c("p_value", "Fiber_Type", "Value")
+colnames(Fig_3_cf_sexdiff_anova) <- c("p_value", "Fiber_Type", "Value")
+
+Fig3_cf_sexdiff_posthocs <- data.frame(rbind(table_glht(I_Fig3_Ae_hoc),
+                                             table_glht(I_Fig3_Av_hoc),
+                                             table_glht(I_Fig3_2pib_hoc),
+                                             table_glht(I_Fig3_ton_hoc),
+                                             table_glht(I.IIA_Fig3_B_hoc),
+                                             table_glht(I.IIA_Fig3_Ae_hoc),
+                                             table_glht(IIA_Fig3_B_hoc),
+                                             table_glht(IIA_Fig3_Av_hoc),
+                                             table_glht(IIA_Fig3_2pib_hoc),
+                                             table_glht(IIA_Fig3_ton_hoc),
+                                             table_glht(IIAX_Fig3_ton_hoc)
+                                             )) %>% 
+  mutate(FiberType = c("I","I","I","I","I","I","I","I","I","I","I","I",
+                       "I","I","I","I","I","I","I","I","I","I","I","I",
+                       "I.IIA","I.IIA","I.IIA","I.IIA","I.IIA","I.IIA","I.IIA","I.IIA","I.IIA","I.IIA","I.IIA","I.IIA",
+                       "IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA",
+                       "IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA","IIA",
+                       "IIAX","IIAX","IIAX","IIAX","IIAX","IIAX"),.before = Estimate) %>% 
+  mutate(Value = c("Aelastic","Aelastic","Aelastic","Aelastic","Aelastic","Aelastic",
+                   "Aviscous","Aviscous","Aviscous","Aviscous","Aviscous","Aviscous",
+                   "Aviscous","Aviscous","Aviscous","Aviscous","Aviscous","Aviscous",
+                   "ton","ton","ton","ton","ton","ton",
+                   "B","B","B","B","B","B",
+                   "Aelastic","Aelastic","Aelastic","Aelastic","Aelastic","Aelastic",
+                   "B","B","B","B","B","B",
+                   "Aviscous","Aviscous","Aviscous","Aviscous","Aviscous","Aviscous",
+                   "2pib","2pib","2pib","2pib","2pib","2pib",
+                   "ton", "ton", "ton", "ton", "ton", "ton",
+                   "ton", "ton", "ton", "ton", "ton", "ton"
+                   ),.before = Estimate) %>% 
+  mutate(Comparison = c("Control Males v Control Females","Control Males v Fatigue Males", "Control Males v Fatigue Females","Control Females v Fatigue Males","Control Females v Fatigue Females", "Fatigue Males v Fatigue Females",
+                        "Control Males v Control Females","Control Males v Fatigue Males", "Control Males v Fatigue Females","Control Females v Fatigue Males","Control Females v Fatigue Females", "Fatigue Males v Fatigue Females",
+                        "Control Males v Control Females","Control Males v Fatigue Males", "Control Males v Fatigue Females","Control Females v Fatigue Males","Control Females v Fatigue Females", "Fatigue Males v Fatigue Females",
+                        "Control Males v Control Females","Control Males v Fatigue Males", "Control Males v Fatigue Females","Control Females v Fatigue Males","Control Females v Fatigue Females", "Fatigue Males v Fatigue Females",
+                        "Control Males v Control Females","Control Males v Fatigue Males", "Control Males v Fatigue Females","Control Females v Fatigue Males","Control Females v Fatigue Females", "Fatigue Males v Fatigue Females",
+                        "Control Males v Control Females","Control Males v Fatigue Males", "Control Males v Fatigue Females","Control Females v Fatigue Males","Control Females v Fatigue Females", "Fatigue Males v Fatigue Females",
+                        "Control Males v Control Females","Control Males v Fatigue Males", "Control Males v Fatigue Females","Control Females v Fatigue Males","Control Females v Fatigue Females", "Fatigue Males v Fatigue Females",
+                        "Control Males v Control Females","Control Males v Fatigue Males", "Control Males v Fatigue Females","Control Females v Fatigue Males","Control Females v Fatigue Females", "Fatigue Males v Fatigue Females",
+                        "Control Males v Control Females","Control Males v Fatigue Males", "Control Males v Fatigue Females","Control Females v Fatigue Males","Control Females v Fatigue Females", "Fatigue Males v Fatigue Females",
+                        "Control Males v Control Females","Control Males v Fatigue Males", "Control Males v Fatigue Females","Control Females v Fatigue Males","Control Females v Fatigue Females", "Fatigue Males v Fatigue Females",
+                        "Control Males v Control Females","Control Males v Fatigue Males", "Control Males v Fatigue Females","Control Females v Fatigue Males","Control Females v Fatigue Females", "Fatigue Males v Fatigue Females"),
+         .before = FiberType)
 
 
-Fig3_cf <- list(Fig_3_cf_emm,Fig_3_cf_anova)
+Fig3_cf_sexdiff <- list(Fig_3_cf_sexdiff_emm,Fig_3_cf_sexdiff_anova,Fig3_cf_sexdiff_posthocs)
 
-names(Fig3_cf) <- c("Figure 3 CvF -EMM", 
-                    "Figure 3 CvF -Anova")
+names(Fig3_cf_sexdiff) <- c("Fig3 CvF Sex Diff -EMM", 
+                    "Fig3 CvF Sex Diff -Anova",
+                    "Fig3 CvF Sex Diff - Posthocs")
 
-writexl::write_xlsx(Fig3_cf, path = "Woods_AuroraMaster_Figure3_ControlvFatigue.xlsx")
+writexl::write_xlsx(Fig3_cf_sexdiff, path = "Woods_AuroraMaster_Figure3_ControlvFatigue_SexDiff.xlsx")
 
 ### Figure 3: Control + dATP --------------------------------------------------------------
 
