@@ -1,0 +1,102 @@
+---
+title: "CHAMP - Single Fiber - EXAMPLE  - Resistance training - Fiber I"
+output: html_document
+date: "2022-09-05"
+---
+For each variable of Po, A, k, B, lb, C, lc and ton, a linear mixed model with participant as the random effect is built. The covariates are dominant leg indicator, sex, pre/post indicator, and the interaction between sex and the pre/post indicator. To answer the research question whether there is a sex difference in responding to the resistance training in fiber I in terms of these measures, we look at the p-values of the interaction term in the output of each model. 
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lmerTest)
+library(kableExtra)
+setwd("~/downloads/Exercise/")
+```
+
+```{r cars, echo=F}
+
+data <- read.csv("CHAMP - Single Fiber Data - EXAMPLE.csv", header=T)
+data <- data[1:350, 1:21]
+data.fiberI.R <- filter(data, Fiber.Type=="I", Training..R.P. == "Resistance")
+```
+
+
+```{r, echo=F}
+par(mfrow=c(1,2))
+hist(data.fiberI.R$Po..kN.m2., main="Po..kN.m2.")
+hist(log(data.fiberI.R$Po..kN.m2.), main="log(Po..kN.m2.)")
+fit.Po <- lmer(Po..kN.m2.~Dominant.Leg..D.ND.+Sex..M.F.*Exercise..Pre.Post.+(1|Participant..), data=data.fiberI.R)
+round(summary(fit.Po)$coef, 4) %>%
+  kbl(caption = "Po..kN.m2.",) %>%
+  kable_styling()
+```
+
+```{r, echo=F}
+par(mfrow=c(1,2))
+hist(data.fiberI.R$A..kN.m2., main="A.kN.m2.")
+hist(log(data.fiberI.R$A..kN.m2.), main="log(A.kN.m2.)")
+fit.A <- lmer(log(A..kN.m2.)~Dominant.Leg..D.ND.+Sex..M.F.*Exercise..Pre.Post.+(1|Participant..), data=data.fiberI.R)
+round(summary(fit.A)$coef, 4) %>%
+  kbl(caption = "A..kN.m2.",) %>%
+  kable_styling()
+```
+
+```{r, echo=F}
+par(mfrow=c(1,2))
+hist(data.fiberI.R$k, main="k")
+hist(log(data.fiberI.R$k), main="log(k)")
+fit.k <- lmer(log(k)~Dominant.Leg..D.ND.+Sex..M.F.*Exercise..Pre.Post.+(1|Participant..), data=data.fiberI.R)
+round(summary(fit.k)$coef, 4) %>%
+  kbl(caption = "k",) %>%
+  kable_styling()
+```
+
+```{r, echo=F}
+par(mfrow=c(1,2))
+hist(data.fiberI.R$B..kN.m2., main="B..kN.m2.")
+hist(log(data.fiberI.R$B..kN.m2.), main="log(B..kN.m2.)")
+fit.B <- lmer(log(B..kN.m2.)~Dominant.Leg..D.ND.+Sex..M.F.*Exercise..Pre.Post.+(1|Participant..), data=data.fiberI.R)
+round(summary(fit.B)$coef, 4) %>%
+  kbl(caption = "B..kN.m2.",) %>%
+  kable_styling()
+```
+
+```{r, echo=F}
+par(mfrow=c(1,2))
+hist(data.fiberI.R$lb..Hz., main="lb..Hz.")
+hist(log(data.fiberI.R$lb..Hz.), main="log(lb..Hz.)")
+fit.lb <- lmer(log(lb..Hz.)~Dominant.Leg..D.ND.+Sex..M.F.*Exercise..Pre.Post.+(1|Participant..), data=data.fiberI.R)
+round(summary(fit.lb)$coef, 4) %>%
+  kbl(caption = "lb..Hz.",) %>%
+  kable_styling()
+```
+
+```{r, echo=F}
+par(mfrow=c(1,2))
+hist(data.fiberI.R$C..kN.m2., main="C..kN.m2.")
+hist(log(data.fiberI.R$C..kN.m2.), main="log(C..kN.m2.)")
+fit.C <- lmer(log(C..kN.m2.)~Dominant.Leg..D.ND.+Sex..M.F.*Exercise..Pre.Post.+(1|Participant..), data=data.fiberI.R)
+round(summary(fit.C)$coef, 4) %>%
+  kbl(caption = "C..kN.m2.",) %>%
+  kable_styling()
+```
+
+```{r, echo=F}
+par(mfrow=c(1,2))
+hist(data.fiberI.R$lc..Hz., main="lc..Hz.")
+hist(log(data.fiberI.R$lc..Hz.), main="log(lc..Hz.)")
+fit.lc <- lmer(log(lc..Hz.)~Dominant.Leg..D.ND.+Sex..M.F.*Exercise..Pre.Post.+(1|Participant..), data=data.fiberI.R)
+round(summary(fit.lc)$coef, 4) %>%
+  kbl(caption = "lc..Hz.",) %>%
+  kable_styling()
+```
+
+```{r, echo=F}
+par(mfrow=c(1,2))
+hist(data.fiberI.R$ton..ms., main="ton..ms.")
+hist(log(data.fiberI.R$ton..ms.), main="log(ton..ms.)")
+fit.ton <- lmer(log(ton..ms.)~Dominant.Leg..D.ND.+Sex..M.F.*Exercise..Pre.Post.+(1|Participant..), data=data.fiberI.R)
+round(summary(fit.ton)$coef, 4) %>%
+  kbl(caption = "ton..ms.",) %>%
+  kable_styling()
+```
+
