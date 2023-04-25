@@ -329,7 +329,6 @@ IIA_F1_fatdatp_females$mdl <- predict(IIA_F1_fatdatp_lm_females)
 con_fat_data <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum %in% c(1,2,4,5)) %>%
   filter(Grp == 1) %>%
-  filter(CondxSex %in% c(0:5)) %>% 
   mutate(CondxSex = as.factor(CondxSex)) %>% 
   group_by(SubjectNum, FiberType, Fibertypenum, CondxSex) %>%
   mutate(Force = CSA*PoControl25C)
@@ -577,7 +576,7 @@ writexl::write_xlsx(Fig3_cf_sexdiff, path = "Woods_AuroraMaster_Figure3_Controlv
 con_fatdatp_data <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum %in% c(1,2,4,5)) %>%
   filter(Grp == 2) %>%
-  filter(CondxSex %in% c(0:5)) %>% 
+  filter(ExpCond == "Control" | ExpCond == "Fatigue+dATP") %>% 
   mutate(CondxSex = as.factor(CondxSex)) %>% 
   group_by(SubjectNum, FiberType, Fibertypenum,CondxSex) %>%
   mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
@@ -707,14 +706,14 @@ if((z.3 <- anova(IIAX_Fig3_gr2_Av_lm)$`Pr(>F)`)<0.05){
   IIAX_Fig3_gr2_Av_hoc <- summary(glht(IIAX_Fig3_gr2_Av_lm, specs = "CondxSex"))
 }else{NA}
 
-IIAX_Fig3_gr2_2pib_lm <- lmer(twopib ~ CondxSex + (1  | SubjectNum),data = IIAX_cdatp)
+IIAX_Fig3_gr2_2pib_lm <- lmer(twopib ~ CondxSex + (1|SubjectNum), data = IIAX_cdatp)
 IIAX_Fig3_gr2_2pib_emm <- data.frame(emmeans(IIAX_Fig3_gr2_2pib_lm, specs = "CondxSex"))
 if((zz <- anova(IIAX_Fig3_gr2_2pib_lm)$`Pr(>F)`)<0.05){
   IIAX_Fig3_gr2_2pib_hoc <- summary(glht(IIAX_Fig3_gr2_2pib_lm, specs = "CondxSex"))
 }else{NA}
 
 
-IIAX_Fig3_gr2_ton_lm <- lmer(ton ~ CondxSex + (1  | SubjectNum),data = IIAX_cdatp)
+IIAX_Fig3_gr2_ton_lm <- lmer(ton ~ CondxSex + (1|SubjectNum),data = IIAX_cdatp)
 IIAX_Fig3_gr2_ton_emm <- data.frame(emmeans(IIAX_Fig3_gr2_ton_lm, specs = "CondxSex"))
 if((zzz <- anova(IIAX_Fig3_gr2_ton_lm)$`Pr(>F)`)<0.05){
   IIAX_Fig3_gr2_ton_hoc <- summary(glht(IIAX_Fig3_gr2_ton_lm, specs = "CondxSex"))
