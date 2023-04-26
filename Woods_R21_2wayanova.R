@@ -25,7 +25,7 @@ my_data_IIAX <- my_data %>%
 
 I_Ten_aov <- aov(Tension ~ Sex*Wt.Status, data = my_data_I)
 summary(I_Ten_aov)
-I_Ten2_aov <- aov(Tension ~ Sex*Wt.Status + (1|SubjNum), data = my_data_I)
+I_Ten2_aov <- aov(Tension ~ Sex*Wt.Status + Error(SubjNum), data = my_data_I)
 summary(I_Ten2_aov)
 I_Ten3_aov <- aov(Tension ~ Wt.Status*Sex, data = my_data_I)
 summary(I_Ten3_aov)
