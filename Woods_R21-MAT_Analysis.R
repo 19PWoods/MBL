@@ -2,6 +2,7 @@ library(tidyverse)
 library(readxl)
 library(emmeans)
 library(multcomp)
+library(lme4)
 library(lmerTest)
 
 # setwd("C:/Users/Phil/Dropbox/MBL/Tension + AaBbCc/R21-MAT")
