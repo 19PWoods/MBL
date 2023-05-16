@@ -270,3 +270,141 @@ IIAX_data_onf$mdl <- predict(ONF.IIAX.lm)
 
 ggsave("R21_ForcevCSA_MHCIIAX.tiff",
        IIAX_gg , width = 12, height = 7, units = "in",  dpi = 300)
+
+### MHC I - Young Only -------------------------------------
+(I.axw.all.yg <- I_data %>% 
+   filter(AgexWeight %in% c(0:1)) %>% 
+ ggplot(aes(x = CSA, y = Force)) +
+  geom_point(aes(shape = AgexWeight)) +
+  geom_line(data = I_data_yn, aes(y = mdl), linetype = "solid") +
+  geom_line(data = I_data_yh, aes(y = mdl), linetype = "longdash") +
+  scale_shape_manual(values = c(1,6),
+                     labels = c("Young Normal",
+                                "Young High")) 
+)
+
+(I.axw.fits.yg <- ggplot(data = I_data, aes(x = CSA, y = Force)) +
+   geom_line(data = I_data_yn, aes(y = mdl), linetype = "solid") +
+   geom_line(data = I_data_yh, aes(y = mdl), linetype = "longdash") 
+)
+
+(I.axwxs.all.yg <- I_data %>% 
+    filter(AgexWeightxSex %in% c(0:3)) %>% 
+    ggplot(aes(x = CSA, y = Force)) +
+    geom_point(aes(shape = AgexWeightxSex)) +
+    geom_line(data = I_data_ynm, aes(y = mdl), linetype = "solid") +
+    geom_line(data = I_data_ynf, aes(y = mdl), linetype = "solid", alpha = 0.5) +
+    geom_line(data = I_data_yhm, aes(y = mdl), linetype = "longdash") +
+    geom_line(data = I_data_yhf, aes(y = mdl), linetype = "longdash", alpha = 0.5) +
+    scale_shape_manual(values = c(16,1,17,6),
+                       labels = c("Young Normal Males",
+                                  "Young Normal Females",
+                                  "Young High Males",
+                                  "Young High Females")) 
+)
+
+(I.axwxs.fits.yg <- ggplot(data = I_data, aes(x = CSA, y = Force)) +
+    geom_line(data = I_data_ynm, aes(y = mdl), linetype = "solid") +
+    geom_line(data = I_data_ynf, aes(y = mdl), linetype = "solid", alpha = 0.5) +
+    geom_line(data = I_data_yhm, aes(y = mdl), linetype = "longdash") +
+    geom_line(data = I_data_yhf, aes(y = mdl), linetype = "longdash", alpha = 0.5)
+)
+
+(I_yg <- (I.axw.all.yg | I.axw.fits.yg) / (I.axwxs.all.yg | I.axwxs.fits.yg) +
+    plot_annotation(title = "MHC I - Young Only")
+)
+
+ggsave("R21_ForcevCSA_MHCIyg.tiff",
+       I_yg , width = 12, height = 7, units = "in",  dpi = 300)
+
+### MHC IIA - Young Only -----------------------------------
+(IIA.axw.all.yg <- IIA_data %>% 
+   filter(AgexWeight %in% c(0:1)) %>% 
+   ggplot(aes(x = CSA, y = Force)) +
+   geom_point(aes(shape = AgexWeight)) +
+   geom_line(data = IIA_data_yn, aes(y = mdl), linetype = "solid") +
+   geom_line(data = IIA_data_yh, aes(y = mdl), linetype = "longdash") +
+   scale_shape_manual(values = c(1,6),
+                      labels = c("Young Normal",
+                                 "Young High")) 
+)
+
+(IIA.axw.fits.yg <- ggplot(data = IIA_data, aes(x = CSA, y = Force)) +
+    geom_line(data = IIA_data_yn, aes(y = mdl), linetype = "solid") +
+    geom_line(data = IIA_data_yh, aes(y = mdl), linetype = "longdash") 
+)
+
+(IIA.axwxs.all.yg <- IIA_data %>% 
+    filter(AgexWeightxSex %in% c(0:3)) %>% 
+    ggplot(aes(x = CSA, y = Force)) +
+    geom_point(aes(shape = AgexWeightxSex)) +
+    geom_line(data = IIA_data_ynm, aes(y = mdl), linetype = "solid") +
+    geom_line(data = IIA_data_ynf, aes(y = mdl), linetype = "solid", alpha = 0.5) +
+    geom_line(data = IIA_data_yhm, aes(y = mdl), linetype = "longdash") +
+    geom_line(data = IIA_data_yhf, aes(y = mdl), linetype = "longdash", alpha = 0.5) +
+    scale_shape_manual(values = c(16,1,17,6),
+                       labels = c("Young Normal Males",
+                                  "Young Normal Females",
+                                  "Young High Males",
+                                  "Young High Females")) 
+)
+
+(IIA.axwxs.fits.yg <- ggplot(data = IIA_data, aes(x = CSA, y = Force)) +
+    geom_line(data = IIA_data_ynm, aes(y = mdl), linetype = "solid") +
+    geom_line(data = IIA_data_ynf, aes(y = mdl), linetype = "solid", alpha = 0.5) +
+    geom_line(data = IIA_data_yhm, aes(y = mdl), linetype = "longdash") +
+    geom_line(data = IIA_data_yhf, aes(y = mdl), linetype = "longdash", alpha = 0.5)
+)
+
+(IIA_yg <- (IIA.axw.all.yg | IIA.axw.fits.yg) / (IIA.axwxs.all.yg | IIA.axwxs.fits.yg) +
+    plot_annotation(title = "MHC IIA - Young Only")
+)
+
+ggsave("R21_ForcevCSA_MHCIIAyg.tiff",
+       IIA_yg , width = 12, height = 7, units = "in",  dpi = 300)
+### MHC IIAX - Young Only -----------------------------------
+
+(IIAX.axw.all.yg <- IIAX_data %>% 
+   filter(AgexWeight %in% c(0:1)) %>% 
+   ggplot(aes(x = CSA, y = Force)) +
+   geom_point(aes(shape = AgexWeight)) +
+   geom_line(data = IIAX_data_yn, aes(y = mdl), linetype = "solid") +
+   geom_line(data = IIAX_data_yh, aes(y = mdl), linetype = "longdash") +
+   scale_shape_manual(values = c(1,6),
+                      labels = c("Young Normal",
+                                 "Young High")) 
+)
+
+(IIAX.axw.fits.yg <- ggplot(data = IIAX_data, aes(x = CSA, y = Force)) +
+    geom_line(data = IIAX_data_yn, aes(y = mdl), linetype = "solid") +
+    geom_line(data = IIAX_data_yh, aes(y = mdl), linetype = "longdash") 
+)
+
+(IIAX.axwxs.all.yg <- IIAX_data %>% 
+    filter(AgexWeightxSex %in% c(0:3)) %>% 
+    ggplot(aes(x = CSA, y = Force)) +
+    geom_point(aes(shape = AgexWeightxSex)) +
+    geom_line(data = IIAX_data_ynm, aes(y = mdl), linetype = "solid") +
+    geom_line(data = IIAX_data_ynf, aes(y = mdl), linetype = "solid", alpha = 0.5) +
+    geom_line(data = IIAX_data_yhm, aes(y = mdl), linetype = "longdash") +
+    geom_line(data = IIAX_data_yhf, aes(y = mdl), linetype = "longdash", alpha = 0.5) +
+    scale_shape_manual(values = c(16,1,17,6),
+                       labels = c("Young Normal Males",
+                                  "Young Normal Females",
+                                  "Young High Males",
+                                  "Young High Females")) 
+)
+
+(IIAX.axwxs.fits.yg <- ggplot(data = IIAX_data, aes(x = CSA, y = Force)) +
+    geom_line(data = IIAX_data_ynm, aes(y = mdl), linetype = "solid") +
+    geom_line(data = IIAX_data_ynf, aes(y = mdl), linetype = "solid", alpha = 0.5) +
+    geom_line(data = IIAX_data_yhm, aes(y = mdl), linetype = "longdash") +
+    geom_line(data = IIAX_data_yhf, aes(y = mdl), linetype = "longdash", alpha = 0.5)
+)
+
+(IIAX_yg <- (IIAX.axw.all.yg | IIAX.axw.fits.yg) / (IIAX.axwxs.all.yg | IIAX.axwxs.fits.yg) +
+    plot_annotation(title = "MHC IIAX - Young Only")
+)
+
+ggsave("R21_ForcevCSA_MHCIIAXyg.tiff",
+       IIAX_yg , width = 12, height = 7, units = "in",  dpi = 300)
