@@ -3,20 +3,19 @@ library(readxl)
 library(emmeans)
 library(multcomp)
 library(lmerTest)
+library(interactions)
 theme_set(theme_classic())
 
 
-setwd("C:/Users/Phil/Dropbox/MBL/Aurora Fatigue Data")
-setwd("C:/Users/pcw00/Dropbox/MBL/Aurora Fatigue Data")
+setwd("C:/Users/Phil/Dropbox/University of Massachusetts Amherst/MBL/Aurora Fatigue Data")
+# setwd("C:/Users/pcw00/Dropbox/University of Massachusetts Amherst/MBL/Aurora Fatigue Data")
 
-# my_data <- read_excel("Aurora_Masters_CS.xlsx") %>%
-#   filter(Fibertypenum %in% c(1,2,4,5)) %>%
-#   filter(ExpCondnum %in% c(1:3)) %>%
-#   group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>%
-#   mutate(CSA = (pi*(Topwidthum/2)*(Sidewidthum/2))/(1000*1000)) %>%
-#   mutate(Force = CSA*PoControl25C)
-#   # select(SubjectNum, AgeGrp, Sex,Leg, FiberType,Fibertypenum,Fibernum,ExpCond,ExpCondnum,
-#   #        CSA,Force,PoControl25C,MSRunNum, AkNm2,k,BkNm2,lbHz,CkNm2,lcHz,ton,twopib)
+my_data <- read_excel("Woods_AuroraFatigue_7-6-23.xlsx",
+                      sheet = 'raw') %>%
+  filter(Fibertypenum %in% c(1,2,4,5)) %>%
+  filter(ExpCondnum %in% c(1:3)) %>%
+  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum)
+
 
 table_glht <- function(x) {
   pq <- summary(x)$test
@@ -31,11 +30,10 @@ table_glht <- function(x) {
 
 ### Figure 1: Bar Graphs-----------------------------------------------------------------
 
-I <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
+I <- my_data %>%
   filter(Fibertypenum == 1) %>% 
   filter(ExpCondnum %in% c(1:3)) %>% 
-  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
-  mutate(Force = CSA*PoControl25C) 
+  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) 
 
 
 I_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = I)
@@ -58,11 +56,10 @@ if ((b<- anova(I_Force_lm)$`Pr(>F)`) <0.05) {
   NA
 }
 
-I.IIA <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
+I.IIA <- my_data %>%
   filter(Fibertypenum == 4) %>% 
   filter(ExpCondnum %in% c(1:3)) %>% 
-  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
-  mutate(Force = CSA*PoControl25C) 
+  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) 
 
 I.IIA_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = I.IIA)
 I.IIA_Po_emm <- data.frame(emmeans(I.IIA_Po_lm, specs = "ExpCond"))  
@@ -84,11 +81,10 @@ if ((d <- anova(I.IIA_Force_lm)$`Pr(>F)`) <0.05) {
   NA
 }
 
-IIA <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
+IIA <- my_data %>%
   filter(Fibertypenum == 2) %>% 
   filter(ExpCondnum %in% c(1:3)) %>% 
-  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
-  mutate(Force = CSA*PoControl25C) 
+  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum)
 
 IIA_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = IIA)
 IIA_Po_emm <- data.frame(emmeans(IIA_Po_lm, specs = "ExpCond"))  
@@ -110,11 +106,10 @@ if ((f <- anova(IIA_Force_lm)$`Pr(>F)`) <0.05) {
   NA
 }
 
-IIAX <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
+IIAX <- my_data %>%
   filter(Fibertypenum == 5) %>% 
   filter(ExpCondnum %in% c(1:3)) %>% 
-  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum) %>% 
-  mutate(Force = CSA*PoControl25C) 
+  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum)
 
 IIAX_Po_lm <- lmer(PoControl25C ~ ExpCond + (1 + as.factor(ExpCond) | SubjectNum), data = IIAX)
 IIAX_Po_emm <- data.frame(emmeans(IIAX_Po_lm, specs = "ExpCond"))
@@ -269,7 +264,7 @@ IIA_F1_fatdatp$mdl <- predict(IIA_F1_fatdatp_lm)
 )
 
 
-## Figure 3: Control + Fatigue  -----------------------------------------------------------------------------------
+### Figure 2: Control + Fatigue  -----------------------------------------------------------------------------------
 
 con_fat_data <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum %in% c(1,2,4,5)) %>%
@@ -429,7 +424,7 @@ names(Fig3_cf) <- c("Figure 3 CvF -EMM",
 
 writexl::write_xlsx(Fig3_cf, path = "Woods_AuroraMaster_Figure3_ControlvFatigue.xlsx")
 
-### Figure 3: Control + dATP --------------------------------------------------------------
+### Figure 2: Control + dATP --------------------------------------------------------------
 
 con_fatdatp_data <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum %in% c(1,2,4,5)) %>%
@@ -586,7 +581,7 @@ names(Fig3_cdatp) <- c("Figure 3 C v dATP -EMM",
 
 writexl::write_xlsx(Fig3_cdatp, path = "Woods_AuroraMaster_Figure3_ControlvFatiguedATP.xlsx")
 
-### Figure 3: Fatigue vs Fatigue dATP -----------------------------------------------------------------------
+### Figure 2: Fatigue vs Fatigue dATP -----------------------------------------------------------------------
 
 fat_v_datp <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum %in% c(1,2,4,5)) %>%
@@ -741,7 +736,7 @@ names(Fig3_fvf) <- c("Figure 3 Fat vs dATP - EMM",
 
 writexl::write_xlsx(Fig3_fvf, path = "Woods_AuroraMaster_Figure3_FatiguevFatiguedATP.xlsx")
 
-### Figure 3: Fatigue Control vs Fatigue dATP Control ------------------------------------------
+### Figure 2: Fatigue Control vs Fatigue dATP Control ------------------------------------------
 control_fat <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum %in% c(1,2,4,5)) %>%
   filter(ExpCondnum == 1 & Grp == 1) %>% 
@@ -900,7 +895,7 @@ writexl::write_xlsx(Fig3_cc, path = "Woods_AuroraMaster_Figure3_ControlvsControl
 
 
 
-### Figure 4: Bar Graphs-----------------------------------------------------------------------
+### Figure 3: Control v Control dATP Bar Graphs-----------------------------------------------------------------------
 
 I_Fig4 <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum == 1) %>% 
@@ -956,7 +951,7 @@ writexl::write_xlsx(Fig4, path = "Woods_AuroraMaster_Figure4.xlsx")
 
 
 
-### Figure 4: Scatter plots ---------------------------------------------------
+### Figure 3: Control v Control dATP Scatter plots (old, figures were tossed) ---------------------------------------------------
 
 I_Fig4 <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
   filter(Fibertypenum == 1) %>% 
@@ -1000,20 +995,27 @@ IIA_Fig4_condatp$mdl <- predict(IIA_Fig4_condatp_lm)
     geom_line(data = IIA_Fig4_condatp, aes(y = mdl), linetype = "longdash", size = 1)
 )
 
-### Figure 5: Bar Plots --------------------------------------------------
+### Figure 4: Percent Differences Bar Plots --------------------------------------------------
 
-df5 <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
-  filter(FiberTypeNum %in% c(1,2)) %>%
-  filter(ExpCondNum %in% c(2:4)) %>%
-  group_by(SubjectNum, FiberType, FiberTypeNum, ExpCondNum) %>% 
-  mutate(Pdiff_Aelastic = Pdiff_Aelastic + 100) %>% 
-  mutate(Pdiff_Aviscous = Pdiff_Aviscous + 100) %>% 
-  mutate(Pdiff_B = Pdiff_B + 100) %>% 
-  mutate(Pdiff_ton = Pdiff_ton + 100) %>% 
-  mutate(Pdiff_2pib = Pdiff_2pib + 100)
+# df5 <- read_excel("Aurora_Masters_CS_3-1-23.xlsx") %>%
+#   filter(FiberTypeNum %in% c(1,2)) %>%
+#   filter(ExpCondNum %in% c(2:4)) %>%
+#   group_by(SubjectNum, FiberType, FiberTypeNum, ExpCondNum) %>% 
+#   mutate(Pdiff_Aelastic = Pdiff_Aelastic + 100) %>% 
+#   mutate(Pdiff_Aviscous = Pdiff_Aviscous + 100) %>% 
+#   mutate(Pdiff_B = Pdiff_B + 100) %>% 
+#   mutate(Pdiff_ton = Pdiff_ton + 100) %>% 
+#   mutate(Pdiff_2pib = Pdiff_2pib + 100)
+# 
+# df6 <- read_excel("Woods_PercDiff_SpecificTension.xlsx") %>% 
+#   mutate(Pdiff_ST = Pdiff_ST + 100)
+# df6_I <- df6 %>% filter(FiberType == "I")
+# df6_IIA <- df6 %>% filter(FiberType == "IIA")
 
-df6 <- read_excel("Woods_PercDiff_SpecificTension.xlsx") %>% 
-  mutate(Pdiff_ST = Pdiff_ST + 100)
+df6 <- read_excel("Woods_AuroraFatigue_7-6-23.xlsx",
+                             sheet = 'P_diff') %>%
+  filter(Fibertypenum %in% c(1,2)) %>%
+  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum)
 df6_I <- df6 %>% filter(FiberType == "I")
 df6_IIA <- df6 %>% filter(FiberType == "IIA")
 
@@ -1213,3 +1215,96 @@ Fig5_posthoc <- data.frame(rbind(table_glht(Fig5_I_ST_posthoc),
 
 Fig5_analysis <- list(Fig5_emm, Fig5_anova, Fig5_posthoc)
 writexl::write_xlsx(Fig5_analysis, "Aurora_Figure5_Analysis_normalized.xlsx")
+
+### Updated Graphs 7/6/23: Figure 1 Scatterplot Significance----------------------
+my_data <- read_excel("Woods_AuoraFatigue_7-6-23.xlsx") %>% 
+  filter(ExpCondNum %in% c(1:3)) %>% 
+  filter(FiberTypeNum %in% c(1:2)) 
+
+Fig1.I <- my_data %>% filter(FiberType == "I")
+
+Fig1.IIA <- my_data %>% filter(FiberType == "IIA")
+
+Fig1.I.mdl <- lm(Force ~ CSA * ExpCondNum, data = Fig1.I)
+interactions::probe_interaction(Fig1.I.mdl, pred = CSA, modx = ExpCondNum, plot.points = T)
+
+# sim_slopes(Fig1.I.mdl, pred = CSA, modx = ExpCondNum, jnplot = T)
+
+Fig1.IIA.mdl <- lm(Force ~ CSA * ExpCond, data = Fig1.IIA)
+interactions::probe_interaction(Fig1.IIA.mdl, pred = CSA, modx = ExpCond, plot.points = T)
+
+
+
+fitiris <- lm(Petal.Length ~ Petal.Width * Species, data = iris)
+probe_interaction(fitiris, pred = Petal.Width, modx = Species, plot.points = TRUE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Updated Graphs 7/6/23: Figure 3 Control v Control dATP Molecular Parameters ---------
+
+my_data <- read_excel("Woods_AuoraFatigue_7-6-23.xlsx") %>% 
+  filter(ExpCondNum %in% c(4,10)) %>% 
+  filter(FiberTypeNum %in% c(1:2))
+
+Fig3.I <- my_data %>% filter(FiberType == "I")
+Fig3.IIA <- my_data %>% filter(FiberType == "IIA")
+
+Fig3.I.Aelastic <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | Subj), data = Fig3.I)
+Fig3.I.Aelastic.emm <- data.frame(emmeans(Fig3.I.Aelastic, specs = "ExpCond"))  
+if ((a <- anova(Fig3.I.Aelastic)$`Pr(>F)`) <0.05) {Fig3.I.Aelastic.hoc <- 
+  summary(glht(Fig3.I.Aelastic, linfct = mcp(ExpCond = "Tukey"))) } else{NA}
+
+Fig3.I.Aviscous <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | Subj), data = Fig3.I)
+Fig3.I.Aviscous.emm <- data.frame(emmeans(Fig3.I.Aviscous, specs = "ExpCond"))  
+if ((b <- anova(Fig3.I.Aviscous)$`Pr(>F)`) <0.05) {Fig3.I.Aviscous.hoc <- 
+  summary(glht(Fig3.I.Aviscous, linfct = mcp(ExpCond = "Tukey"))) } else{NA}
+
+Fig3.I.B <- lmer(B.N ~ ExpCond + (1 + as.factor(ExpCond) | Subj), data = Fig3.I)
+Fig3.I.B.emm <- data.frame(emmeans(Fig3.I.B, specs = "ExpCond"))  
+if ((c <- anova(Fig3.I.B)$`Pr(>F)`) <0.05) {Fig3.I.B.hoc <- 
+  summary(glht(Fig3.I.B, linfct = mcp(ExpCond = "Tukey"))) } else{NA}
+
+Fig3.I.2pib <- lmer(twopib ~ ExpCond + (1 + as.factor(ExpCond) | Subj), data = Fig3.I)
+Fig3.I.2pib.emm <- data.frame(emmeans(Fig3.I.2pib, specs = "ExpCond"))  
+if ((d <- anova(Fig3.I.2pib)$`Pr(>F)`) <0.05) {Fig3.I.2pib.hoc <- 
+  summary(glht(Fig3.I.2pib, linfct = mcp(ExpCond = "Tukey"))) } else{NA}
+
+Fig3.I.ton <- lmer(ton ~ ExpCond + (1 + as.factor(ExpCond) | Subj), data = Fig3.I)
+Fig3.I.ton.emm <- data.frame(emmeans(Fig3.I.ton, specs = "ExpCond"))  
+if ((e <- anova(Fig3.I.ton)$`Pr(>F)`) <0.05) {Fig3.I.ton.hoc <- 
+  summary(glht(Fig3.I.ton, linfct = mcp(ExpCond = "Tukey"))) } else{NA}
+
+Fig3.IIA.Aelastic <- lmer(Aelastic ~ ExpCond + (1 + as.factor(ExpCond) | Subj), data = Fig3.IIA)
+Fig3.IIA.Aelastic.emm <- data.frame(emmeans(Fig3.IIA.Aelastic, specs = "ExpCond"))  
+if ((f <- anova(Fig3.IIA.Aelastic)$`Pr(>F)`) <0.05) {Fig3.IIA.Aelastic.hoc <- 
+  summary(glht(Fig3.IIA.Aelastic, linfct = mcp(ExpCond = "Tukey"))) } else{NA}
+
+Fig3.IIA.Aviscous <- lmer(Aviscous ~ ExpCond + (1 + as.factor(ExpCond) | Subj), data = Fig3.IIA)
+Fig3.IIA.Aviscous.emm <- data.frame(emmeans(Fig3.IIA.Aviscous, specs = "ExpCond"))  
+if ((g <- anova(Fig3.IIA.Aviscous)$`Pr(>F)`) <0.05) {Fig3.IIA.Aviscous.hoc <- 
+  summary(glht(Fig3.IIA.Aviscous, linfct = mcp(ExpCond = "Tukey"))) } else{NA}
+
+Fig3.IIA.B <- lmer(B.N ~ ExpCond + (1 + as.factor(ExpCond) | Subj), data = Fig3.IIA)
+Fig3.IIA.B.emm <- data.frame(emmeans(Fig3.IIA.B, specs = "ExpCond"))  
+if ((h <- anova(Fig3.IIA.B)$`Pr(>F)`) <0.05) {Fig3.IIA.B.hoc <- 
+  summary(glht(Fig3.IIA.B, linfct = mcp(ExpCond = "Tukey"))) } else{NA}
+
+Fig3.IIA.2pib <- lmer(twopib ~ ExpCond + (1 + as.factor(ExpCond) | Subj), data = Fig3.IIA)
+Fig3.IIA.2pib.emm <- data.frame(emmeans(Fig3.IIA.2pib, specs = "ExpCond"))  
+if ((i <- anova(Fig3.IIA.2pib)$`Pr(>F)`) <0.05) {Fig3.IIA.2pib.hoc <- 
+  summary(glht(Fig3.IIA.2pib, linfct = mcp(ExpCond = "Tukey"))) } else{NA}
+
+Fig3.IIA.ton <- lmer(ton ~ ExpCond + (1 + as.factor(ExpCond) | Subj), data = Fig3.IIA)
+Fig3.IIA.ton.emm <- data.frame(emmeans(Fig3.IIA.ton, specs = "ExpCond"))  
+if ((j <- anova(Fig3.IIA.ton)$`Pr(>F)`) <0.05) {Fig3.IIA.ton.hoc <- 
+  summary(glht(Fig3.IIA.ton, linfct = mcp(ExpCond = "Tukey"))) } else{NA}
