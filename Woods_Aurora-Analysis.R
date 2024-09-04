@@ -1,20 +1,10 @@
-library(tidyverse)
-library(readxl)
-library(emmeans)
-library(multcomp)
-library(lmerTest)
-library(interactions)
-theme_set(theme_classic())
-
-
-setwd("C:/Users/Phil/Dropbox/University of Massachusetts Amherst/MBL/Aurora Fatigue Data")
-# setwd("C:/Users/pcw00/Dropbox/University of Massachusetts Amherst/MBL/Aurora Fatigue Data")
-
-my_data <- read_excel("Woods_AuroraFatigue_7-6-23.xlsx",
-                      sheet = 'raw') %>%
-  filter(Fibertypenum %in% c(1,2,4,5)) %>%
-  filter(ExpCondnum %in% c(1:3)) %>%
-  group_by(SubjectNum, FiberType, Fibertypenum, ExpCondnum)
+# library(tidyverse)
+# library(readxl)
+# library(emmeans)
+# library(multcomp)
+# library(lmerTest)
+# library(interactions)
+# theme_set(theme_classic())
 
 
 table_glht <- function(x) {
@@ -1308,3 +1298,84 @@ Fig3.IIA.ton <- lmer(ton ~ ExpCond + (1 + as.factor(ExpCond) | Subj), data = Fig
 Fig3.IIA.ton.emm <- data.frame(emmeans(Fig3.IIA.ton, specs = "ExpCond"))  
 if ((j <- anova(Fig3.IIA.ton)$`Pr(>F)`) <0.05) {Fig3.IIA.ton.hoc <- 
   summary(glht(Fig3.IIA.ton, linfct = mcp(ExpCond = "Tukey"))) } else{NA}
+
+
+### 240824 Re-analysis for manuscript revisions -----------------------------------
+# Below is the most up to date re-written code to analyze data from Aurora's project. Due to the 
+# six (6) new variables requested to be analzed, in addition to A, k and C, I re-wrote the code in one section
+# just to be safe. 
+
+library(tidyverse)
+library(multcomp)
+library(lmerTest)
+library(readxl)
+
+my_data = read_excel(file.choose(),
+                      sheet = 'raw') %>%
+  mutate(FiberType = factor(FiberType)) %>% 
+  mutate(FiberTypeNum = factor(FiberTypeNum)) %>% 
+  mutate(ExpCond = factor(ExpCond)) %>% 
+  mutate(ExpCondNum = factor(ExpCondNum)) %>% 
+  mutate(Grp = factor(Grp)) %>% 
+  mutate(SubjectNum = factor(SubjectNum)) %>% 
+  group_by(SubjectNum, Grp, FiberType, FiberTypeNum, ExpCond, ExpCondNum)
+
+
+# DF for specific tension analysis between Control, Fatigue & Fatigue + dATP
+# Contains MHC I, IIA, I/IIA, and IIAX
+# df1 = my_data %>% 
+#   filter(FiberTypeNum %in% c(1,2,4,5)) %>% 
+#   filter(ExpCondNum %in% c(1:3)) %>% 
+#   select(c(`Filename`:`Po-Control`))
+# 
+# 
+# DF for sinusoidal analysis b/t Control & Fatigue (MHC I & IIA)
+df2_I = my_data %>%
+  filter(FiberTypeNum %in% c(1)) %>%
+  filter(ExpCondNum %in% c(1,2)) %>%
+  filter(Grp == 1) %>%
+  dplyr::select(c(`Filename`:`Po-Control`,`DynamicAmplitude`:`Aviscous`))
+
+df2_IIA = my_data %>%
+  filter(FiberTypeNum %in% c(2)) %>%
+  filter(ExpCondNum %in% c(1,2)) %>%
+  filter(Grp == 1) %>%
+  dplyr::select(c(`Filename`:`Po-Control`,`DynamicAmplitude`:`Aviscous`))
+
+models_ConvFat_I = purrr::map(df2_I[,20:length(df2_I)], ~lmer(.x ~ df2_I$ExpCond + (1 + df2_I$ExpCond | df2_I$SubjectNum)))
+posthoc_ConvFat_I = purrr::map(models_ConvFat_I, ~ summary(glht(.x, linfct=mcp("df2_I$ExpCond" ="Tukey"))))
+models_ConvFat_IIA = purrr::map(df2_IIA[,20:35], ~lmer(.x ~ df2_IIA$ExpCond + (1 + df2_IIA$ExpCond | df2_IIA$SubjectNum)))
+posthoc_ConvFat_IIA = purrr::map(models_ConvFat_IIA, ~ summary(glht(.x, linfct=mcp("df2_IIA$ExpCond" ="Tukey"))))
+
+
+# DF for sinusoidal analysis b/t Control & Fatigue+dATP (MHC I & IIA)
+df3_I = my_data %>%
+  filter(FiberTypeNum %in% c(1:2)) %>%
+  filter(ExpCondNum %in% c(1,3)) %>%
+  filter(Grp == 2) %>%
+  dpylr::select(c(`Filename`:`Po-Control`,`DynamicAmplitude`:`Aviscous`))
+
+df3_IIA = my_data %>%
+  filter(FiberTypeNum %in% c(1:2)) %>%
+  filter(ExpCondNum %in% c(1,3)) %>%
+  filter(Grp == 2) %>%
+  dpylr::select(c(`Filename`:`Po-Control`,`DynamicAmplitude`:`pdiff_twopib`))
+
+models_ConvFatdATP_I = purrr::map(df3_I[,20:35], ~lmer(.x ~ df3_I$ExpCond + (1 + df3_I$ExpCond | df3_I$SubjectNum)))
+posthoc_ConvFatdATP_I = purrr::map(models_ConvFatdATP_I, ~ summary(glht(.x, linfct=mcp("df3_I$ExpCond" ="Tukey"))))
+models_ConvFatdATP_IIA = purrr::map(df3_IIA[,20:35], ~lmer(.x ~ df3_IIA$ExpCond + (1 + df3_IIA$ExpCond | df3_IIA$SubjectNum)))
+posthoc_ConvFatdATP_IIA = purrr::map(models_ConvFat_IIA, ~ summary(glht(.x, linfct=mcp("df3_IIA$ExpCond" ="Tukey"))))
+# 
+# # DF for sinusoidal analysis b/t Fatigue & Fatigue+dATP (MHC I & IIA)
+# df4 = my_data %>% 
+#   filter(FiberTypeNum %in% c(1:2)) %>% 
+#   filter(ExpCondNum %in% c(2,3)) %>% 
+#   select(c(`Filename`:`Po-Control`,`DynamicAmplitude`:`pdiff_twopib`))
+  
+
+
+
+
+
+
+
