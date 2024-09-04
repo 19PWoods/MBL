@@ -1323,18 +1323,37 @@ my_data = read_excel(file.choose(),
 
 # DF for specific tension analysis between Control, Fatigue & Fatigue + dATP
 # Contains MHC I, IIA, I/IIA, and IIAX
-# df1 = my_data %>% 
-#   filter(FiberTypeNum %in% c(1,2,4,5)) %>% 
-#   filter(ExpCondNum %in% c(1:3)) %>% 
-#   select(c(`Filename`:`Po-Control`))
-# 
-# 
+df1 = my_data %>%
+  filter(FiberTypeNum %in% c(1,2,4,5)) %>%
+  filter(ExpCondNum %in% c(1:3)) %>%
+  dplyr::select(c(`Filename`:`Po-Control`))
+
+ST_mod_I = df1 %>% 
+  filter(FiberTypeNum == 1) %>% 
+  lmer(`Po-Control` ~ `ExpCond` + (1 + `ExpCond` | `SubjectNum`), data = .) 
+ST_post_I = summary(glht(ST_mod_I, linfct = mcp(ExpCond = "Tukey")))
+
+ST_mod_IIA = df1 %>% 
+  filter(FiberTypeNum == 2) %>% 
+  lmer(`Po-Control` ~ `ExpCond` + (1 + `ExpCond` | `SubjectNum`), data = .) 
+ST_post_IIA = summary(glht(ST_mod_IIA, linfct = mcp(ExpCond = "Tukey")))
+
+ST_mod_I.IA = df1 %>% 
+  filter(FiberTypeNum == 4) %>% 
+  lmer(`Po-Control` ~ `ExpCond` + (1 + `ExpCond` | `SubjectNum`), data = .) 
+ST_post_I.IA = summary(glht(ST_mod_I.IA, linfct = mcp(ExpCond = "Tukey")))
+
+ST_mod_IIAX = df1 %>% 
+  filter(FiberTypeNum == 5) %>% 
+  lmer(`Po-Control` ~ `ExpCond` + (1 + `ExpCond` | `SubjectNum`), data = .) 
+ST_post_IIAX = summary(glht(ST_mod_IIAX, linfct = mcp(ExpCond = "Tukey")))
+
 # DF for sinusoidal analysis b/t Control & Fatigue (MHC I & IIA)
 df2_I = my_data %>%
   filter(FiberTypeNum %in% c(1)) %>%
   filter(ExpCondNum %in% c(1,2)) %>%
   filter(Grp == 1) %>%
-  dplyr::select(c(`Filename`:`Po-Control`,`DynamicAmplitude`:`Aviscous`))
+  dplyr::select(c(`Filename`:`Po-Control`,`DynamicAmplitude`:`Aviscous`)) 
 
 df2_IIA = my_data %>%
   filter(FiberTypeNum %in% c(2)) %>%
@@ -1342,40 +1361,103 @@ df2_IIA = my_data %>%
   filter(Grp == 1) %>%
   dplyr::select(c(`Filename`:`Po-Control`,`DynamicAmplitude`:`Aviscous`))
 
-models_ConvFat_I = purrr::map(df2_I[,20:length(df2_I)], ~lmer(.x ~ df2_I$ExpCond + (1 + df2_I$ExpCond | df2_I$SubjectNum)))
-posthoc_ConvFat_I = purrr::map(models_ConvFat_I, ~ summary(glht(.x, linfct=mcp("df2_I$ExpCond" ="Tukey"))))
-models_ConvFat_IIA = purrr::map(df2_IIA[,20:35], ~lmer(.x ~ df2_IIA$ExpCond + (1 + df2_IIA$ExpCond | df2_IIA$SubjectNum)))
-posthoc_ConvFat_IIA = purrr::map(models_ConvFat_IIA, ~ summary(glht(.x, linfct=mcp("df2_IIA$ExpCond" ="Tukey"))))
+models_ConvFat_I = purrr::map(df2_I[,20:length(df2_I)], 
+                              ~lmer(.x ~ df2_I$ExpCond + (1 + df2_I$ExpCond | df2_I$SubjectNum)))
+posthoc_ConvFat_I = purrr::map(models_ConvFat_I,
+                               ~ summary(glht(.x, linfct=mcp("df2_I$ExpCond" ="Tukey"))))
+models_ConvFat_IIA = purrr::map(df2_IIA[,20:35],
+                                ~lmer(.x ~ df2_IIA$ExpCond + (1 + df2_IIA$ExpCond | df2_IIA$SubjectNum)))
+posthoc_ConvFat_IIA = purrr::map(models_ConvFat_IIA, 
+                                 ~ summary(glht(.x, linfct=mcp("df2_IIA$ExpCond" ="Tukey"))))
 
 
 # DF for sinusoidal analysis b/t Control & Fatigue+dATP (MHC I & IIA)
 df3_I = my_data %>%
-  filter(FiberTypeNum %in% c(1:2)) %>%
+  filter(FiberTypeNum %in% c(1)) %>%
   filter(ExpCondNum %in% c(1,3)) %>%
   filter(Grp == 2) %>%
-  dpylr::select(c(`Filename`:`Po-Control`,`DynamicAmplitude`:`Aviscous`))
+  dplyr::select(c(`Filename`:`Po-Control`,`DynamicAmplitude`:`Aviscous`))
 
 df3_IIA = my_data %>%
-  filter(FiberTypeNum %in% c(1:2)) %>%
+  filter(FiberTypeNum %in% c(2)) %>%
   filter(ExpCondNum %in% c(1,3)) %>%
   filter(Grp == 2) %>%
-  dpylr::select(c(`Filename`:`Po-Control`,`DynamicAmplitude`:`pdiff_twopib`))
+  dplyr::select(c(`Filename`:`Po-Control`,`DynamicAmplitude`:`pdiff_twopib`))
 
-models_ConvFatdATP_I = purrr::map(df3_I[,20:35], ~lmer(.x ~ df3_I$ExpCond + (1 + df3_I$ExpCond | df3_I$SubjectNum)))
-posthoc_ConvFatdATP_I = purrr::map(models_ConvFatdATP_I, ~ summary(glht(.x, linfct=mcp("df3_I$ExpCond" ="Tukey"))))
-models_ConvFatdATP_IIA = purrr::map(df3_IIA[,20:35], ~lmer(.x ~ df3_IIA$ExpCond + (1 + df3_IIA$ExpCond | df3_IIA$SubjectNum)))
-posthoc_ConvFatdATP_IIA = purrr::map(models_ConvFat_IIA, ~ summary(glht(.x, linfct=mcp("df3_IIA$ExpCond" ="Tukey"))))
-# 
-# # DF for sinusoidal analysis b/t Fatigue & Fatigue+dATP (MHC I & IIA)
-# df4 = my_data %>% 
-#   filter(FiberTypeNum %in% c(1:2)) %>% 
-#   filter(ExpCondNum %in% c(2,3)) %>% 
-#   select(c(`Filename`:`Po-Control`,`DynamicAmplitude`:`pdiff_twopib`))
+models_ConvFatdATP_I = purrr::map(df3_I[,20:35], 
+                                  ~lmer(.x ~ df3_I$ExpCond + (1 + df3_I$ExpCond | df3_I$SubjectNum)))
+posthoc_ConvFatdATP_I = purrr::map(models_ConvFatdATP_I, 
+                                   ~ summary(glht(.x, linfct=mcp("df3_I$ExpCond" ="Tukey"))))
+models_ConvFatdATP_IIA = purrr::map(df3_IIA[,20:35],
+                                    ~lmer(.x ~ df3_IIA$ExpCond + (1 + df3_IIA$ExpCond | df3_IIA$SubjectNum)))
+posthoc_ConvFatdATP_IIA = purrr::map(models_ConvFatdATP_IIA,
+                                     ~ summary(glht(.x, linfct=mcp("df3_IIA$ExpCond" ="Tukey"))))
+
+
+# DF for sinusoidal analysis b/t Fatigue & Fatigue+dATP (MHC I & IIA)
+df4_I = my_data %>%
+  filter(FiberTypeNum %in% c(1)) %>%
+  filter(ExpCondNum %in% c(2,3)) %>%
+  dplyr::select(c(`Filename`:`Po-Control`,`DynamicAmplitude`:`Aviscous`))
+df4_I = na.omit(df4_I)
+
+df4_IIA = my_data %>%
+  filter(FiberTypeNum %in% c(2)) %>%
+  filter(ExpCondNum %in% c(2,3)) %>%
+  dplyr::select(c(`Filename`:`Po-Control`,`DynamicAmplitude`:`Aviscous`))
+df4_IIA = na.omit(df4_IIA)
+
+models_FatvFatdATP_I = purrr::map(df4_I[,20:35],
+                                  ~lmer(.x ~ df4_I$ExpCond + (1 | df4_I$SubjectNum)))
+posthoc_FatvFatdATP_I = purrr::map(models_FatvFatdATP_I,
+                                   ~ summary(glht(.x, linfct=mcp("df4_I$ExpCond" ="Tukey"))))
+models_FatvFatdATP_IIA = purrr::map(df4_IIA[,20:35],
+                                    ~lmer(.x ~ df4_IIA$ExpCond + (1 | df4_IIA$SubjectNum)))
+posthoc_FatvFatdATP_IIA = purrr::map(models_FatvFatdATP_IIA,
+                                     ~ summary(glht(.x, linfct=mcp("df4_IIA$ExpCond" ="Tukey"))))
+
+
+## DF for sinsoidal analysis b/t Control & Control+dATP
+
+df5_I = my_data %>% 
+  filter(FiberTypeNum == 1) %>% 
+  filter(ExpCondNum %in% c(4,10)) %>% 
+  dplyr::select(c(`Filename`:`Po-Control`,`DynamicAmplitude`:`Aviscous`)) 
+
+df5_IIA = my_data %>% 
+  filter(FiberTypeNum == 2) %>% 
+  filter(ExpCondNum %in% c(4,10)) %>% 
+  dplyr::select(c(`Filename`:`Po-Control`,`DynamicAmplitude`:`Aviscous`))
+
+ConvCondATP_mod_I = purrr::map(df5_I[, 19:length(df5_I)],
+                             ~lmer(.x ~ df5_I$ExpCond + (1 + df5_I$ExpCond| df5_I$SubjectNum)))
+ConvCondATP_mod_IIA = purrr::map(df5_IIA[, 19:length(df5_IIA)],
+                             ~lmer(.x ~ df5_IIA$ExpCond + (1 + df5_IIA$ExpCond| df5_IIA$SubjectNum)))
+
+## DF for % difference (pdiff)
+
+df6_I = my_data %>% 
+  filter(FiberTypeNum == 1) %>% 
+  filter(ExpCondNum %in% c(2,3,4)) %>% 
+  dplyr::select(c(`Filename`:`ExpCondNum`,`pdiff_A`:`pdiff_twopib`))
+df6_I = na.omit(df6_I)
+
+df6_IIA = my_data %>% 
+  filter(FiberTypeNum == 2) %>% 
+  filter(ExpCondNum %in% c(2,3,4)) %>% 
+  dplyr::select(c(`Filename`:`ExpCondNum`,`pdiff_A`:`pdiff_twopib`))
+df6_IIA = na.omit(df6_IIA)
   
-
-
-
-
-
-
-
+models_pdiff_I = purrr::map(df6_I[,19:length(df6_I)],
+                                  ~lmer(.x ~ df6_I$ExpCond + (1 | df6_I$SubjectNum)))
+posthoc_pdiff_I = purrr::map(models_pdiff_I,
+                                   ~ summary(glht(.x, linfct=mcp("df6_I$ExpCond" ="Tukey"))))
+models_pdiff_IIA = purrr::map(df6_IIA[,19:length(df6_IIA)],
+                                    ~lmer(.x ~ df6_IIA$ExpCond + (1 | df6_IIA$SubjectNum)))
+posthoc_Fpdiff_IIA = purrr::map(models_pdiff_IIA,
+                                     ~ summary(glht(.x, linfct=mcp("df6_IIA$ExpCond" ="Tukey"))))
+  
+  
+  
+  
+  
