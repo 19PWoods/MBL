@@ -18,9 +18,11 @@ my_data = read_excel(file.choose(),
                 `Grp`,`DynamicAmplitude`:`pdiff_twopib`) %>% 
   group_by(SubjectNum, FiberType,  ExpCond)
 
-# rigor_data = read_excel(file.choose(),
-#                         sheet = "Format1") %>% 
-#   dplyr::select(`Subj.#`, `MHC`, `MHC #`, ``)
+rigor_data = read_excel(file.choose(),
+                        sheet = "Format1") %>%
+  dplyr::select(`Subj.#`, `MHC`, `MHC #`, `Rigor-Tension (mN/mm2)`, `Rigor-Ft-Tension (mN/mm2)`,
+                `Rigor-Stiffness - 100 Hz (N/mm2)`, `Rigor-Ft-Stiffness - 100 Hz (N/mm2)`,
+                `Rigor Tension-Stiffness ratio`, `Rigor-FT-Tension-Stiffnesss ratio`)
 
 # Function to fit repeated measures linear mixed model
 fit_model_rep <- function(df, var_name) {
@@ -57,6 +59,7 @@ var_force = c("Po-Control", "Po*CSA")
 var_controldATP = c("Po-Control", "B-N", "C-N", "A-N", "k", "twopib", "ton")
 var_pdiff = c("pdiff_Ten","pdiff_A", "pdiff_Aelastic", "pdiff_Aviscous", "pdiff_k", "pdiff_B",
               "pdiff_C", "pdiff_ton", "pdiff_twopib")
+
 
 # Model 1: Tension and Forces for Control, Fatigue, Fatigue + dATP
 forces_model = my_data %>% 
@@ -122,11 +125,69 @@ pdiff_model = my_data %>%
          model_tidy = map(models, ~ map(.x, tidy)),
          posthoc = map(models, ~ map(.x, posthoc_analysis)))
 
+# Model 7-10: Rigor Models 
+
+rigor_tension_model = rigor_data %>% 
+  dplyr::select(`Subj.#`, `MHC`, `MHC #`, 
+                `Rigor-Tension (mN/mm2)`, `Rigor-Ft-Tension (mN/mm2)`) %>% 
+  filter(MHC %in% c("I", "IIA")) %>% 
+  pivot_longer(
+    cols = `Rigor-Tension (mN/mm2)`:`Rigor-Ft-Tension (mN/mm2)`,
+    names_to = "ExpCond",
+    values_to = "value"
+               ) %>% 
+  group_by(MHC) %>% 
+  nest() %>% 
+  mutate(model = map(data, ~ lmer(value ~ ExpCond + (1 + ExpCond | `Subj.#`),
+                                  data = .x)),
+         model_tidy = map(model, tidy))
+
+rigor_stiff_model = rigor_data %>% 
+  dplyr::select(`Subj.#`, `MHC`, `MHC #`, 
+                `Rigor-Stiffness - 100 Hz (N/mm2)`, `Rigor-Ft-Stiffness - 100 Hz (N/mm2)`) %>% 
+  filter(MHC %in% c("I", "IIA")) %>% 
+  pivot_longer(
+    cols = `Rigor-Stiffness - 100 Hz (N/mm2)`:`Rigor-Ft-Stiffness - 100 Hz (N/mm2)`,
+    names_to = "ExpCond",
+    values_to = "value"
+  ) %>% 
+  group_by(MHC) %>% 
+  nest() %>% 
+  mutate(model = map(data, ~ lmer(value ~ ExpCond + (1 + ExpCond | `Subj.#`),
+                                  data = .x)),
+         model_tidy = map(model, tidy))
+
+ten_stiff_ratio_model = rigor_data %>% 
+  dplyr::select(`Subj.#`, `MHC`, `MHC #`, 
+                `Rigor Tension-Stiffness ratio`, `Rigor-FT-Tension-Stiffnesss ratio`) %>% 
+  filter(MHC %in% c("I", "IIA")) %>% 
+  pivot_longer(
+    cols = `Rigor Tension-Stiffness ratio`:`Rigor-FT-Tension-Stiffnesss ratio`,
+    names_to = "ExpCond",
+    values_to = "value"
+  ) %>% 
+  group_by(MHC) %>% 
+  nest() %>% 
+  mutate(model = map(data, ~ lmer(value ~ ExpCond + (1 + ExpCond | `Subj.#`),
+                                  data = .x)),
+         model_tidy = map(model, tidy))
+
+fig4d_model = read_excel(file.choose()) %>% 
+  filter(`Fiber Type` %in% c("I", "IIA")) %>% 
+  filter(`Exp Cond` %in% c("Control", "Fatigue")) %>% 
+  group_by(`Fiber Type`) %>% 
+  nest() %>% 
+  mutate(model = map(data, ~ lmer(`Specific Force:Dynamic Amplitude Ratio` ~ 
+                                    `Exp Cond` + (1 + `Exp Cond` | `Subject#`),
+                                  data = .x)),
+         model_tidy = map(model, tidy))
+  
+
 # Export to Excel Functions
 export_to_excel <- function(model_list, file_name) {
   model_summaries <- model_list %>%
     unnest(model_tidy) %>% 
-    unnest(model_tidy) 
+    unnest(model_tidy)
   
   writexl::write_xlsx(model_summaries, file_name)
 }
@@ -153,7 +214,10 @@ export_to_excel(ConvFatdATP_model, "ConvFatdATP_model.xlsx")
 export_to_excel(ConvCondATP_model, "ConvCondATP_model.xlsx")
 export_to_excel(FatvFatdATP_model, "FatvFatdATP_model.xlsx")
 export_to_excel_force(pdiff_model, "pdiff_model.xlsx")
-
+export_to_excel(rigor_tension_model, "rigortension.xlsx")
+export_to_excel(rigor_stiff_model, "rigorstiff.xlsx")
+export_to_excel(ten_stiff_ratio_model, "tenstiffratio.xlsx")
+export_to_excel(fig4d_model, "fig4d.xlsx")
 
  
 # # Print summaries of the models and post-hoc analyses
